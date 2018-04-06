@@ -1,3 +1,7 @@
 name: StiumulusPackage
 version: 1.0.0-SNAPSHOT
 main: com.queuedpixel.stimuluspackage.Main
+commands:
+    stimulus:
+        description: Test Command
+        usage: /stimulus
