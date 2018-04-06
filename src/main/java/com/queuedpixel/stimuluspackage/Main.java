@@ -1,9 +1,16 @@
 package com.queuedpixel.stimuluspackage;
 
-public class Main
+import org.bukkit.plugin.java.JavaPlugin;
+
+public class Main extends JavaPlugin
 {
-    public static void main( String[] args )
+    public void onEnable()
     {
-        System.out.println( "Hello, world!" );
+        getLogger().info( "onEnable is called!" );
+    }
+
+    public void onDisable()
+    {
+        getLogger().info( "onDisable is called!" );
     }
 }
