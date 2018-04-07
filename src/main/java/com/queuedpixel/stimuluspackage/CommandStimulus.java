@@ -12,6 +12,12 @@ public class CommandStimulus implements CommandExecutor
     {
         OfflinePlayer[] players = Bukkit.getOfflinePlayers();
         sender.sendMessage( "There are " + players.length + " players." );
+
+        for ( OfflinePlayer player : players )
+        {
+            sender.sendMessage( player.getName() + " : " + player.getLastPlayed() );
+        }
+
         return true;
     }
 }
