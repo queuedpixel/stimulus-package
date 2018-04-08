@@ -18,7 +18,7 @@ public class CommandStimulus implements CommandExecutor
 
         for ( OfflinePlayer player : offlinePlayers )
         {
-            sender.sendMessage( player.getName() + " : " + player.getLastPlayed() );
+            sender.sendMessage( player.getUniqueId().toString() + " : " + player.getLastPlayed() );
         }
 
         Collection< ? extends Player > onlinePlayers = Bukkit.getOnlinePlayers();
@@ -26,7 +26,7 @@ public class CommandStimulus implements CommandExecutor
 
         for ( Player player : onlinePlayers )
         {
-            sender.sendMessage( player.getName() );
+            sender.sendMessage( player.getUniqueId().toString() );
         }
 
         return true;
