@@ -8,6 +8,7 @@ public class Main extends JavaPlugin
     {
         getLogger().info( "onEnable is called!" );
         this.getCommand( "stimulus" ).setExecutor( new CommandStimulus() );
+        this.getServer().getPluginManager().registerEvents( new EconomyTransactionListener(), this );
     }
 
     public void onDisable()
