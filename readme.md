@@ -61,8 +61,11 @@ total payment of 10,080 currency over one week.
 
 ## Dependencies
 
-This plugin depends on the
-[SaneEconomy plugin](https://www.spigotmc.org/resources/saneeconomy-simple-but-featureful-economy.26223/).
+This plugin depends on the following plugins:
+
+* [GriefPrevention](https://www.spigotmc.org/resources/griefprevention.1884/)
+* [SaneEconomy](https://www.spigotmc.org/resources/saneeconomy-simple-but-featureful-economy.26223/)
+* [Vault](https://www.spigotmc.org/resources/vault.34315/)
 
 ## Installation
 
