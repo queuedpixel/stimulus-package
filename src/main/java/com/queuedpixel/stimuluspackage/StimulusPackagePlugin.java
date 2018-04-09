@@ -31,15 +31,15 @@ import java.util.LinkedList;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Main extends JavaPlugin
+public class StimulusPackagePlugin extends JavaPlugin
 {
     private LinkedList< Transaction > transactions = new LinkedList< Transaction >();
 
     public void onEnable()
     {
         getLogger().info( "onEnable is called!" );
-        this.getCommand( "stimulus" ).setExecutor( new CommandStimulus( this ));
-        this.getServer().getPluginManager().registerEvents( new EconomyTransactionListener( this ), this );
+        this.getCommand( "stimulus" ).setExecutor( new StimulusCommand( this ));
+        this.getServer().getPluginManager().registerEvents( new StimulusPackageListener( this ), this );
     }
 
     public void onDisable()

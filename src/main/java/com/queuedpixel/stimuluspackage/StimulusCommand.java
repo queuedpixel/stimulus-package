@@ -40,14 +40,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CommandStimulus implements CommandExecutor
+public class StimulusCommand implements CommandExecutor
 {
     private static final long economicInterval = 604800; // seconds; one week
     private static final long stimulusInterval = 86400;  // seconds; one day
 
-    private final Main plugin;
+    private final StimulusPackagePlugin plugin;
 
-    public CommandStimulus( Main plugin )
+    public StimulusCommand( StimulusPackagePlugin plugin )
     {
         this.plugin = plugin;
     }

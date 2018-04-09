@@ -33,11 +33,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-public class EconomyTransactionListener implements Listener
+public class StimulusPackageListener implements Listener
 {
-    private final Main plugin;
+    private final StimulusPackagePlugin plugin;
 
-    public EconomyTransactionListener( Main plugin )
+    public StimulusPackageListener( StimulusPackagePlugin plugin )
     {
         this.plugin = plugin;
     }

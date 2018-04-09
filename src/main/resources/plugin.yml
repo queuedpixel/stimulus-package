@@ -22,7 +22,7 @@
 
 name: StiumulusPackage
 version: 1.0.0-SNAPSHOT
-main: com.queuedpixel.stimuluspackage.Main
+main: com.queuedpixel.stimuluspackage.StimulusPackagePlugin
 commands:
     stimulus:
         description: Test Command
