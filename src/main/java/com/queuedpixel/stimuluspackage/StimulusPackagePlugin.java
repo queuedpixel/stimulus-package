@@ -26,6 +26,13 @@ SOFTWARE.
 
 package com.queuedpixel.stimuluspackage;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -33,10 +40,34 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class StimulusPackagePlugin extends JavaPlugin
 {
-    private LinkedList< Transaction > transactions = new LinkedList< Transaction >();
+    private final Path pluginDirectory = Paths.get( "plugins/StimulusPackage" );
+    private final Path transactionsFile = Paths.get( "plugins/StimulusPackage/transactions.txt" );
+    private final LinkedList< Transaction > transactions = new LinkedList< Transaction >();
 
     public void onEnable()
     {
+        if ( Files.exists( this.transactionsFile ))
+        {
+            try
+            {
+                BufferedReader reader = Files.newBufferedReader( this.transactionsFile );
+                String line = reader.readLine();
+                while ( line != null )
+                {
+                    // add each transaction to our linked list
+                    String[] splits = line.split( " " );
+                    long timestamp = Long.parseLong( splits[ 0 ] );
+                    double amount = Double.parseDouble( splits[ 1 ] );
+                    this.transactions.add( new Transaction( timestamp, amount ));
+                    line = reader.readLine();
+                }
+            }
+            catch ( IOException e )
+            {
+                e.printStackTrace();
+            }
+        }
+
         getLogger().info( "onEnable is called!" );
         this.getCommand( "stimulus" ).setExecutor( new StimulusCommand( this ));
         this.getServer().getPluginManager().registerEvents( new StimulusPackageListener( this ), this );
@@ -50,6 +81,20 @@ public class StimulusPackagePlugin extends JavaPlugin
     protected void addTransaction( Transaction transaction )
     {
         this.transactions.add( transaction );
+
+        try
+        {
+            if ( !Files.exists( this.pluginDirectory )) Files.createDirectory( this.pluginDirectory );
+            BufferedWriter writer = Files.newBufferedWriter(
+                    this.transactionsFile, StandardOpenOption.CREATE, StandardOpenOption.APPEND );
+            writer.write( transaction.getTimestamp() + " " + transaction.getAmount() );
+            writer.newLine();
+            writer.close();
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
     }
 
     protected Iterator< Transaction > getTransactionIterator()
