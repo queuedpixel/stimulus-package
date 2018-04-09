@@ -40,6 +40,10 @@ SOFTWARE.
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -50,9 +54,9 @@ SOFTWARE.
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.appledash</groupId>
-            <artifactId>SaneEconomyCore</artifactId>
-            <version>0.13.1-SNAPSHOT</version>
+            <groupId>com.github.AppleDash</groupId>
+            <artifactId>SaneEconomy</artifactId>
+            <version>0.13.1</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

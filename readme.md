@@ -69,11 +69,6 @@ This plugin depends on the
 This plugin is currently under development and a binary release is not currently available. To use this plugin you must
 clone this repository and compile it yourself. We use [Apache Maven](https://maven.apache.org/) to build this plugin.
 
-### Install Dependencies
-
-Clone the [SaneEconomy repository](https://github.com/AppleDash/SaneEconomy) to your computer. Install SaneEconomy
-into your local Maven repository by running `mvn install` in the root directory of the SaneEconomy project.
-
 ### Compile Plugin
 
 Run `mvn package` to create a Jar for this plugin.
