@@ -69,8 +69,8 @@ This plugin depends on the following plugins:
 
 ## Installation
 
-This plugin is currently under development and a binary release is not currently available. To use this plugin you must
-clone this repository and compile it yourself. We use [Apache Maven](https://maven.apache.org/) to build this plugin.
+This plugin is currently under development and a binary release is not available. To use this plugin you must compile it
+yourself. We use [Apache Maven](https://maven.apache.org/) to build this plugin.
 
 ### Compile Plugin
 
