@@ -3,6 +3,7 @@ package com.queuedpixel.stimuluspackage;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -15,6 +16,16 @@ import org.bukkit.entity.Player;
 
 public class CommandStimulus implements CommandExecutor
 {
+    private static final long economicInterval = 604800; // seconds; one week
+    private static final long stimulusInterval = 86400;  // seconds; one day
+
+    private final Main plugin;
+
+    public CommandStimulus( Main plugin )
+    {
+        this.plugin = plugin;
+    }
+
     public boolean onCommand( CommandSender sender, Command command, String label, String[] args )
     {
         // current time
@@ -24,30 +35,39 @@ public class CommandStimulus implements CommandExecutor
         Map< UUID, Long > playerMap = new HashMap< UUID, Long >();
 
         OfflinePlayer[] offlinePlayers = Bukkit.getOfflinePlayers();
-        sender.sendMessage( offlinePlayers.length + " Offline Players:" );
-
         for ( OfflinePlayer player : offlinePlayers )
         {
             // store number of seconds since player was last on
             playerMap.put( player.getUniqueId(), ( now.getTime() - player.getLastPlayed() ) / 1000 );
-            sender.sendMessage( player.getUniqueId().toString() + " : " + player.getLastPlayed() );
         }
 
         Collection< ? extends Player > onlinePlayers = Bukkit.getOnlinePlayers();
-        sender.sendMessage( onlinePlayers.size() + " Online Players:" );
-
         for ( Player player : onlinePlayers )
         {
             // player is on right now, so zero seconds since they were last on the server
             playerMap.put( player.getUniqueId(), 0l );
-            sender.sendMessage( player.getUniqueId().toString() );
         }
 
-        sender.sendMessage( playerMap.size() + " Total Players:" );
+        int economicPlayers = 0;
+        int stimulusPlayers = 0;
 
-        for ( UUID playerId : playerMap.keySet() )
+        for ( Long loginInterval : playerMap.values() )
         {
-            sender.sendMessage( playerId.toString() + " : " + playerMap.get( playerId ));
+            if ( loginInterval < economicInterval ) economicPlayers++;
+            if ( loginInterval < stimulusInterval ) stimulusPlayers++;
+        }
+
+        sender.sendMessage(
+                "Economic Players: " + economicPlayers + ", Stimulus Players: " + stimulusPlayers );
+
+        sender.sendMessage( "Recent Transactions:" );
+
+        int transactionCount = 0;
+        for ( Iterator< Transaction > iterator = plugin.getTransactionIterator(); iterator.hasNext(); )
+        {
+            Transaction transaction = iterator.next();
+            if ( ++transactionCount > 10 ) break;
+            sender.sendMessage( transaction.getTimestamp() + " - " + transaction.getAmount() );
         }
 
         return true;
