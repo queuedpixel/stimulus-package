@@ -70,6 +70,7 @@ public class StimulusPackagePlugin extends JavaPlugin
 
         getLogger().info( "onEnable is called!" );
         this.getCommand( "stimulus" ).setExecutor( new StimulusCommand( this ));
+        this.getCommand( "wealth" ).setExecutor( new WealthCommand() );
         this.getServer().getPluginManager().registerEvents( new StimulusPackageListener( this ), this );
     }
 
