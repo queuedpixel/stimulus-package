@@ -59,6 +59,33 @@ This plugin does not currently match our proposed implementation.
 With one player with no economic activity, that player would receive a payment of 10 currency every 10 minutes with a
 total payment of 10,080 currency over one week.
 
+## Dependencies
+
+This plugin depends on the
+[SaneEconomy plugin](https://www.spigotmc.org/resources/saneeconomy-simple-but-featureful-economy.26223/).
+
+## Installation
+
+This plugin is currently under development and a binary release is not currently available. To use this plugin you must
+clone this repository and compile it yourself. We use [Apache Maven](https://maven.apache.org/) to build this plugin.
+
+### Install Dependencies
+
+Clone the [SaneEconomy repository](https://github.com/AppleDash/SaneEconomy) to your computer. Install SaneEconomy
+into your local Maven repository by running `mvn install` in the root directory of the SaneEconomy project.
+
+### Compile Plugin
+
+Run `mvn package` to create a Jar for this plugin.
+
+### Install Plugin
+
+Copy `target/stimulus-package-1.0.0-SNAPSHOT.jar` into your server `plugins` directory.
+
+## Usage
+
+Use the `/stimulus` command to see debug information related to the plugin.
+
 ## Contributing
 
 Instructions for those wishing to contribute to this project are available in our
