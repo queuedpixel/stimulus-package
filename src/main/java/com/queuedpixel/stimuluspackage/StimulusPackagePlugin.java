@@ -76,7 +76,7 @@ public class StimulusPackagePlugin extends JavaPlugin
         getLogger().info( "onDisable is called!" );
     }
 
-    protected void addTransaction( Transaction transaction )
+    void addTransaction( Transaction transaction )
     {
         this.transactions.add( transaction );
 
@@ -95,7 +95,7 @@ public class StimulusPackagePlugin extends JavaPlugin
         }
     }
 
-    protected Iterator< Transaction > getTransactionIterator()
+    Iterator< Transaction > getTransactionIterator()
     {
         return this.transactions.descendingIterator();
     }
