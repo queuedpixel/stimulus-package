@@ -42,6 +42,7 @@ public class StimulusPackagePlugin extends JavaPlugin
 {
     private final Path pluginDirectory = Paths.get( "plugins/StimulusPackage" );
     private final Path transactionsFile = Paths.get( "plugins/StimulusPackage/transactions.txt" );
+    private final StimulusPackageConfiguration config = new StimulusPackageConfiguration();
     private final LinkedList< Transaction > transactions = new LinkedList< Transaction >();
 
     public void onEnable()
@@ -74,6 +75,11 @@ public class StimulusPackagePlugin extends JavaPlugin
     public void onDisable()
     {
         getLogger().info( "onDisable is called!" );
+    }
+
+    StimulusPackageConfiguration getConfiguration()
+    {
+        return this.config;
     }
 
     void addTransaction( Transaction transaction )

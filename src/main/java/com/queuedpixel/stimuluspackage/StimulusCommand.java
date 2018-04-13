@@ -42,14 +42,13 @@ import org.bukkit.entity.Player;
 
 public class StimulusCommand implements CommandExecutor
 {
-    private static final long economicInterval = 604800; // seconds; one week
-    private static final long stimulusInterval = 86400;  // seconds; one day
-
     private final StimulusPackagePlugin plugin;
+    private final StimulusPackageConfiguration config;
 
     public StimulusCommand( StimulusPackagePlugin plugin )
     {
         this.plugin = plugin;
+        this.config = this.plugin.getConfiguration();
     }
 
     public boolean onCommand( CommandSender sender, Command command, String label, String[] args )
@@ -79,8 +78,8 @@ public class StimulusCommand implements CommandExecutor
 
         for ( Long loginInterval : playerMap.values() )
         {
-            if ( loginInterval < economicInterval ) economicPlayers++;
-            if ( loginInterval < stimulusInterval ) stimulusPlayers++;
+            if ( loginInterval < config.getEconomicInterval() ) economicPlayers++;
+            if ( loginInterval < config.getStimulusInterval() ) stimulusPlayers++;
         }
 
         sender.sendMessage(
