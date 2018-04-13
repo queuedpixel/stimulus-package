@@ -36,7 +36,11 @@ import java.nio.file.StandardOpenOption;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import net.milkbowl.vault.economy.Economy;
 
 public class StimulusPackagePlugin extends JavaPlugin
 {
@@ -44,6 +48,7 @@ public class StimulusPackagePlugin extends JavaPlugin
     private final Path transactionsFile = Paths.get( "plugins/StimulusPackage/transactions.txt" );
     private final StimulusPackageConfiguration config = new StimulusPackageConfiguration();
     private final LinkedList< Transaction > transactions = new LinkedList< Transaction >();
+    private Economy economy;
 
     public void onEnable()
     {
@@ -70,6 +75,10 @@ public class StimulusPackagePlugin extends JavaPlugin
         this.getCommand( "stimulus" ).setExecutor( new StimulusCommand( this ));
         this.getCommand( "wealth" ).setExecutor( new WealthCommand( this ));
         this.getServer().getPluginManager().registerEvents( new StimulusPackageListener( this ), this );
+
+        RegisteredServiceProvider< Economy > rsp =
+                Bukkit.getServer().getServicesManager().getRegistration( Economy.class );
+        this.economy = rsp.getProvider();
     }
 
     public void onDisable()
@@ -80,6 +89,11 @@ public class StimulusPackagePlugin extends JavaPlugin
     StimulusPackageConfiguration getConfiguration()
     {
         return this.config;
+    }
+
+    Economy getEconomy()
+    {
+        return this.economy;
     }
 
     void addTransaction( Transaction transaction )

@@ -32,7 +32,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.RegisteredServiceProvider;
 
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import me.ryanhamshire.GriefPrevention.PlayerData;
@@ -41,10 +40,12 @@ import net.milkbowl.vault.economy.Economy;
 public class WealthCommand implements CommandExecutor
 {
     private final StimulusPackageConfiguration config;
+    private final Economy economy;
 
     public WealthCommand( StimulusPackagePlugin plugin )
     {
         this.config = plugin.getConfiguration();
+        this.economy = plugin.getEconomy();
     }
 
     public boolean onCommand( CommandSender sender, Command command, String label, String[] args )
@@ -58,24 +59,21 @@ public class WealthCommand implements CommandExecutor
         OfflinePlayer player = (OfflinePlayer) sender;
         sender.sendMessage( "You are a player." );
 
-        RegisteredServiceProvider< Economy > rsp =
-                Bukkit.getServer().getServicesManager().getRegistration( Economy.class );
-        Economy economy = rsp.getProvider();
-        double balance = economy.getBalance( player );
-        sender.sendMessage( "Balance: " + economy.format( balance ));
+        double balance = this.economy.getBalance( player );
+        sender.sendMessage( "Balance: " + this.economy.format( balance ));
 
         GriefPrevention griefPrevention =
                 (GriefPrevention) Bukkit.getServer().getPluginManager().getPlugin( "GriefPrevention" );
         PlayerData playerData = griefPrevention.dataStore.getPlayerData( player.getUniqueId() );
 
         double accruedClaimBlockValue = playerData.getAccruedClaimBlocks() * config.getClaimBlockValue();
-        sender.sendMessage( "Accrued Claim Block Value: " + economy.format( accruedClaimBlockValue ));
+        sender.sendMessage( "Accrued Claim Block Value: " + this.economy.format( accruedClaimBlockValue ));
 
         double bonusClaimBlockValue = playerData.getBonusClaimBlocks() * config.getClaimBlockValue();
-        sender.sendMessage( "Bonus Claim Block Value: " + economy.format( bonusClaimBlockValue ));
+        sender.sendMessage( "Bonus Claim Block Value: " + this.economy.format( bonusClaimBlockValue ));
         
         double wealth = balance + accruedClaimBlockValue + bonusClaimBlockValue;
-        sender.sendMessage( "Wealth: " + economy.format( wealth ));
+        sender.sendMessage( "Wealth: " + this.economy.format( wealth ));
 
         return true;
     }
