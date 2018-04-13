@@ -101,6 +101,13 @@ public class StimulusCommand implements CommandExecutor
                             ", Actual Volume: " + actualVolume +
                             ", Delta: " + volumeDelta );
 
+        if ( volumeDelta <= 0 ) return true;
+
+        // compute total stimulus
+        double stimulusFactor = volumeDelta / totalDesiredVolume;
+        double totalStimulus = stimulusFactor * this.config.getDesiredStimulus() * stimulusPlayers;
+        sender.sendMessage( "Stimulus Factor: " + stimulusFactor + ", Total Stimulus: " + totalStimulus );
+
         return true;
     }
 }

@@ -30,8 +30,9 @@ public class StimulusPackageConfiguration
 {
     private final long   economicInterval = 604800; // seconds; one week
     private final long   stimulusInterval = 86400;  // seconds; one day
-    private final double desiredVolume    = 10000;  // desired volume in in-game currency
-    private final double claimBlockValue  = 1;      // value of claim blocks in in-game currency
+    private final double desiredVolume    = 10000;  // currency; desired volume
+    private final double desiredStimulus  = 10;     // currency; desired stimulus per player per payment
+    private final double claimBlockValue  = 1;      // currency; value of claim blocks
 
     long getEconomicInterval()
     {
@@ -46,6 +47,11 @@ public class StimulusPackageConfiguration
     double getDesiredVolume()
     {
         return this.desiredVolume;
+    }
+
+    double getDesiredStimulus()
+    {
+        return this.desiredStimulus;
     }
 
     double getClaimBlockValue()
