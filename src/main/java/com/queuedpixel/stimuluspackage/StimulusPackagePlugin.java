@@ -71,14 +71,14 @@ public class StimulusPackagePlugin extends JavaPlugin
             }
         }
 
+        RegisteredServiceProvider< Economy > rsp =
+                Bukkit.getServer().getServicesManager().getRegistration( Economy.class );
+        this.economy = rsp.getProvider();
+
         getLogger().info( "onEnable is called!" );
         this.getCommand( "stimulus" ).setExecutor( new StimulusCommand( this ));
         this.getCommand( "wealth" ).setExecutor( new WealthCommand( this ));
         this.getServer().getPluginManager().registerEvents( new StimulusPackageListener( this ), this );
-
-        RegisteredServiceProvider< Economy > rsp =
-                Bukkit.getServer().getServicesManager().getRegistration( Economy.class );
-        this.economy = rsp.getProvider();
     }
 
     public void onDisable()
