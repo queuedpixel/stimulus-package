@@ -92,7 +92,7 @@ public class StimulusCommand implements CommandExecutor
         }
 
         // perform volume calculations
-        double totalDesiredVolume = this.config.getDesiredVolume();
+        double totalDesiredVolume = this.config.getDesiredVolume() * economicPlayers;
         double volumeDelta = totalDesiredVolume - actualVolume;
 
         sender.sendMessage(
