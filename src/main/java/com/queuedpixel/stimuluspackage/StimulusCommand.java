@@ -78,8 +78,8 @@ public class StimulusCommand implements CommandExecutor
 
         for ( Long loginInterval : playerMap.values() )
         {
-            if ( loginInterval < config.getEconomicInterval() ) economicPlayers++;
-            if ( loginInterval < config.getStimulusInterval() ) stimulusPlayers++;
+            if ( loginInterval < this.config.getEconomicInterval() ) economicPlayers++;
+            if ( loginInterval < this.config.getStimulusInterval() ) stimulusPlayers++;
         }
 
         // determine the actual volume of transactions that occurred during the economic interval
@@ -88,12 +88,18 @@ public class StimulusCommand implements CommandExecutor
         {
             Transaction transaction = iterator.next();
             long transactionAge = ( now - transaction.getTimestamp() ) / 1000;
-            if ( transactionAge < config.getEconomicInterval() ) actualVolume += transaction.getAmount();
+            if ( transactionAge < this.config.getEconomicInterval() ) actualVolume += transaction.getAmount();
         }
+
+        // perform volume calculations
+        double totalDesiredVolume = this.config.getDesiredVolume();
+        double volumeDelta = totalDesiredVolume - actualVolume;
 
         sender.sendMessage(
                 "Economic Players: " + economicPlayers + ", Stimulus Players: " + stimulusPlayers );
-        sender.sendMessage( "Actual Volume: " + actualVolume );
+        sender.sendMessage( "Desired Volume: " + totalDesiredVolume +
+                            ", Actual Volume: " + actualVolume +
+                            ", Delta: " + volumeDelta );
 
         sender.sendMessage( "Recent Transactions:" );
 
