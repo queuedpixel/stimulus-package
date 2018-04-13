@@ -54,7 +54,7 @@ public class StimulusCommand implements CommandExecutor
     public boolean onCommand( CommandSender sender, Command command, String label, String[] args )
     {
         // current time
-        Date now = new Date();
+        long now = new Date().getTime();
 
         // map of players to the number of seconds since they were last on the server
         Map< UUID, Long > playerMap = new HashMap< UUID, Long >();
@@ -63,7 +63,7 @@ public class StimulusCommand implements CommandExecutor
         for ( OfflinePlayer player : offlinePlayers )
         {
             // store number of seconds since player was last on
-            playerMap.put( player.getUniqueId(), ( now.getTime() - player.getLastPlayed() ) / 1000 );
+            playerMap.put( player.getUniqueId(), ( now - player.getLastPlayed() ) / 1000 );
         }
 
         Collection< ? extends Player > onlinePlayers = Bukkit.getOnlinePlayers();
@@ -82,8 +82,18 @@ public class StimulusCommand implements CommandExecutor
             if ( loginInterval < config.getStimulusInterval() ) stimulusPlayers++;
         }
 
+        // determine the actual volume of transactions that occurred during the economic interval
+        double actualVolume = 0;
+        for ( Iterator< Transaction > iterator = plugin.getTransactionIterator(); iterator.hasNext(); )
+        {
+            Transaction transaction = iterator.next();
+            long transactionAge = ( now - transaction.getTimestamp() ) / 1000;
+            if ( transactionAge < config.getEconomicInterval() ) actualVolume += transaction.getAmount();
+        }
+
         sender.sendMessage(
                 "Economic Players: " + economicPlayers + ", Stimulus Players: " + stimulusPlayers );
+        sender.sendMessage( "Actual Volume: " + actualVolume );
 
         sender.sendMessage( "Recent Transactions:" );
 
