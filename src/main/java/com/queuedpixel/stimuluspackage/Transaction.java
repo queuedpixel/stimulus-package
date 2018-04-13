@@ -34,10 +34,22 @@ public class Transaction
     // amount of the transaction
     private final double amount;
 
-    public Transaction( long timestamp, double amount )
+    // notes about the transaction
+    private final String notes;
+
+    public Transaction( String transactionString )
+    {
+        String[] transactionElements = transactionString.split( "," );
+        this.timestamp = Long.parseLong( transactionElements[ 0 ].trim() );
+        this.amount = Double.parseDouble( transactionElements[ 1 ].trim() );
+        this.notes = transactionElements[ 2 ].trim();
+    }
+
+    public Transaction( long timestamp, double amount, String notes )
     {
         this.timestamp = timestamp;
         this.amount = amount;
+        this.notes = notes;
     }
 
     public long getTimestamp()
@@ -48,5 +60,15 @@ public class Transaction
     public double getAmount()
     {
         return this.amount;
+    }
+
+    public String getNotes()
+    {
+        return this.notes;
+    }
+
+    public String toString()
+    {
+        return this.timestamp + ", " + this.amount + ", " + this.notes;
     }
 }

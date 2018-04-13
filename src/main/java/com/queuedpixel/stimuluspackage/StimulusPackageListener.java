@@ -45,13 +45,13 @@ public class StimulusPackageListener implements Listener
     @EventHandler
     public void onSaneEconomyTransactionEvent( SaneEconomyTransactionEvent event )
     {
-        plugin.addTransaction( new Transaction( new Date().getTime(),
-                               event.getTransaction().getAmount() ));
-
-        Bukkit.getLogger().info( "Economy Transaction: " +
-                                 event.getTransaction().getReason().toString() + " - " +
-                                 event.getTransaction().getSender().getUniqueIdentifier() + " - " +
-                                 event.getTransaction().getReceiver().getUniqueIdentifier() + " - " +
-                                 event.getTransaction().getAmount() );
+        long timestamp = new Date().getTime();
+        double amount = event.getTransaction().getAmount();
+        String notes = event.getTransaction().getReason().toString() + " - " +
+                       event.getTransaction().getSender().getUniqueIdentifier() + " - " +
+                       event.getTransaction().getReceiver().getUniqueIdentifier();
+        Transaction transaction = new Transaction( timestamp, amount, notes );
+        plugin.addTransaction( transaction );
+        Bukkit.getLogger().info( "Economy Transaction: " + transaction.toString() );
     }
 }

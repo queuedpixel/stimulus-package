@@ -55,10 +55,7 @@ public class StimulusPackagePlugin extends JavaPlugin
                 while ( line != null )
                 {
                     // add each transaction to our linked list
-                    String[] splits = line.split( " " );
-                    long timestamp = Long.parseLong( splits[ 0 ] );
-                    double amount = Double.parseDouble( splits[ 1 ] );
-                    this.transactions.add( new Transaction( timestamp, amount ));
+                    this.transactions.add( new Transaction( line ));
                     line = reader.readLine();
                 }
             }
@@ -88,7 +85,7 @@ public class StimulusPackagePlugin extends JavaPlugin
             if ( !Files.exists( this.pluginDirectory )) Files.createDirectory( this.pluginDirectory );
             BufferedWriter writer = Files.newBufferedWriter(
                     this.transactionsFile, StandardOpenOption.CREATE, StandardOpenOption.APPEND );
-            writer.write( transaction.getTimestamp() + " " + transaction.getAmount() );
+            writer.write( transaction.toString() );
             writer.newLine();
             writer.close();
         }
