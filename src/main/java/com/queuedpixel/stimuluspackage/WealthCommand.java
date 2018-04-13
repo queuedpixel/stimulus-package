@@ -40,6 +40,13 @@ import net.milkbowl.vault.economy.Economy;
 
 public class WealthCommand implements CommandExecutor
 {
+    private final StimulusPackageConfiguration config;
+
+    public WealthCommand( StimulusPackagePlugin plugin )
+    {
+        this.config = plugin.getConfiguration();
+    }
+
     public boolean onCommand( CommandSender sender, Command command, String label, String[] args )
     {
         if ( !( sender instanceof Player ))
@@ -61,13 +68,13 @@ public class WealthCommand implements CommandExecutor
                 (GriefPrevention) Bukkit.getServer().getPluginManager().getPlugin( "GriefPrevention" );
         PlayerData playerData = griefPrevention.dataStore.getPlayerData( player.getUniqueId() );
 
-        int accruedClaimBlocks = playerData.getAccruedClaimBlocks();
-        sender.sendMessage( "Accrued Claim Blocks: " + accruedClaimBlocks );
+        double accruedClaimBlockValue = playerData.getAccruedClaimBlocks() * config.getClaimBlockValue();
+        sender.sendMessage( "Accrued Claim Block Value: " + economy.format( accruedClaimBlockValue ));
 
-        int bonusClaimBlocks = playerData.getBonusClaimBlocks();
-        sender.sendMessage( "Bonus Claim Blocks: " + bonusClaimBlocks );
+        double bonusClaimBlockValue = playerData.getBonusClaimBlocks() * config.getClaimBlockValue();
+        sender.sendMessage( "Bonus Claim Block Value: " + economy.format( bonusClaimBlockValue ));
         
-        double wealth = balance + accruedClaimBlocks + bonusClaimBlocks;
+        double wealth = balance + accruedClaimBlockValue + bonusClaimBlockValue;
         sender.sendMessage( "Wealth: " + economy.format( wealth ));
 
         return true;

@@ -28,8 +28,9 @@ package com.queuedpixel.stimuluspackage;
 
 public class StimulusPackageConfiguration
 {
-    private final long economicInterval = 604800; // seconds; one week
-    private final long stimulusInterval = 86400;  // seconds; one day
+    private final long   economicInterval = 604800; // seconds; one week
+    private final long   stimulusInterval = 86400;  // seconds; one day
+    private final double claimBlockValue  = 1.0;    // value of claim blocks in in-game currency
 
     long getEconomicInterval()
     {
@@ -39,5 +40,10 @@ public class StimulusPackageConfiguration
     long getStimulusInterval()
     {
         return this.stimulusInterval;
+    }
+
+    double getClaimBlockValue()
+    {
+        return this.claimBlockValue;
     }
 }
