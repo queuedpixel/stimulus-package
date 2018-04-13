@@ -73,13 +73,13 @@ public class StimulusCommand implements CommandExecutor
             playerMap.put( player.getUniqueId(), 0l );
         }
 
-        int economicPlayers = 0;
-        int stimulusPlayers = 0;
+        int activeEconomicPlayers = 0;
+        int activeStimulusPlayers = 0;
 
         for ( Long loginInterval : playerMap.values() )
         {
-            if ( loginInterval < this.config.getEconomicInterval() ) economicPlayers++;
-            if ( loginInterval < this.config.getStimulusInterval() ) stimulusPlayers++;
+            if ( loginInterval < this.config.getEconomicInterval() ) activeEconomicPlayers++;
+            if ( loginInterval < this.config.getStimulusInterval() ) activeStimulusPlayers++;
         }
 
         // determine the actual volume of transactions that occurred during the economic interval
@@ -92,11 +92,11 @@ public class StimulusCommand implements CommandExecutor
         }
 
         // perform volume calculations
-        double totalDesiredVolume = this.config.getDesiredVolume() * economicPlayers;
+        double totalDesiredVolume = this.config.getDesiredVolume() * activeEconomicPlayers;
         double volumeDelta = totalDesiredVolume - actualVolume;
 
-        sender.sendMessage(
-                "Economic Players: " + economicPlayers + ", Stimulus Players: " + stimulusPlayers );
+        sender.sendMessage( "Economic Players: " + activeEconomicPlayers +
+                            ", Stimulus Players: " + activeStimulusPlayers );
         sender.sendMessage( "Desired Volume: " + totalDesiredVolume +
                             ", Actual Volume: " + actualVolume +
                             ", Delta: " + volumeDelta );
@@ -105,7 +105,7 @@ public class StimulusCommand implements CommandExecutor
 
         // compute total stimulus
         double stimulusFactor = volumeDelta / totalDesiredVolume;
-        double totalStimulus = stimulusFactor * this.config.getDesiredStimulus() * stimulusPlayers;
+        double totalStimulus = stimulusFactor * this.config.getDesiredStimulus() * activeStimulusPlayers;
         sender.sendMessage( "Stimulus Factor: " + stimulusFactor + ", Total Stimulus: " + totalStimulus );
 
         return true;
