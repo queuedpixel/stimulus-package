@@ -97,16 +97,17 @@ public class StimulusCommand implements CommandExecutor
 
         sender.sendMessage( "Economic Players: " + activeEconomicPlayers +
                             ", Stimulus Players: " + activeStimulusPlayers );
-        sender.sendMessage( "Desired Volume: " + totalDesiredVolume +
-                            ", Actual Volume: " + actualVolume +
-                            ", Delta: " + volumeDelta );
+        sender.sendMessage( "Desired Volume: " + String.format( "%.2f", totalDesiredVolume ) +
+                            ", Actual Volume: " + String.format( "%.2f", actualVolume ) +
+                            ", Delta: " + String.format( "%.2f", volumeDelta ));
 
         if ( volumeDelta <= 0 ) return true;
 
         // compute total stimulus
         double stimulusFactor = volumeDelta / totalDesiredVolume;
         double totalStimulus = stimulusFactor * this.config.getDesiredStimulus() * activeStimulusPlayers;
-        sender.sendMessage( "Stimulus Factor: " + stimulusFactor + ", Total Stimulus: " + totalStimulus );
+        sender.sendMessage( "Stimulus Factor: " + String.format( "%.2f", stimulusFactor ) +
+                            ", Total Stimulus: " + String.format( "%.2f", totalStimulus ));
 
         return true;
     }
