@@ -101,16 +101,6 @@ public class StimulusCommand implements CommandExecutor
                             ", Actual Volume: " + actualVolume +
                             ", Delta: " + volumeDelta );
 
-        sender.sendMessage( "Recent Transactions:" );
-
-        int transactionCount = 0;
-        for ( Iterator< Transaction > iterator = plugin.getTransactionIterator(); iterator.hasNext(); )
-        {
-            Transaction transaction = iterator.next();
-            if ( ++transactionCount > 10 ) break;
-            sender.sendMessage( transaction.getTimestamp() + " - " + transaction.getAmount() );
-        }
-
         return true;
     }
 }
