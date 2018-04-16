@@ -52,6 +52,8 @@ public class StimulusPackagePlugin extends JavaPlugin
 
     public void onEnable()
     {
+        this.getLogger().info( "onEnable() is called!" );
+
         if ( Files.exists( this.transactionsFile ))
         {
             try
@@ -75,7 +77,6 @@ public class StimulusPackagePlugin extends JavaPlugin
                 Bukkit.getServer().getServicesManager().getRegistration( Economy.class );
         this.economy = rsp.getProvider();
 
-        getLogger().info( "onEnable is called!" );
         this.getCommand( "stimulus" ).setExecutor( new StimulusCommand( this ));
         this.getCommand( "wealth" ).setExecutor( new WealthCommand( this ));
         this.getServer().getPluginManager().registerEvents( new StimulusPackageListener( this ), this );
@@ -83,7 +84,7 @@ public class StimulusPackagePlugin extends JavaPlugin
 
     public void onDisable()
     {
-        getLogger().info( "onDisable is called!" );
+        getLogger().info( "onDisable() is called!" );
     }
 
     StimulusPackageConfiguration getConfiguration()
