@@ -33,6 +33,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -53,8 +54,9 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     private final Path pluginDirectory = Paths.get( "plugins/StimulusPackage" );
     private final Path transactionsFile = Paths.get( "plugins/StimulusPackage/transactions.txt" );
     private final StimulusPackageConfiguration config = new StimulusPackageConfiguration();
-    private final LinkedList< Transaction > transactions = new LinkedList< Transaction >();
+    private final Collection< Transaction > transactions = new LinkedList< Transaction >();
     private Economy economy;
+    private double actualVolume = 0;
 
     public void onEnable()
     {
@@ -81,7 +83,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
                 while ( line != null )
                 {
                     // add each transaction to our linked list
-                    this.transactions.add( new Transaction( line ));
+                    this.addTransaction( new Transaction( line ));
                     line = reader.readLine();
                 }
             }
@@ -111,7 +113,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         long timestamp = new Date().getTime();
         double amount = event.getTransaction().getAmount();
         Transaction transaction = new Transaction( timestamp, amount );
-        this.transactions.add( transaction );
+        this.addTransaction( transaction );
         this.appendToFile( this.transactionsFile, transaction.toString() );
 
         int fractionalDigits = this.economy.fractionalDigits();
@@ -134,6 +136,28 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     Economy getEconomy()
     {
         return this.economy;
+    }
+
+    double getActualVolume( long now )
+    {
+        for ( Iterator< Transaction > iterator = this.transactions.iterator(); iterator.hasNext(); )
+        {
+            Transaction transaction = iterator.next();
+            long transactionAge = ( now - transaction.getTimestamp() ) / 1000;
+            if ( transactionAge > this.config.getEconomicInterval() )
+            {
+                // remove transaction that is outside the economic time interval
+                this.actualVolume -= transaction.getAmount();
+                iterator.remove();
+            }
+            else
+            {
+                // all remaining transactions are within the economic time interval
+                break;
+            }
+        }
+
+        return this.actualVolume;
     }
 
     private String formatEconomable( Economable economable )
@@ -160,8 +184,9 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         }
     }
 
-    Iterator< Transaction > getTransactionIterator()
+    private void addTransaction( Transaction transaction )
     {
-        return this.transactions.descendingIterator();
+        this.transactions.add( transaction );
+        this.actualVolume += transaction.getAmount();
     }
 }

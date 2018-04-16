@@ -29,7 +29,6 @@ package com.queuedpixel.stimuluspackage;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -82,16 +81,8 @@ public class StimulusCommand implements CommandExecutor
             if ( loginInterval < this.config.getStimulusInterval() ) activeStimulusPlayers++;
         }
 
-        // determine the actual volume of transactions that occurred during the economic interval
-        double actualVolume = 0;
-        for ( Iterator< Transaction > iterator = plugin.getTransactionIterator(); iterator.hasNext(); )
-        {
-            Transaction transaction = iterator.next();
-            long transactionAge = ( now - transaction.getTimestamp() ) / 1000;
-            if ( transactionAge < this.config.getEconomicInterval() ) actualVolume += transaction.getAmount();
-        }
-
         // perform volume calculations
+        double actualVolume = this.plugin.getActualVolume( now );
         double totalDesiredVolume = this.config.getDesiredVolume() * activeEconomicPlayers;
         double volumeDelta = totalDesiredVolume - actualVolume;
 
