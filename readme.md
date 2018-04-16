@@ -15,7 +15,7 @@ This plugin does not currently match our proposed implementation.
     - `[payment interval]`: Time interval used to make stimulus payments to players.
     - `[desired volume]`: Desired economic activity per player over the last `[economic interval]`.
     - `[desired stimulus]`: Desired stimulus payment per player every `[payment interval]`.
-    - `[minimum payment factor]`: Determines how much the richest player gets paid.
+    - `[minimum payment factor]`: Determines how much the wealthiest player gets paid.
 - Track `[active economic players]` for the past `[economic interval]`.
 - Track `[active stimulus players]` for the past `[stimulus interval]`.
 - A player who spends any time at all on the server during the specified time interval is considered active.
@@ -40,10 +40,11 @@ This plugin does not currently match our proposed implementation.
             - Compute `[raw payment factor]`: 1 - ( `[player's offset]` / `[wealth delta]` )
             - Compute `[payment factor]`:
               (( 1 - `[minimum payment factor]` ) * `[raw payment factor]` ) + `[minimum payment factor]`
-    - Assign the sum of `[payment factor]` for all active players to `[payment factor sum]`.
-    - Compute an `[adjusted payment factor]` for each active player: `[payment factor]` / `[payment factor sum]`
-    - Compute a `[payment amount]` for each active player: `[adjusted payment factor]` * `[total stimulus]`
-    - Pay each active player their `[payment amount]`.
+    - Assign the sum of `[payment factor]` for all active stimulus players to `[payment factor sum]`.
+    - Compute an `[adjusted payment factor]` for each active stimulus player:
+      `[payment factor]` / `[payment factor sum]`
+    - Compute a `[payment amount]` for each active stimulus player: `[adjusted payment factor]` * `[total stimulus]`
+    - Pay each active stimulus player their `[payment amount]`.
 
 ## Proposed Default Configuration
 
