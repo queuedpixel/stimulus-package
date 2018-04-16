@@ -29,15 +29,15 @@ This plugin does not currently match our proposed implementation.
     - If `[volume delta]` is less than or equal to 0, skip the rest.
     - Compute `[stimulus factor]`: `[volume delta]` / `[total desired volume]`
     - Compute `[total stimulus]`: `[stimulus factor]` * `[desired stimulus]` * `[active stimulus players]`
-    - Assign the amount of money owned by the wealthiest active player(s) to `[highest money]`.
-    - Assign the amount of money owned by the poorest active player(s) to `[lowest money]`.
-    - Compute `[money delta]`: `[highest money]` - `[lowest money]`
+    - Assign the wealth of the wealthiest active stimulus player(s) to `[highest wealth]`.
+    - Assign the wealth of the poorest active stimulus player(s) to `[lowest wealth]`.
+    - Compute `[wealth delta]`: `[highest wealth]` - `[lowest wealth]`
     - Compute a `[payment factor]` for each active stimulus player:
-        - If all active players have the same amount of money, or there is only one active player, use 1.
+        - If all active stimulus players have the same wealth, or there is only one active stimulus player, use 1.
         - Otherwise:
-            - Assign the amount of money owned by a player to `[player's money]`.
-            - Compute `[player's offset]`: `[player's money]` - `[lowest money]`
-            - Compute `[raw payment factor]`: 1 - ( `[player's offset]` / `[money delta]` )
+            - Assign the amount of wealth owned by a player to `[player's wealth]`.
+            - Compute `[player's offset]`: `[player's wealth]` - `[lowest wealth]`
+            - Compute `[raw payment factor]`: 1 - ( `[player's offset]` / `[wealth delta]` )
             - Compute `[payment factor]`:
               (( 1 - `[minimum payment factor]` ) * `[raw payment factor]` ) + `[minimum payment factor]`
     - Assign the sum of `[payment factor]` for all active players to `[payment factor sum]`.
