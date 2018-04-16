@@ -33,16 +33,22 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.appledash.saneeconomy.economy.economable.Economable;
+import org.appledash.saneeconomy.event.SaneEconomyTransactionEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.milkbowl.vault.economy.Economy;
 
-public class StimulusPackagePlugin extends JavaPlugin
+public class StimulusPackagePlugin extends JavaPlugin implements Listener
 {
     private final Path pluginDirectory = Paths.get( "plugins/StimulusPackage" );
     private final Path transactionsFile = Paths.get( "plugins/StimulusPackage/transactions.txt" );
@@ -91,12 +97,33 @@ public class StimulusPackagePlugin extends JavaPlugin
 
         this.getCommand( "stimulus" ).setExecutor( new StimulusCommand( this ));
         this.getCommand( "wealth" ).setExecutor( new WealthCommand( this ));
-        this.getServer().getPluginManager().registerEvents( new StimulusPackageListener( this ), this );
+        this.getServer().getPluginManager().registerEvents( this, this );
     }
 
     public void onDisable()
     {
-        getLogger().info( "onDisable() is called!" );
+        this.getLogger().info( "onDisable() is called!" );
+    }
+
+    @EventHandler
+    public void onSaneEconomyTransactionEvent( SaneEconomyTransactionEvent event )
+    {
+        long timestamp = new Date().getTime();
+        double amount = event.getTransaction().getAmount();
+        Transaction transaction = new Transaction( timestamp, amount );
+        this.transactions.add( transaction );
+        this.appendToFile( this.transactionsFile, transaction.toString() );
+
+        int fractionalDigits = this.economy.fractionalDigits();
+        String currencyFormat = ( fractionalDigits > -1 ) ? "%." + fractionalDigits + "f" : "%f";
+        String logEntry = String.format(
+                "%tF %<tT.%<tL, " + currencyFormat + ", %s, %s, %s",
+                timestamp, amount, event.getTransaction().getReason(),
+                this.formatEconomable( event.getTransaction().getSender() ),
+                this.formatEconomable( event.getTransaction().getReceiver() ));
+        Path logFile = Paths.get( String.format( "plugins/StimulusPackage/%tF.log", timestamp ));
+        this.appendToFile( logFile, logEntry );
+        this.getLogger().info( "Economy Transaction: " + logEntry );
     }
 
     StimulusPackageConfiguration getConfiguration()
@@ -109,15 +136,21 @@ public class StimulusPackagePlugin extends JavaPlugin
         return this.economy;
     }
 
-    void addTransaction( Transaction transaction )
+    private String formatEconomable( Economable economable )
     {
-        this.transactions.add( transaction );
+        String result = economable.getUniqueIdentifier();
+        OfflinePlayer player = economable.tryCastToPlayer();
+        if ( player != null ) result += " [" + player.getName() + "]";
+        return result;
+    }
 
+    private void appendToFile( Path file, String line )
+    {
         try
         {
             BufferedWriter writer = Files.newBufferedWriter(
-                    this.transactionsFile, StandardOpenOption.CREATE, StandardOpenOption.APPEND );
-            writer.write( transaction.toString() );
+                    file, StandardOpenOption.CREATE, StandardOpenOption.APPEND );
+            writer.write( line );
             writer.newLine();
             writer.close();
         }
