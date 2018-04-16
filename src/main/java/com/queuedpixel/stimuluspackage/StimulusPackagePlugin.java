@@ -54,6 +54,18 @@ public class StimulusPackagePlugin extends JavaPlugin
     {
         this.getLogger().info( "onEnable() is called!" );
 
+        if ( !Files.exists( this.pluginDirectory ))
+        {
+            try
+            {
+                Files.createDirectory( this.pluginDirectory );
+            }
+            catch ( IOException e )
+            {
+                e.printStackTrace();
+            }
+        }
+
         if ( Files.exists( this.transactionsFile ))
         {
             try
@@ -103,7 +115,6 @@ public class StimulusPackagePlugin extends JavaPlugin
 
         try
         {
-            if ( !Files.exists( this.pluginDirectory )) Files.createDirectory( this.pluginDirectory );
             BufferedWriter writer = Files.newBufferedWriter(
                     this.transactionsFile, StandardOpenOption.CREATE, StandardOpenOption.APPEND );
             writer.write( transaction.toString() );
