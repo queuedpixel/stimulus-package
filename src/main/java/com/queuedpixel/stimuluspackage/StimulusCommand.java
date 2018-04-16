@@ -127,8 +127,9 @@ public class StimulusCommand implements CommandExecutor
         }
 
         double wealthDelta = highestWealth - lowestWealth;
-        sender.sendMessage( "Highest Wealth: " + highestWealth + ", Lowest Wealth: " + lowestWealth +
-                            ", Wealth Delta: " + wealthDelta );
+        sender.sendMessage( "Highest Wealth: " + String.format( "%.2f", highestWealth ) +
+                            ", Lowest Wealth: " + String.format( "%.2f", lowestWealth ) +
+                            ", Wealth Delta: " + String.format( "%.2f", wealthDelta ));
         sender.sendMessage( "Player Payment Factors:" );
 
         // map players to payment factors
@@ -155,10 +156,10 @@ public class StimulusCommand implements CommandExecutor
 
             paymentFactorSum += playerPaymentFactorMap.get( player.getUniqueId() );
             sender.sendMessage( "    " + player.getUniqueId() + " - " +
-                                playerPaymentFactorMap.get( player.getUniqueId() ));
+                                String.format( "%.2f", playerPaymentFactorMap.get( player.getUniqueId() )));
         }
 
-        sender.sendMessage( "Sum: " + paymentFactorSum );
+        sender.sendMessage( "Sum: " + String.format( "%.2f", paymentFactorSum ));
         sender.sendMessage( "Player Payments:" );
 
         // compute the payment for each player
@@ -171,7 +172,8 @@ public class StimulusCommand implements CommandExecutor
             double adjustedPaymentFactor =
                     playerPaymentFactorMap.get( player.getUniqueId() ) / paymentFactorSum;
             double playerPayment = adjustedPaymentFactor * totalStimulus;
-            sender.sendMessage( "    " + player.getUniqueId() + " - " + playerPayment );
+            sender.sendMessage( "    " + player.getUniqueId() + " - " +
+                                String.format( "%.2f", playerPayment ));
         }
 
         return true;
