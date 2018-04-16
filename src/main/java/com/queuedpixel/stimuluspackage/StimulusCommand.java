@@ -159,6 +159,20 @@ public class StimulusCommand implements CommandExecutor
         }
 
         sender.sendMessage( "Sum: " + paymentFactorSum );
+        sender.sendMessage( "Player Payments:" );
+
+        // compute the payment for each player
+        for ( OfflinePlayer player : offlinePlayers )
+        {
+            // skip players who are not active stimulus players
+            long loginInterval = playerMap.get( player.getUniqueId() );
+            if ( loginInterval >= this.config.getStimulusInterval() ) continue;
+
+            double adjustedPaymentFactor =
+                    playerPaymentFactorMap.get( player.getUniqueId() ) / paymentFactorSum;
+            double playerPayment = adjustedPaymentFactor * totalStimulus;
+            sender.sendMessage( "    " + player.getUniqueId() + " - " + playerPayment );
+        }
 
         return true;
     }
