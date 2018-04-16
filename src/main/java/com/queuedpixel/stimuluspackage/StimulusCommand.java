@@ -94,7 +94,7 @@ public class StimulusCommand implements CommandExecutor
                             ", Actual Volume: " + String.format( "%.2f", actualVolume ) +
                             ", Delta: " + String.format( "%.2f", volumeDelta ));
 
-        if ( volumeDelta <= 0 ) return true;
+        if (( volumeDelta <= 0 ) || ( activeStimulusPlayers == 0 )) return true;
 
         // compute total stimulus
         double stimulusFactor = volumeDelta / totalDesiredVolume;
