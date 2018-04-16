@@ -107,12 +107,19 @@ public class StimulusCommand implements CommandExecutor
         double lowestWealth = Double.POSITIVE_INFINITY;
         for ( OfflinePlayer player : offlinePlayers )
         {
+            // skip players who are not active stimulus players
+            long loginInterval = playerMap.get( player.getUniqueId() );
+            if ( loginInterval >= this.config.getStimulusInterval() ) continue;
+
+            // determine the wealth of the player
             double balance = this.plugin.getEconomy().getBalance( player );
             PlayerData playerData =
                     this.plugin.getGriefPrevention().dataStore.getPlayerData( player.getUniqueId() );
             double accruedClaimBlockValue = playerData.getAccruedClaimBlocks() * config.getClaimBlockValue();
             double bonusClaimBlockValue = playerData.getBonusClaimBlocks() * config.getClaimBlockValue();
             double wealth = balance + accruedClaimBlockValue + bonusClaimBlockValue;
+
+            // adjust highest and lowest wealth
             if ( wealth > highestWealth ) highestWealth = wealth;
             if ( wealth < lowestWealth  ) lowestWealth  = wealth;
         }
