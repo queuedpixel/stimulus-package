@@ -47,6 +47,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import net.milkbowl.vault.economy.Economy;
 
 public class StimulusPackagePlugin extends JavaPlugin implements Listener
@@ -56,6 +57,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     private final StimulusPackageConfiguration config = new StimulusPackageConfiguration();
     private final Collection< Transaction > transactions = new LinkedList< Transaction >();
     private Economy economy;
+    private GriefPrevention griefPrevention;
     private double actualVolume = 0;
 
     public void onEnable()
@@ -96,6 +98,8 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         RegisteredServiceProvider< Economy > rsp =
                 Bukkit.getServer().getServicesManager().getRegistration( Economy.class );
         this.economy = rsp.getProvider();
+        this.griefPrevention =
+                (GriefPrevention) Bukkit.getServer().getPluginManager().getPlugin( "GriefPrevention" );
 
         this.getCommand( "stimulus" ).setExecutor( new StimulusCommand( this ));
         this.getCommand( "wealth" ).setExecutor( new WealthCommand( this ));
@@ -136,6 +140,11 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     Economy getEconomy()
     {
         return this.economy;
+    }
+
+    GriefPrevention getGriefPrevention()
+    {
+        return this.griefPrevention;
     }
 
     double getActualVolume( long now )

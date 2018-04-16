@@ -39,6 +39,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.ryanhamshire.GriefPrevention.PlayerData;
+
 public class StimulusCommand implements CommandExecutor
 {
     private final StimulusPackagePlugin plugin;
@@ -99,6 +101,25 @@ public class StimulusCommand implements CommandExecutor
         double totalStimulus = stimulusFactor * this.config.getDesiredStimulus() * activeStimulusPlayers;
         sender.sendMessage( "Stimulus Factor: " + String.format( "%.2f", stimulusFactor ) +
                             ", Total Stimulus: " + String.format( "%.2f", totalStimulus ));
+
+        // determine the wealth of the wealthiest and poorest players
+        double highestWealth = Double.NEGATIVE_INFINITY;
+        double lowestWealth = Double.POSITIVE_INFINITY;
+        for ( OfflinePlayer player : offlinePlayers )
+        {
+            double balance = this.plugin.getEconomy().getBalance( player );
+            PlayerData playerData =
+                    this.plugin.getGriefPrevention().dataStore.getPlayerData( player.getUniqueId() );
+            double accruedClaimBlockValue = playerData.getAccruedClaimBlocks() * config.getClaimBlockValue();
+            double bonusClaimBlockValue = playerData.getBonusClaimBlocks() * config.getClaimBlockValue();
+            double wealth = balance + accruedClaimBlockValue + bonusClaimBlockValue;
+            if ( wealth > highestWealth ) highestWealth = wealth;
+            if ( wealth < lowestWealth  ) lowestWealth  = wealth;
+        }
+
+        double wealthDelta = highestWealth - lowestWealth;
+        sender.sendMessage( "Highest Wealth: " + highestWealth + ", Lowest Wealth: " + lowestWealth +
+                            ", Wealth Delta: " + wealthDelta );
 
         return true;
     }

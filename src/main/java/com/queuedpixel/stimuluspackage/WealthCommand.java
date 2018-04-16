@@ -26,7 +26,6 @@ SOFTWARE.
 
 package com.queuedpixel.stimuluspackage;
 
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -41,11 +40,13 @@ public class WealthCommand implements CommandExecutor
 {
     private final StimulusPackageConfiguration config;
     private final Economy economy;
+    private final GriefPrevention griefPrevention;
 
     public WealthCommand( StimulusPackagePlugin plugin )
     {
         this.config = plugin.getConfiguration();
         this.economy = plugin.getEconomy();
+        this.griefPrevention = plugin.getGriefPrevention();
     }
 
     public boolean onCommand( CommandSender sender, Command command, String label, String[] args )
@@ -62,9 +63,7 @@ public class WealthCommand implements CommandExecutor
         double balance = this.economy.getBalance( player );
         sender.sendMessage( "Balance: " + this.economy.format( balance ));
 
-        GriefPrevention griefPrevention =
-                (GriefPrevention) Bukkit.getServer().getPluginManager().getPlugin( "GriefPrevention" );
-        PlayerData playerData = griefPrevention.dataStore.getPlayerData( player.getUniqueId() );
+        PlayerData playerData = this.griefPrevention.dataStore.getPlayerData( player.getUniqueId() );
 
         double accruedClaimBlockValue = playerData.getAccruedClaimBlocks() * config.getClaimBlockValue();
         sender.sendMessage( "Accrued Claim Block Value: " + this.economy.format( accruedClaimBlockValue ));
