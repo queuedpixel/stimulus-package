@@ -103,6 +103,7 @@ public class StimulusCommand implements CommandExecutor
                             ", Total Stimulus: " + String.format( "%.2f", totalStimulus ));
 
         // determine the wealth of the wealthiest and poorest players
+        Map< UUID, Double > playerWealthMap = new HashMap< UUID, Double >();
         double highestWealth = Double.NEGATIVE_INFINITY;
         double lowestWealth = Double.POSITIVE_INFINITY;
         for ( OfflinePlayer player : offlinePlayers )
@@ -118,6 +119,7 @@ public class StimulusCommand implements CommandExecutor
             double accruedClaimBlockValue = playerData.getAccruedClaimBlocks() * config.getClaimBlockValue();
             double bonusClaimBlockValue = playerData.getBonusClaimBlocks() * config.getClaimBlockValue();
             double wealth = balance + accruedClaimBlockValue + bonusClaimBlockValue;
+            playerWealthMap.put( player.getUniqueId(), wealth );
 
             // adjust highest and lowest wealth
             if ( wealth > highestWealth ) highestWealth = wealth;
@@ -127,6 +129,36 @@ public class StimulusCommand implements CommandExecutor
         double wealthDelta = highestWealth - lowestWealth;
         sender.sendMessage( "Highest Wealth: " + highestWealth + ", Lowest Wealth: " + lowestWealth +
                             ", Wealth Delta: " + wealthDelta );
+        sender.sendMessage( "Player Payment Factors:" );
+
+        // map players to payment factors
+        Map< UUID, Double > playerPaymentFactorMap = new HashMap< UUID, Double >();
+        double paymentFactorSum = 0;
+        for ( OfflinePlayer player : offlinePlayers )
+        {
+            // skip players who are not active stimulus players
+            long loginInterval = playerMap.get( player.getUniqueId() );
+            if ( loginInterval >= this.config.getStimulusInterval() ) continue;
+
+            if ( highestWealth == lowestWealth )
+            {
+                playerPaymentFactorMap.put( player.getUniqueId(), 1.0 );
+            }
+            else
+            {
+                double playerOffset = playerWealthMap.get( player.getUniqueId() ) - lowestWealth;
+                double rawPaymentFactor = 1 - ( playerOffset / wealthDelta );
+                double paymentFactor = (( 1 - config.getMinimumPaymentFactor() ) * rawPaymentFactor ) +
+                                       config.getMinimumPaymentFactor();
+                playerPaymentFactorMap.put( player.getUniqueId(), paymentFactor );
+            }
+
+            paymentFactorSum += playerPaymentFactorMap.get( player.getUniqueId() );
+            sender.sendMessage( "    " + player.getUniqueId() + " - " +
+                                playerPaymentFactorMap.get( player.getUniqueId() ));
+        }
+
+        sender.sendMessage( "Sum: " + paymentFactorSum );
 
         return true;
     }
