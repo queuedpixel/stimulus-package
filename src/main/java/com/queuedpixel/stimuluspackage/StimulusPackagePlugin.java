@@ -53,7 +53,7 @@ import net.milkbowl.vault.economy.Economy;
 public class StimulusPackagePlugin extends JavaPlugin implements Listener
 {
     private final Path pluginDirectory = Paths.get( "plugins/StimulusPackage" );
-    private final Path transactionsFile = Paths.get( "plugins/StimulusPackage/transactions.txt" );
+    private final Path transactionsFile = this.pluginDirectory.resolve( "transactions.txt" );
     private final StimulusPackageConfiguration config = new StimulusPackageConfiguration();
     private final Collection< Transaction > transactions = new LinkedList< Transaction >();
     private Economy economy;
@@ -127,7 +127,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
                 timestamp, amount, event.getTransaction().getReason(),
                 this.formatEconomable( event.getTransaction().getSender() ),
                 this.formatEconomable( event.getTransaction().getReceiver() ));
-        Path logFile = Paths.get( String.format( "plugins/StimulusPackage/%tF.log", timestamp ));
+        Path logFile = this.pluginDirectory.resolve( String.format( "%tF.log", timestamp ));
         this.appendToFile( logFile, logEntry );
         this.getLogger().info( "Economy Transaction: " + logEntry );
     }
