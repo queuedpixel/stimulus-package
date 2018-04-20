@@ -53,6 +53,7 @@ import net.milkbowl.vault.economy.Economy;
 public class StimulusPackagePlugin extends JavaPlugin implements Listener
 {
     private final Path pluginDirectory = Paths.get( "plugins/StimulusPackage" );
+    private final Path logDirectory = this.pluginDirectory.resolve( "logs" );
     private final Path transactionsFile = this.pluginDirectory.resolve( "transactions.txt" );
     private final StimulusPackageConfiguration config = new StimulusPackageConfiguration();
     private final Collection< Transaction > transactions = new LinkedList< Transaction >();
@@ -64,16 +65,14 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     {
         this.getLogger().info( "onEnable() is called!" );
 
-        if ( !Files.exists( this.pluginDirectory ))
+        try
         {
-            try
-            {
-                Files.createDirectory( this.pluginDirectory );
-            }
-            catch ( IOException e )
-            {
-                e.printStackTrace();
-            }
+            if ( !Files.exists( this.pluginDirectory )) Files.createDirectory( this.pluginDirectory );
+            if ( !Files.exists( this.logDirectory    )) Files.createDirectory( this.logDirectory    );
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
         }
 
         if ( Files.exists( this.transactionsFile ))
@@ -127,7 +126,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
                 timestamp, amount, event.getTransaction().getReason(),
                 this.formatEconomable( event.getTransaction().getSender() ),
                 this.formatEconomable( event.getTransaction().getReceiver() ));
-        Path logFile = this.pluginDirectory.resolve( String.format( "%tF.log", timestamp ));
+        Path logFile = this.logDirectory.resolve( String.format( "SaneEconomy-%tF.log", timestamp ));
         this.appendToFile( logFile, logEntry );
         this.getLogger().info( "Economy Transaction: " + logEntry );
     }
