@@ -126,8 +126,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
                 timestamp, amount, event.getTransaction().getReason(),
                 this.formatEconomable( event.getTransaction().getSender() ),
                 this.formatEconomable( event.getTransaction().getReceiver() ));
-        Path logFile = this.logDirectory.resolve( String.format( "SaneEconomy-%tF.log", timestamp ));
-        this.appendToFile( logFile, logEntry );
+        this.appendToFile( this.getLogFile( "SaneEconomy", timestamp ), logEntry );
         this.getLogger().info( "Economy Transaction: " + logEntry );
     }
 
@@ -144,6 +143,11 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     GriefPrevention getGriefPrevention()
     {
         return this.griefPrevention;
+    }
+
+    Path getLogFile( String prefix, long timestamp )
+    {
+        return this.logDirectory.resolve( String.format( "%s-%tF.log", prefix, timestamp ));
     }
 
     double getActualVolume( long now )
@@ -168,15 +172,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         return this.actualVolume;
     }
 
-    private String formatEconomable( Economable economable )
-    {
-        String result = economable.getUniqueIdentifier();
-        OfflinePlayer player = economable.tryCastToPlayer();
-        if ( player != null ) result += " [" + player.getName() + "]";
-        return result;
-    }
-
-    private void appendToFile( Path file, String line )
+    void appendToFile( Path file, String line )
     {
         try
         {
@@ -190,6 +186,14 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         {
             e.printStackTrace();
         }
+    }
+
+    private String formatEconomable( Economable economable )
+    {
+        String result = economable.getUniqueIdentifier();
+        OfflinePlayer player = economable.tryCastToPlayer();
+        if ( player != null ) result += " [" + player.getName() + "]";
+        return result;
     }
 
     private void addTransaction( Transaction transaction )

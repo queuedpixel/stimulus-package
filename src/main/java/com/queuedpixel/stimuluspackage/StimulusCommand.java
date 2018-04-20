@@ -26,6 +26,7 @@ SOFTWARE.
 
 package com.queuedpixel.stimuluspackage;
 
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -54,8 +55,13 @@ public class StimulusCommand implements CommandExecutor
 
     public boolean onCommand( CommandSender sender, Command command, String label, String[] args )
     {
+        sender.sendMessage( "Making stimulus payments..." );
+
         // current time
         long now = new Date().getTime();
+
+        // stimulus log file
+        Path logFile = plugin.getLogFile( "Stimulus", now );
 
         // map of players to the number of seconds since they were last on the server
         Map< UUID, Long > playerMap = new HashMap< UUID, Long >();
@@ -88,19 +94,19 @@ public class StimulusCommand implements CommandExecutor
         double totalDesiredVolume = this.config.getDesiredVolume() * activeEconomicPlayers;
         double volumeDelta = totalDesiredVolume - actualVolume;
 
-        sender.sendMessage( "Economic Players: " + activeEconomicPlayers +
-                            ", Stimulus Players: " + activeStimulusPlayers );
-        sender.sendMessage( "Desired Volume: " + String.format( "%.2f", totalDesiredVolume ) +
-                            ", Actual Volume: " + String.format( "%.2f", actualVolume ) +
-                            ", Delta: " + String.format( "%.2f", volumeDelta ));
+        plugin.appendToFile( logFile, "Economic Players: " + activeEconomicPlayers +
+                             ", Stimulus Players: " + activeStimulusPlayers );
+        plugin.appendToFile( logFile, "Desired Volume: " + String.format( "%.2f", totalDesiredVolume ) +
+                             ", Actual Volume: " + String.format( "%.2f", actualVolume ) +
+                             ", Delta: " + String.format( "%.2f", volumeDelta ));
 
         if (( volumeDelta <= 0 ) || ( activeStimulusPlayers == 0 )) return true;
 
         // compute total stimulus
         double stimulusFactor = volumeDelta / totalDesiredVolume;
         double totalStimulus = stimulusFactor * this.config.getDesiredStimulus() * activeStimulusPlayers;
-        sender.sendMessage( "Stimulus Factor: " + String.format( "%.2f", stimulusFactor ) +
-                            ", Total Stimulus: " + String.format( "%.2f", totalStimulus ));
+        plugin.appendToFile( logFile, "Stimulus Factor: " + String.format( "%.2f", stimulusFactor ) +
+                             ", Total Stimulus: " + String.format( "%.2f", totalStimulus ));
 
         // determine the wealth of the wealthiest and poorest players
         Map< UUID, Double > playerWealthMap = new HashMap< UUID, Double >();
@@ -127,10 +133,10 @@ public class StimulusCommand implements CommandExecutor
         }
 
         double wealthDelta = highestWealth - lowestWealth;
-        sender.sendMessage( "Highest Wealth: " + String.format( "%.2f", highestWealth ) +
-                            ", Lowest Wealth: " + String.format( "%.2f", lowestWealth ) +
-                            ", Wealth Delta: " + String.format( "%.2f", wealthDelta ));
-        sender.sendMessage( "Player Payment Factors:" );
+        plugin.appendToFile( logFile, "Highest Wealth: " + String.format( "%.2f", highestWealth ) +
+                             ", Lowest Wealth: " + String.format( "%.2f", lowestWealth ) +
+                             ", Wealth Delta: " + String.format( "%.2f", wealthDelta ));
+        plugin.appendToFile( logFile, "Player Payment Factors:" );
 
         // map players to payment factors
         Map< UUID, Double > playerPaymentFactorMap = new HashMap< UUID, Double >();
@@ -155,12 +161,12 @@ public class StimulusCommand implements CommandExecutor
             }
 
             paymentFactorSum += playerPaymentFactorMap.get( player.getUniqueId() );
-            sender.sendMessage( "    " + player.getUniqueId() + " - " +
-                                String.format( "%.2f", playerPaymentFactorMap.get( player.getUniqueId() )));
+            plugin.appendToFile( logFile, "    " + player.getUniqueId() + " - " +
+                                 String.format( "%.2f", playerPaymentFactorMap.get( player.getUniqueId() )));
         }
 
-        sender.sendMessage( "Sum: " + String.format( "%.2f", paymentFactorSum ));
-        sender.sendMessage( "Player Payments:" );
+        plugin.appendToFile( logFile, "Sum: " + String.format( "%.2f", paymentFactorSum ));
+        plugin.appendToFile( logFile, "Player Payments:" );
 
         // compute the payment for each player
         for ( OfflinePlayer player : offlinePlayers )
@@ -172,8 +178,8 @@ public class StimulusCommand implements CommandExecutor
             double adjustedPaymentFactor =
                     playerPaymentFactorMap.get( player.getUniqueId() ) / paymentFactorSum;
             double playerPayment = adjustedPaymentFactor * totalStimulus;
-            sender.sendMessage( "    " + player.getUniqueId() + " - " +
-                                String.format( "%.2f", playerPayment ));
+            plugin.appendToFile( logFile, "    " + player.getUniqueId() + " - " +
+                                 String.format( "%.2f", playerPayment ));
         }
 
         return true;
