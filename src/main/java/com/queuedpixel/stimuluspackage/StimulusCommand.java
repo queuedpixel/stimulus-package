@@ -30,6 +30,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.UUID;
 
@@ -82,13 +83,31 @@ public class StimulusCommand implements CommandExecutor
             playerMap.put( player.getUniqueId(), 0l );
         }
 
+        // count active players
         int activeEconomicPlayers = 0;
         int activeStimulusPlayers = 0;
+        Collection< UUID > activePlayers = new LinkedList< UUID >();
 
-        for ( Long loginInterval : playerMap.values() )
+        for ( UUID playerId : playerMap.keySet() )
         {
-            if ( loginInterval < this.config.getEconomicInterval() ) activeEconomicPlayers++;
-            if ( loginInterval < this.config.getStimulusInterval() ) activeStimulusPlayers++;
+            Long loginInterval = playerMap.get( playerId );
+            if (( loginInterval < this.config.getEconomicInterval() ) ||
+                ( loginInterval < this.config.getStimulusInterval() ))
+            {
+                activePlayers.add( playerId );
+                if ( loginInterval < this.config.getEconomicInterval() ) activeEconomicPlayers++;
+                if ( loginInterval < this.config.getStimulusInterval() ) activeStimulusPlayers++;
+            }
+        }
+
+        // log active players
+        plugin.appendToFile( logFile, "Economic Players: " + activeEconomicPlayers +
+                             ", Stimulus Players: " + activeStimulusPlayers );
+
+        for ( UUID playerId : playerMap.keySet() )
+        {
+            plugin.appendToFile(
+                    logFile, String.format( "    %s - %,d", playerId, playerMap.get( playerId )));
         }
 
         // perform volume calculations
@@ -96,8 +115,6 @@ public class StimulusCommand implements CommandExecutor
         double totalDesiredVolume = this.config.getDesiredVolume() * activeEconomicPlayers;
         double volumeDelta = totalDesiredVolume - actualVolume;
 
-        plugin.appendToFile( logFile, "Economic Players: " + activeEconomicPlayers +
-                             ", Stimulus Players: " + activeStimulusPlayers );
         plugin.appendToFile( logFile, "Desired Volume: " + String.format( "%.2f", totalDesiredVolume ) +
                              ", Actual Volume: " + String.format( "%.2f", actualVolume ) +
                              ", Delta: " + String.format( "%.2f", volumeDelta ));
