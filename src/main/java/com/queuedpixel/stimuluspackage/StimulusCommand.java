@@ -62,6 +62,8 @@ public class StimulusCommand implements CommandExecutor
 
         // stimulus log file
         Path logFile = plugin.getLogFile( "Stimulus", now );
+        plugin.appendToFile( logFile, "------------------------------------------------------------" );
+        plugin.appendToFile( logFile, String.format( "Time: %tF %<tT.%<tL", now ));
 
         // map of players to the number of seconds since they were last on the server
         Map< UUID, Long > playerMap = new HashMap< UUID, Long >();
