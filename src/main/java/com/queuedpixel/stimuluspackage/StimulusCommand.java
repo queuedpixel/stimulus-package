@@ -118,14 +118,14 @@ public class StimulusCommand implements CommandExecutor
         String formattedTotalDesiredVolume = this.plugin.getEconomy().format( totalDesiredVolume );
         String formattedActualVolume       = this.plugin.getEconomy().format( actualVolume       );
         String formattedVolumeDelta        = this.plugin.getEconomy().format( volumeDelta        );
-        int length = StimulusUtil.getMaxLength(
+        int volumeLength = StimulusUtil.getMaxLength(
                 formattedTotalDesiredVolume, formattedActualVolume, formattedVolumeDelta );
-        plugin.appendToFile(
-                logFile, String.format( "Desired Volume : %" + length + "s", formattedTotalDesiredVolume ));
-        plugin.appendToFile(
-                logFile, String.format( "Actual Volume  : %" + length + "s", formattedActualVolume ));
-        plugin.appendToFile(
-                logFile, String.format( "Volume Delta   : %" + length + "s", formattedVolumeDelta ));
+        plugin.appendToFile( logFile,
+                String.format( "Desired Volume : %" + volumeLength + "s", formattedTotalDesiredVolume ));
+        plugin.appendToFile( logFile,
+                String.format( "Actual Volume  : %" + volumeLength + "s", formattedActualVolume ));
+        plugin.appendToFile( logFile,
+                String.format( "Volume Delta   : %" + volumeLength + "s", formattedVolumeDelta ));
 
         if (( volumeDelta <= 0 ) || ( activeStimulusPlayers == 0 )) return true;
 
@@ -160,9 +160,19 @@ public class StimulusCommand implements CommandExecutor
         }
 
         double wealthDelta = highestWealth - lowestWealth;
-        plugin.appendToFile( logFile, "Highest Wealth: " + String.format( "%.2f", highestWealth ) +
-                             ", Lowest Wealth: " + String.format( "%.2f", lowestWealth ) +
-                             ", Wealth Delta: " + String.format( "%.2f", wealthDelta ));
+
+        String formattedHighestWealth = this.plugin.getEconomy().format( highestWealth );
+        String formattedLowestWealth  = this.plugin.getEconomy().format( lowestWealth  );
+        String formattedWealthDelta   = this.plugin.getEconomy().format( wealthDelta   );
+        int wealthLength = StimulusUtil.getMaxLength(
+                formattedHighestWealth, formattedLowestWealth, formattedWealthDelta );
+        plugin.appendToFile(
+                logFile, String.format( "Highest Wealth : %" + wealthLength + "s", formattedHighestWealth ));
+        plugin.appendToFile(
+                logFile, String.format( "Lowest Wealth  : %" + wealthLength + "s", formattedLowestWealth ));
+        plugin.appendToFile(
+                logFile, String.format( "Wealth Delta   : %" + wealthLength + "s", formattedWealthDelta ));
+
         plugin.appendToFile( logFile, "Player Payment Factors:" );
 
         // map players to payment factors
