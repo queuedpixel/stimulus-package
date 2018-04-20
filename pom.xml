@@ -54,9 +54,9 @@ SOFTWARE.
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.AppleDash</groupId>
+            <groupId>com.github.queuedpixel</groupId>
             <artifactId>SaneEconomy</artifactId>
-            <version>0.13.1</version>
+            <version>queuedpixel-build-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
