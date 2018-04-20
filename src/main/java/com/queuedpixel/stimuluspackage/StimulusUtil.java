@@ -24,16 +24,14 @@ SOFTWARE.
 
 */
 
-package com.queuedpixel.stimuluspackage.test;
+package com.queuedpixel.stimuluspackage;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
-class ExampleTest
+public class StimulusUtil
 {
-    @Test
-    void myFirstTest()
+    public static int getMaxLength( String... values )
     {
-        Assertions.assertEquals( 42, 12 + 30 );
+        int result = 0;
+        for ( String value : values ) if ( value.length() > result ) result = value.length();
+        return result;
     }
 }

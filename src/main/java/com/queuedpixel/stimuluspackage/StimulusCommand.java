@@ -115,9 +115,17 @@ public class StimulusCommand implements CommandExecutor
         double totalDesiredVolume = this.config.getDesiredVolume() * activeEconomicPlayers;
         double volumeDelta = totalDesiredVolume - actualVolume;
 
-        plugin.appendToFile( logFile, "Desired Volume: " + String.format( "%.2f", totalDesiredVolume ) +
-                             ", Actual Volume: " + String.format( "%.2f", actualVolume ) +
-                             ", Delta: " + String.format( "%.2f", volumeDelta ));
+        String formattedTotalDesiredVolume = this.plugin.getEconomy().format( totalDesiredVolume );
+        String formattedActualVolume       = this.plugin.getEconomy().format( actualVolume       );
+        String formattedVolumeDelta        = this.plugin.getEconomy().format( volumeDelta        );
+        int length = StimulusUtil.getMaxLength(
+                formattedTotalDesiredVolume, formattedActualVolume, formattedVolumeDelta );
+        plugin.appendToFile(
+                logFile, String.format( "Desired Volume : %" + length + "s", formattedTotalDesiredVolume ));
+        plugin.appendToFile(
+                logFile, String.format( "Actual Volume  : %" + length + "s", formattedActualVolume ));
+        plugin.appendToFile(
+                logFile, String.format( "Volume Delta   : %" + length + "s", formattedVolumeDelta ));
 
         if (( volumeDelta <= 0 ) || ( activeStimulusPlayers == 0 )) return true;
 
