@@ -132,8 +132,8 @@ public class StimulusCommand implements CommandExecutor
         // compute total stimulus
         double stimulusFactor = volumeDelta / totalDesiredVolume;
         double totalStimulus = stimulusFactor * this.config.getDesiredStimulus() * activeStimulusPlayers;
-        plugin.appendToFile( logFile, "Stimulus Factor: " + String.format( "%.2f", stimulusFactor ) +
-                             ", Total Stimulus: " + String.format( "%.2f", totalStimulus ));
+        plugin.appendToFile( logFile, "Stimulus Factor : " + stimulusFactor );
+        plugin.appendToFile( logFile, "Total Stimulus  : " + totalStimulus  );
 
         // determine the wealth of the wealthiest and poorest players
         Map< UUID, Double > playerWealthMap = new HashMap< UUID, Double >();
