@@ -26,9 +26,19 @@ SOFTWARE.
 
 package com.queuedpixel.stimuluspackage;
 
+import java.util.Collection;
+import java.util.LinkedList;
+
 public class StimulusUtil
 {
     public static int getMaxLength( String... values )
+    {
+        Collection< String > list = new LinkedList< String >();
+        for ( String value : values ) list.add( value );
+        return StimulusUtil.getMaxLength( list );
+    }
+
+    public static int getMaxLength( Collection< String > values )
     {
         int result = 0;
         for ( String value : values ) if ( value.length() > result ) result = value.length();

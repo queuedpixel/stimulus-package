@@ -173,6 +173,22 @@ public class StimulusCommand implements CommandExecutor
         plugin.appendToFile(
                 logFile, String.format( "Wealth Delta   : %" + wealthLength + "s", formattedWealthDelta ));
 
+        LinkedList< String > playerWealth = new LinkedList< String >();
+
+        for ( UUID playerId : playerWealthMap.keySet() )
+        {
+            playerWealth.add( this.plugin.getEconomy().format( playerWealthMap.get( playerId )));
+        }
+
+        int playerWealthLength = StimulusUtil.getMaxLength( playerWealth );
+
+        for ( UUID playerId : playerWealthMap.keySet() )
+        {
+            String wealth = this.plugin.getEconomy().format( playerWealthMap.get( playerId ));
+            plugin.appendToFile( logFile,
+                    String.format( "    %s - %" + playerWealthLength + "s", playerId, wealth ));
+        }
+
         plugin.appendToFile( logFile, "Player Payment Factors:" );
 
         // map players to payment factors
