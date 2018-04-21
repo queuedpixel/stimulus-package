@@ -189,11 +189,13 @@ public class StimulusCommand implements CommandExecutor
                     String.format( "    %s - %" + playerWealthLength + "s", playerId, wealth ));
         }
 
-        plugin.appendToFile( logFile, "Player Payment Factors:" );
+        plugin.appendToFile( logFile, "Raw Player Payment Factors:" );
 
         // map players to payment factors
         Map< UUID, Double > playerPaymentFactorMap = new HashMap< UUID, Double >();
         double paymentFactorSum = 0;
+        double rawPaymentFactor = 0;
+        double paymentFactor = 0;
         for ( OfflinePlayer player : offlinePlayers )
         {
             // skip players who are not active stimulus players
@@ -202,23 +204,29 @@ public class StimulusCommand implements CommandExecutor
 
             if ( highestWealth == lowestWealth )
             {
-                playerPaymentFactorMap.put( player.getUniqueId(), 1.0 );
+                rawPaymentFactor = 1;
+                paymentFactor = 1;
             }
             else
             {
                 double playerOffset = playerWealthMap.get( player.getUniqueId() ) - lowestWealth;
-                double rawPaymentFactor = 1 - ( playerOffset / wealthDelta );
-                double paymentFactor = (( 1 - config.getMinimumPaymentFactor() ) * rawPaymentFactor ) +
-                                       config.getMinimumPaymentFactor();
-                playerPaymentFactorMap.put( player.getUniqueId(), paymentFactor );
+                rawPaymentFactor = 1 - ( playerOffset / wealthDelta );
+                paymentFactor = (( 1 - config.getMinimumPaymentFactor() ) * rawPaymentFactor ) +
+                                config.getMinimumPaymentFactor();
             }
 
-            paymentFactorSum += playerPaymentFactorMap.get( player.getUniqueId() );
-            plugin.appendToFile( logFile, "    " + player.getUniqueId() + " - " +
-                                 String.format( "%.2f", playerPaymentFactorMap.get( player.getUniqueId() )));
+            paymentFactorSum += paymentFactor;
+            playerPaymentFactorMap.put( player.getUniqueId(), paymentFactor );
+            plugin.appendToFile( logFile, "    " + player.getUniqueId() + " - " + rawPaymentFactor );
         }
 
-        plugin.appendToFile( logFile, "Sum: " + String.format( "%.2f", paymentFactorSum ));
+        plugin.appendToFile( logFile, "Player Payment Factor Sum: " + paymentFactorSum );
+
+        for ( UUID playerId : playerPaymentFactorMap.keySet() )
+        {
+            plugin.appendToFile( logFile, "    " + playerId + " - " + playerPaymentFactorMap.get( playerId ));
+        }
+
         plugin.appendToFile( logFile, "Player Payments:" );
 
         // compute the payment for each player
