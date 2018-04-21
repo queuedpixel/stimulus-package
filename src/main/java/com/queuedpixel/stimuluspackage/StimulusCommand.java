@@ -65,6 +65,7 @@ public class StimulusCommand implements CommandExecutor
         Path logFile = plugin.getLogFile( "Stimulus", now );
         plugin.appendToFile( logFile, "------------------------------------------------------------" );
         plugin.appendToFile( logFile, String.format( "Time: %tF %<tT.%<tL", now ));
+        plugin.appendToFile( logFile, "" );
 
         // map of players to the number of seconds since they were last on the server
         Map< UUID, Long > playerMap = new HashMap< UUID, Long >();
@@ -120,6 +121,7 @@ public class StimulusCommand implements CommandExecutor
         String formattedVolumeDelta        = this.plugin.getEconomy().format( volumeDelta        );
         int volumeLength = StimulusUtil.getMaxLength(
                 formattedTotalDesiredVolume, formattedActualVolume, formattedVolumeDelta );
+        plugin.appendToFile( logFile, "" );
         plugin.appendToFile( logFile,
                 String.format( "Desired Volume : %" + volumeLength + "s", formattedTotalDesiredVolume ));
         plugin.appendToFile( logFile,
@@ -132,6 +134,7 @@ public class StimulusCommand implements CommandExecutor
         // compute total stimulus
         double stimulusFactor = volumeDelta / totalDesiredVolume;
         double totalStimulus = stimulusFactor * this.config.getDesiredStimulus() * activeStimulusPlayers;
+        plugin.appendToFile( logFile, "" );
         plugin.appendToFile( logFile, "Stimulus Factor : " + stimulusFactor );
         plugin.appendToFile( logFile, "Total Stimulus  : " + totalStimulus  );
 
@@ -166,6 +169,7 @@ public class StimulusCommand implements CommandExecutor
         String formattedWealthDelta   = this.plugin.getEconomy().format( wealthDelta   );
         int wealthLength = StimulusUtil.getMaxLength(
                 formattedHighestWealth, formattedLowestWealth, formattedWealthDelta );
+        plugin.appendToFile( logFile, "" );
         plugin.appendToFile(
                 logFile, String.format( "Highest Wealth : %" + wealthLength + "s", formattedHighestWealth ));
         plugin.appendToFile(
@@ -189,6 +193,7 @@ public class StimulusCommand implements CommandExecutor
                     String.format( "    %s - %" + playerWealthLength + "s", playerId, wealth ));
         }
 
+        plugin.appendToFile( logFile, "" );
         plugin.appendToFile( logFile, "Raw Player Payment Factors:" );
 
         // map players to payment factors
@@ -220,6 +225,7 @@ public class StimulusCommand implements CommandExecutor
             plugin.appendToFile( logFile, "    " + player.getUniqueId() + " - " + rawPaymentFactor );
         }
 
+        plugin.appendToFile( logFile, "" );
         plugin.appendToFile( logFile, "Player Payment Factor Sum: " + paymentFactorSum );
 
         for ( UUID playerId : playerPaymentFactorMap.keySet() )
@@ -241,6 +247,7 @@ public class StimulusCommand implements CommandExecutor
             playerPaymentMap.put( player.getUniqueId(), playerPayment );
         }
 
+        plugin.appendToFile( logFile, "" );
         plugin.appendToFile( logFile, "Player Payments:" );
         LinkedList< String > playerPayments = new LinkedList< String >();
 
