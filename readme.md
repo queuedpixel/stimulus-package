@@ -48,15 +48,15 @@ This plugin does not currently match our proposed implementation.
 
 ## Proposed Default Configuration
 
-- `[economic interval]`: One Week - 604,800 seconds
-- `[stimulus interval]`: One Day - 86,400 seconds
-- `[payment interval]`: Ten Minutes - 600 seconds
-- `[desired volume]`: 10,000
-- `[desired stimulus]`: 10
+- `[economic interval]`: 1 Week - 604,800 Seconds
+- `[stimulus interval]`: 1 Week - 604,800 Seconds
+- `[payment interval]`: 15 Minutes - 900 Seconds
+- `[desired volume]`: 1,000
+- `[desired stimulus]`: 1
 - `[minimum payment factor]`: 0
 
-With one player with no economic activity, that player would receive a payment of 10 currency every 10 minutes with a
-total payment of 10,080 currency over one week.
+With 1 player with no economic activity, that player would receive a payment of 1 currency every 15 minutes with a
+total payment of 672 currency over one week.
 
 ## Dependencies
 

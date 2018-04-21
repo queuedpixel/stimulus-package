@@ -29,9 +29,9 @@ package com.queuedpixel.stimuluspackage;
 public class StimulusPackageConfiguration
 {
     private final long   economicInterval     = 604800; // seconds; one week
-    private final long   stimulusInterval     = 86400;  // seconds; one day
-    private final double desiredVolume        = 10000;  // currency; desired volume
-    private final double desiredStimulus      = 10;     // currency; desired stimulus per player per payment
+    private final long   stimulusInterval     = 604800; // seconds; one week
+    private final double desiredVolume        = 1000;   // currency; desired volume
+    private final double desiredStimulus      = 1;      // currency; desired stimulus per player per payment
     private final double minimumPaymentFactor = 0;      // payment factor for the wealthiest player
     private final double claimBlockValue      = 1;      // currency; value of claim blocks
 
