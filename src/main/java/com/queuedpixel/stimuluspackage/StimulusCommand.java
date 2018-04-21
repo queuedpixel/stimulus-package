@@ -68,20 +68,20 @@ public class StimulusCommand implements CommandExecutor
         plugin.appendToFile( logFile, "" );
 
         // map of players to the number of seconds since they were last on the server
-        Map< UUID, Long > playerMap = new HashMap< UUID, Long >();
+        Map< UUID, Long > playerTimeMap = new HashMap< UUID, Long >();
 
         OfflinePlayer[] offlinePlayers = Bukkit.getOfflinePlayers();
         for ( OfflinePlayer player : offlinePlayers )
         {
             // store number of seconds since player was last on
-            playerMap.put( player.getUniqueId(), ( now - player.getLastPlayed() ) / 1000 );
+            playerTimeMap.put( player.getUniqueId(), ( now - player.getLastPlayed() ) / 1000 );
         }
 
         Collection< ? extends Player > onlinePlayers = Bukkit.getOnlinePlayers();
         for ( Player player : onlinePlayers )
         {
             // player is on right now, so zero seconds since they were last on the server
-            playerMap.put( player.getUniqueId(), 0l );
+            playerTimeMap.put( player.getUniqueId(), 0l );
         }
 
         // count active players
@@ -89,9 +89,9 @@ public class StimulusCommand implements CommandExecutor
         int activeStimulusPlayers = 0;
         Collection< UUID > activePlayers = new LinkedList< UUID >();
 
-        for ( UUID playerId : playerMap.keySet() )
+        for ( UUID playerId : playerTimeMap.keySet() )
         {
-            Long loginInterval = playerMap.get( playerId );
+            Long loginInterval = playerTimeMap.get( playerId );
             if (( loginInterval < this.config.getEconomicInterval() ) ||
                 ( loginInterval < this.config.getStimulusInterval() ))
             {
@@ -105,10 +105,20 @@ public class StimulusCommand implements CommandExecutor
         plugin.appendToFile( logFile, "Economic Players: " + activeEconomicPlayers +
                              ", Stimulus Players: " + activeStimulusPlayers );
 
-        for ( UUID playerId : playerMap.keySet() )
+        Map< UUID, String > formattedPlayerTimeMap = new HashMap< UUID, String >();
+
+        for ( UUID playerId : playerTimeMap.keySet() )
         {
-            plugin.appendToFile(
-                    logFile, String.format( "    %s - %,d", playerId, playerMap.get( playerId )));
+            formattedPlayerTimeMap.put( playerId, String.format( "%,d", playerTimeMap.get( playerId )));
+        }
+
+        int playerTimeLength = StimulusUtil.getMaxLength( formattedPlayerTimeMap.values() );
+
+        for ( UUID playerId : playerTimeMap.keySet() )
+        {
+            String time = formattedPlayerTimeMap.get( playerId );
+            plugin.appendToFile( logFile,
+                    String.format( "    %s - %" + playerTimeLength + "s", playerId, time ));
         }
 
         // perform volume calculations
@@ -145,7 +155,7 @@ public class StimulusCommand implements CommandExecutor
         for ( OfflinePlayer player : offlinePlayers )
         {
             // skip players who are not active stimulus players
-            long loginInterval = playerMap.get( player.getUniqueId() );
+            long loginInterval = playerTimeMap.get( player.getUniqueId() );
             if ( loginInterval >= this.config.getStimulusInterval() ) continue;
 
             // determine the wealth of the player
@@ -205,7 +215,7 @@ public class StimulusCommand implements CommandExecutor
         for ( OfflinePlayer player : offlinePlayers )
         {
             // skip players who are not active stimulus players
-            long loginInterval = playerMap.get( player.getUniqueId() );
+            long loginInterval = playerTimeMap.get( player.getUniqueId() );
             if ( loginInterval >= this.config.getStimulusInterval() ) continue;
 
             if ( highestWealth == lowestWealth )
@@ -239,7 +249,7 @@ public class StimulusCommand implements CommandExecutor
         for ( OfflinePlayer player : offlinePlayers )
         {
             // skip players who are not active stimulus players
-            long loginInterval = playerMap.get( player.getUniqueId() );
+            long loginInterval = playerTimeMap.get( player.getUniqueId() );
             if ( loginInterval >= this.config.getStimulusInterval() ) continue;
 
             double adjustedPaymentFactor =
