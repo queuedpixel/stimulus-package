@@ -227,9 +227,8 @@ public class StimulusCommand implements CommandExecutor
             plugin.appendToFile( logFile, "    " + playerId + " - " + playerPaymentFactorMap.get( playerId ));
         }
 
-        plugin.appendToFile( logFile, "Player Payments:" );
-
         // compute the payment for each player
+        Map< UUID, Double > playerPaymentMap = new HashMap< UUID, Double >();
         for ( OfflinePlayer player : offlinePlayers )
         {
             // skip players who are not active stimulus players
@@ -239,8 +238,24 @@ public class StimulusCommand implements CommandExecutor
             double adjustedPaymentFactor =
                     playerPaymentFactorMap.get( player.getUniqueId() ) / paymentFactorSum;
             double playerPayment = adjustedPaymentFactor * totalStimulus;
-            plugin.appendToFile( logFile, "    " + player.getUniqueId() + " - " +
-                                 String.format( "%.2f", playerPayment ));
+            playerPaymentMap.put( player.getUniqueId(), playerPayment );
+        }
+
+        plugin.appendToFile( logFile, "Player Payments:" );
+        LinkedList< String > playerPayments = new LinkedList< String >();
+
+        for ( UUID playerId : playerPaymentMap.keySet() )
+        {
+            playerPayments.add( this.plugin.getEconomy().format( playerPaymentMap.get( playerId )));
+        }
+
+        int playerPaymentLength = StimulusUtil.getMaxLength( playerPayments );
+
+        for ( UUID playerId : playerPaymentMap.keySet() )
+        {
+            String payment = this.plugin.getEconomy().format( playerPaymentMap.get( playerId ));
+            plugin.appendToFile( logFile,
+                    String.format( "    %s - %" + playerPaymentLength + "s", playerId, payment ));
         }
 
         return true;
