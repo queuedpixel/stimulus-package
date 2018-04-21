@@ -177,18 +177,19 @@ public class StimulusCommand implements CommandExecutor
         plugin.appendToFile(
                 logFile, String.format( "Wealth Delta   : %" + wealthLength + "s", formattedWealthDelta ));
 
-        LinkedList< String > playerWealth = new LinkedList< String >();
+        Map< UUID, String > formattedPlayerWealthMap = new HashMap< UUID, String >();
 
         for ( UUID playerId : playerWealthMap.keySet() )
         {
-            playerWealth.add( this.plugin.getEconomy().format( playerWealthMap.get( playerId )));
+            formattedPlayerWealthMap.put(
+                    playerId, this.plugin.getEconomy().format( playerWealthMap.get( playerId )));
         }
 
-        int playerWealthLength = StimulusUtil.getMaxLength( playerWealth );
+        int playerWealthLength = StimulusUtil.getMaxLength( formattedPlayerWealthMap.values() );
 
         for ( UUID playerId : playerWealthMap.keySet() )
         {
-            String wealth = this.plugin.getEconomy().format( playerWealthMap.get( playerId ));
+            String wealth = formattedPlayerWealthMap.get( playerId );
             plugin.appendToFile( logFile,
                     String.format( "    %s - %" + playerWealthLength + "s", playerId, wealth ));
         }
@@ -249,18 +250,19 @@ public class StimulusCommand implements CommandExecutor
 
         plugin.appendToFile( logFile, "" );
         plugin.appendToFile( logFile, "Player Payments:" );
-        LinkedList< String > playerPayments = new LinkedList< String >();
+        Map< UUID, String > formattedPlayerPaymentMap = new HashMap< UUID, String >();
 
         for ( UUID playerId : playerPaymentMap.keySet() )
         {
-            playerPayments.add( this.plugin.getEconomy().format( playerPaymentMap.get( playerId )));
+            formattedPlayerPaymentMap.put(
+                    playerId, this.plugin.getEconomy().format( playerPaymentMap.get( playerId )));
         }
 
-        int playerPaymentLength = StimulusUtil.getMaxLength( playerPayments );
+        int playerPaymentLength = StimulusUtil.getMaxLength( formattedPlayerPaymentMap.values() );
 
         for ( UUID playerId : playerPaymentMap.keySet() )
         {
-            String payment = this.plugin.getEconomy().format( playerPaymentMap.get( playerId ));
+            String payment = formattedPlayerPaymentMap.get( playerId );
             plugin.appendToFile( logFile,
                     String.format( "    %s - %" + playerPaymentLength + "s", playerId, payment ));
         }
