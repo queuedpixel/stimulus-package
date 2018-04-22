@@ -42,15 +42,18 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.ryanhamshire.GriefPrevention.PlayerData;
+import net.milkbowl.vault.economy.Economy;
 
 public class StimulusCommand implements CommandExecutor
 {
     private final StimulusPackagePlugin plugin;
+    private final Economy economy;
     private final StimulusPackageConfiguration config;
 
     public StimulusCommand( StimulusPackagePlugin plugin )
     {
         this.plugin = plugin;
+        this.economy = this.plugin.getEconomy();
         this.config = this.plugin.getConfiguration();
     }
 
@@ -126,9 +129,9 @@ public class StimulusCommand implements CommandExecutor
         double totalDesiredVolume = this.config.getDesiredVolume() * activeEconomicPlayers;
         double volumeDelta = totalDesiredVolume - actualVolume;
 
-        String formattedTotalDesiredVolume = this.plugin.getEconomy().format( totalDesiredVolume );
-        String formattedActualVolume       = this.plugin.getEconomy().format( actualVolume       );
-        String formattedVolumeDelta        = this.plugin.getEconomy().format( volumeDelta        );
+        String formattedTotalDesiredVolume = this.economy.format( totalDesiredVolume );
+        String formattedActualVolume       = this.economy.format( actualVolume       );
+        String formattedVolumeDelta        = this.economy.format( volumeDelta        );
         int volumeLength = StimulusUtil.getMaxLength(
                 formattedTotalDesiredVolume, formattedActualVolume, formattedVolumeDelta );
         plugin.appendToFile( logFile, "" );
@@ -159,7 +162,7 @@ public class StimulusCommand implements CommandExecutor
             if ( loginInterval >= this.config.getStimulusInterval() ) continue;
 
             // determine the wealth of the player
-            double balance = this.plugin.getEconomy().getBalance( player );
+            double balance = this.economy.getBalance( player );
             PlayerData playerData =
                     this.plugin.getGriefPrevention().dataStore.getPlayerData( player.getUniqueId() );
             double accruedClaimBlockValue = playerData.getAccruedClaimBlocks() * config.getClaimBlockValue();
@@ -174,9 +177,9 @@ public class StimulusCommand implements CommandExecutor
 
         double wealthDelta = highestWealth - lowestWealth;
 
-        String formattedHighestWealth = this.plugin.getEconomy().format( highestWealth );
-        String formattedLowestWealth  = this.plugin.getEconomy().format( lowestWealth  );
-        String formattedWealthDelta   = this.plugin.getEconomy().format( wealthDelta   );
+        String formattedHighestWealth = this.economy.format( highestWealth );
+        String formattedLowestWealth  = this.economy.format( lowestWealth  );
+        String formattedWealthDelta   = this.economy.format( wealthDelta   );
         int wealthLength = StimulusUtil.getMaxLength(
                 formattedHighestWealth, formattedLowestWealth, formattedWealthDelta );
         plugin.appendToFile( logFile, "" );
@@ -191,8 +194,7 @@ public class StimulusCommand implements CommandExecutor
 
         for ( UUID playerId : playerWealthMap.keySet() )
         {
-            formattedPlayerWealthMap.put(
-                    playerId, this.plugin.getEconomy().format( playerWealthMap.get( playerId )));
+            formattedPlayerWealthMap.put( playerId, this.economy.format( playerWealthMap.get( playerId )));
         }
 
         int playerWealthLength = StimulusUtil.getMaxLength( formattedPlayerWealthMap.values() );
@@ -264,8 +266,7 @@ public class StimulusCommand implements CommandExecutor
 
         for ( UUID playerId : playerPaymentMap.keySet() )
         {
-            formattedPlayerPaymentMap.put(
-                    playerId, this.plugin.getEconomy().format( playerPaymentMap.get( playerId )));
+            formattedPlayerPaymentMap.put( playerId, this.economy.format( playerPaymentMap.get( playerId )));
         }
 
         int playerPaymentLength = StimulusUtil.getMaxLength( formattedPlayerPaymentMap.values() );
