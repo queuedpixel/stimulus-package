@@ -65,4 +65,11 @@ public class StimulusUtil
         for ( String value : values ) if ( value.length() > result ) result = value.length();
         return result;
     }
+
+    public static double round( int precision, double value )
+    {
+        if ( precision < 0 ) return value;
+        double precisionFactor = Math.pow( 10, precision );
+        return Math.round( value * precisionFactor ) / precisionFactor;
+    }
 }

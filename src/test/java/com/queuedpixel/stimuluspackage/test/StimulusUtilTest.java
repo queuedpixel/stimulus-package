@@ -34,20 +34,32 @@ import com.queuedpixel.stimuluspackage.StimulusUtil;
 public class StimulusUtilTest
 {
     @Test
-    void testNoValues()
+    void getMaxLength_testNoValues()
     {
         Assertions.assertEquals( 0, StimulusUtil.getMaxLength() );
     }
 
     @Test
-    void testSingleValue()
+    void getMaxLength_testSingleValue()
     {
         Assertions.assertEquals( 4, StimulusUtil.getMaxLength( "test" ));
     }
 
     @Test
-    void testMultipleValues()
+    void getMaxLength_testMultipleValues()
     {
         Assertions.assertEquals( 7, StimulusUtil.getMaxLength( "this", "is", "an", "example" ));
+    }
+
+    @Test
+    void round_negativePrecision()
+    {
+        Assertions.assertEquals( 5.12345, StimulusUtil.round( -23, 5.12345 ));
+    }
+
+    @Test
+    void round_positivePrecision()
+    {
+        Assertions.assertEquals( 5.1235, StimulusUtil.round( 4, 5.12345 ));
     }
 }

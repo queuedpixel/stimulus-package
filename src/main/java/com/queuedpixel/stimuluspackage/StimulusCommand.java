@@ -71,6 +71,9 @@ public class StimulusCommand implements CommandExecutor
         StimulusUtil.appendToFile( logFile, String.format( "Time: %tF %<tT.%<tL", now ));
         StimulusUtil.appendToFile( logFile, "" );
 
+        // map of players to their OfflinePlayer instance
+        Map< UUID, OfflinePlayer > playerMap = new HashMap< UUID, OfflinePlayer >();
+
         // map of players to the number of seconds since they were last on the server
         Map< UUID, Long > playerTimeMap = new HashMap< UUID, Long >();
 
@@ -80,6 +83,9 @@ public class StimulusCommand implements CommandExecutor
         OfflinePlayer[] offlinePlayers = Bukkit.getOfflinePlayers();
         for ( OfflinePlayer player : offlinePlayers )
         {
+            // store OfflinePlayer instance
+            playerMap.put( player.getUniqueId(), player );
+
             // store number of seconds since player was last on
             playerTimeMap.put( player.getUniqueId(), ( now - player.getLastPlayed() ) / 1000 );
 
@@ -330,6 +336,14 @@ public class StimulusCommand implements CommandExecutor
         for ( SortedLine< Double > line : playerPaymentOutput.descendingSet() )
         {
             StimulusUtil.appendToFile( logFile, line.line );
+        }
+
+        // make stimulus payments
+        for ( UUID playerId : playerPaymentMap.keySet() )
+        {
+            double rawPayment = playerPaymentMap.get( playerId );
+            double payment = StimulusUtil.round( economy.fractionalDigits(), rawPayment );
+            if ( payment > 0 ) this.economy.depositPlayer( playerMap.get( playerId ), payment );
         }
 
         return true;
