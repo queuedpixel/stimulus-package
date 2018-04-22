@@ -127,7 +127,6 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
                 event.getPlayer().getUniqueId(), event.getPlayer().getName(),
                 event.getShop().getVendor().getUniqueId(), event.getShop().getVendor().getName() );
         StimulusUtil.appendToFile( this.getLogFile( "ShopChest", timestamp ), logEntry );
-        this.getLogger().info( "Shop Chest Transaction: " + logEntry );
     }
 
     @EventHandler
@@ -142,7 +141,6 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
                 this.formatEconomable( event.getTransaction().getSender() ),
                 this.formatEconomable( event.getTransaction().getReceiver() ));
         StimulusUtil.appendToFile( this.getLogFile( "SaneEconomy", timestamp ), logEntry );
-        this.getLogger().info( "Economy Transaction: " + logEntry );
     }
 
     StimulusPackageConfiguration getConfiguration()
