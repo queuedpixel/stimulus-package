@@ -64,6 +64,7 @@ This plugin depends on the following plugins:
 
 * [GriefPrevention](https://www.spigotmc.org/resources/griefprevention.1884/)
 * [SaneEconomy](https://www.spigotmc.org/resources/saneeconomy-simple-but-featureful-economy.26223/)
+* [ShopChest](https://www.spigotmc.org/resources/shopchest.11431/)
 * [Vault](https://www.spigotmc.org/resources/vault.34315/)
 
 ## Installation
