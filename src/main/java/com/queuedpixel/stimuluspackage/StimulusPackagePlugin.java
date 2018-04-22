@@ -45,6 +45,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import de.epiceric.shopchest.event.ShopBuySellEvent;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import net.milkbowl.vault.economy.Economy;
 
@@ -109,19 +110,35 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     }
 
     @EventHandler
-    public void onSaneEconomyTransactionEvent( SaneEconomyTransactionEvent event )
+    public void onShopBuySellEvent( ShopBuySellEvent event )
     {
         long timestamp = new Date().getTime();
-        double amount = event.getTransaction().getAmount();
-        Transaction transaction = new Transaction( timestamp, amount );
+        Transaction transaction = new Transaction( timestamp, event.getNewPrice() );
         this.addTransaction( transaction );
         StimulusUtil.appendToFile( this.transactionsFile, transaction.toString() );
 
         int fractionalDigits = this.economy.fractionalDigits();
         String currencyFormat = ( fractionalDigits > -1 ) ? "%." + fractionalDigits + "f" : "%f";
         String logEntry = String.format(
+                "%tF %<tT.%<tL, %s, %s, %d, " + currencyFormat + ", %s [%s], %s [%s]",
+                timestamp, event.getType().toString(),
+                event.getShop().getProduct().getType().toString(),
+                event.getNewAmount(), event.getNewPrice(),
+                event.getPlayer().getUniqueId(), event.getPlayer().getName(),
+                event.getShop().getVendor().getUniqueId(), event.getShop().getVendor().getName() );
+        StimulusUtil.appendToFile( this.getLogFile( "ShopChest", timestamp ), logEntry );
+        this.getLogger().info( "Shop Chest Transaction: " + logEntry );
+    }
+
+    @EventHandler
+    public void onSaneEconomyTransactionEvent( SaneEconomyTransactionEvent event )
+    {
+        long timestamp = new Date().getTime();
+        int fractionalDigits = this.economy.fractionalDigits();
+        String currencyFormat = ( fractionalDigits > -1 ) ? "%." + fractionalDigits + "f" : "%f";
+        String logEntry = String.format(
                 "%tF %<tT.%<tL, " + currencyFormat + ", %s, %s, %s",
-                timestamp, amount, event.getTransaction().getReason(),
+                timestamp, event.getTransaction().getAmount(), event.getTransaction().getReason(),
                 this.formatEconomable( event.getTransaction().getSender() ),
                 this.formatEconomable( event.getTransaction().getReceiver() ));
         StimulusUtil.appendToFile( this.getLogFile( "SaneEconomy", timestamp ), logEntry );
