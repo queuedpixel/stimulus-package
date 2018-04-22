@@ -73,11 +73,25 @@ public class StimulusCommand implements CommandExecutor
         // map of players to the number of seconds since they were last on the server
         Map< UUID, Long > playerTimeMap = new HashMap< UUID, Long >();
 
+        // map of players to names
+        Map< UUID, String > playerNameMap = new HashMap< UUID, String >();
+
         OfflinePlayer[] offlinePlayers = Bukkit.getOfflinePlayers();
         for ( OfflinePlayer player : offlinePlayers )
         {
             // store number of seconds since player was last on
             playerTimeMap.put( player.getUniqueId(), ( now - player.getLastPlayed() ) / 1000 );
+
+            // store player name
+            playerNameMap.put( player.getUniqueId(), player.getName() );
+        }
+
+        // adjust player names to be the same length by adding padding on the right
+        int nameLength = StimulusUtil.getMaxLength( playerNameMap.values() );
+        for ( UUID playerId : playerNameMap.keySet() )
+        {
+            playerNameMap.put(
+                    playerId, String.format( "%-" + nameLength + "s", playerNameMap.get( playerId )));
         }
 
         Collection< ? extends Player > onlinePlayers = Bukkit.getOnlinePlayers();
@@ -109,19 +123,18 @@ public class StimulusCommand implements CommandExecutor
                                    ", Stimulus Players: " + activeStimulusPlayers );
 
         Map< UUID, String > formattedPlayerTimeMap = new HashMap< UUID, String >();
-
         for ( UUID playerId : playerTimeMap.keySet() )
         {
             formattedPlayerTimeMap.put( playerId, String.format( "%,d", playerTimeMap.get( playerId )));
         }
 
         int playerTimeLength = StimulusUtil.getMaxLength( formattedPlayerTimeMap.values() );
-
         for ( UUID playerId : playerTimeMap.keySet() )
         {
-            String time = formattedPlayerTimeMap.get( playerId );
-            StimulusUtil.appendToFile(
-                    logFile, String.format( "    %s - %" + playerTimeLength + "s", playerId, time ));
+            String name = playerNameMap.get( playerId );
+            String rawTime = formattedPlayerTimeMap.get( playerId );
+            String time = String.format( "%" + playerTimeLength + "s", rawTime );
+            StimulusUtil.appendToFile( logFile, "    " + name + " - " + playerId + " - " + time );
         }
 
         // perform volume calculations
@@ -201,9 +214,10 @@ public class StimulusCommand implements CommandExecutor
 
         for ( UUID playerId : playerWealthMap.keySet() )
         {
-            String wealth = formattedPlayerWealthMap.get( playerId );
-            StimulusUtil.appendToFile(
-                    logFile, String.format( "    %s - %" + playerWealthLength + "s", playerId, wealth ));
+            String name = playerNameMap.get( playerId );
+            String rawWealth = formattedPlayerWealthMap.get( playerId );
+            String wealth = String.format( "%" + playerWealthLength + "s", rawWealth );
+            StimulusUtil.appendToFile( logFile, "    " + name + " - " + playerId + " - " + wealth );
         }
 
         StimulusUtil.appendToFile( logFile, "" );
@@ -212,10 +226,11 @@ public class StimulusCommand implements CommandExecutor
         // map players to payment factors
         Map< UUID, Double > playerPaymentFactorMap = new HashMap< UUID, Double >();
         double paymentFactorSum = 0;
-        double rawPaymentFactor = 0;
-        double paymentFactor = 0;
         for ( OfflinePlayer player : offlinePlayers )
         {
+            double rawPaymentFactor = 0;
+            double paymentFactor = 0;
+
             // skip players who are not active stimulus players
             long loginInterval = playerTimeMap.get( player.getUniqueId() );
             if ( loginInterval >= this.config.getStimulusInterval() ) continue;
@@ -235,7 +250,9 @@ public class StimulusCommand implements CommandExecutor
 
             paymentFactorSum += paymentFactor;
             playerPaymentFactorMap.put( player.getUniqueId(), paymentFactor );
-            StimulusUtil.appendToFile( logFile, "    " + player.getUniqueId() + " - " + rawPaymentFactor );
+            UUID playerId = player.getUniqueId();
+            String name = playerNameMap.get( playerId );
+            StimulusUtil.appendToFile( logFile, "    " + name + " - " + playerId + " - " + rawPaymentFactor );
         }
 
         StimulusUtil.appendToFile( logFile, "" );
@@ -243,8 +260,9 @@ public class StimulusCommand implements CommandExecutor
 
         for ( UUID playerId : playerPaymentFactorMap.keySet() )
         {
-            StimulusUtil.appendToFile(
-                    logFile, "    " + playerId + " - " + playerPaymentFactorMap.get( playerId ));
+            String name = playerNameMap.get( playerId );
+            double paymentFactor = playerPaymentFactorMap.get( playerId );
+            StimulusUtil.appendToFile( logFile, "    " + name + " - " + playerId + " - " + paymentFactor );
         }
 
         // compute the payment for each player
@@ -274,9 +292,10 @@ public class StimulusCommand implements CommandExecutor
 
         for ( UUID playerId : playerPaymentMap.keySet() )
         {
-            String payment = formattedPlayerPaymentMap.get( playerId );
-            StimulusUtil.appendToFile(
-                    logFile, String.format( "    %s - %" + playerPaymentLength + "s", playerId, payment ));
+            String name = playerNameMap.get( playerId );
+            String rawPayment = formattedPlayerPaymentMap.get( playerId );
+            String payment = String.format( "%" + playerPaymentLength + "s", rawPayment );
+            StimulusUtil.appendToFile( logFile, "    " + name + " - " + playerId + " - " + payment );
         }
 
         return true;
