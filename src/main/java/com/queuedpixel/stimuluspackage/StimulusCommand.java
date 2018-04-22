@@ -32,6 +32,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -129,12 +130,19 @@ public class StimulusCommand implements CommandExecutor
         }
 
         int playerTimeLength = StimulusUtil.getMaxLength( formattedPlayerTimeMap.values() );
+        TreeSet< SortedLine< Long >> playerTimeOutput = new TreeSet< SortedLine< Long >>();
         for ( UUID playerId : playerTimeMap.keySet() )
         {
             String name = playerNameMap.get( playerId );
             String rawTime = formattedPlayerTimeMap.get( playerId );
             String time = String.format( "%" + playerTimeLength + "s", rawTime );
-            StimulusUtil.appendToFile( logFile, "    " + name + " - " + playerId + " - " + time );
+            String line = "    " + name + " - " + playerId + " - " + time;
+            playerTimeOutput.add( new SortedLine< Long >( playerTimeMap.get( playerId ), line ));
+        }
+
+        for ( SortedLine< Long > line : playerTimeOutput )
+        {
+            StimulusUtil.appendToFile( logFile, line.line );
         }
 
         // perform volume calculations
@@ -204,28 +212,34 @@ public class StimulusCommand implements CommandExecutor
                 logFile, String.format( "Wealth Delta   : %" + wealthLength + "s", formattedWealthDelta ));
 
         Map< UUID, String > formattedPlayerWealthMap = new HashMap< UUID, String >();
-
         for ( UUID playerId : playerWealthMap.keySet() )
         {
             formattedPlayerWealthMap.put( playerId, this.economy.format( playerWealthMap.get( playerId )));
         }
 
         int playerWealthLength = StimulusUtil.getMaxLength( formattedPlayerWealthMap.values() );
-
+        TreeSet< SortedLine< Double >> playerWealthOutput = new TreeSet< SortedLine< Double >>();
         for ( UUID playerId : playerWealthMap.keySet() )
         {
             String name = playerNameMap.get( playerId );
             String rawWealth = formattedPlayerWealthMap.get( playerId );
             String wealth = String.format( "%" + playerWealthLength + "s", rawWealth );
-            StimulusUtil.appendToFile( logFile, "    " + name + " - " + playerId + " - " + wealth );
+            String line = "    " + name + " - " + playerId + " - " + wealth;
+            playerWealthOutput.add( new SortedLine< Double >( playerWealthMap.get( playerId ), line ));
+        }
+
+        for ( SortedLine< Double > line : playerWealthOutput.descendingSet() )
+        {
+            StimulusUtil.appendToFile( logFile, line.line );
         }
 
         StimulusUtil.appendToFile( logFile, "" );
         StimulusUtil.appendToFile( logFile, "Raw Player Payment Factors:" );
 
         // map players to payment factors
-        Map< UUID, Double > playerPaymentFactorMap = new HashMap< UUID, Double >();
         double paymentFactorSum = 0;
+        Map< UUID, Double > playerPaymentFactorMap = new HashMap< UUID, Double >();
+        TreeSet< SortedLine< Double >> playerRawPaymentFactorOutput = new TreeSet< SortedLine< Double >>();
         for ( OfflinePlayer player : offlinePlayers )
         {
             double rawPaymentFactor = 0;
@@ -252,17 +266,31 @@ public class StimulusCommand implements CommandExecutor
             playerPaymentFactorMap.put( player.getUniqueId(), paymentFactor );
             UUID playerId = player.getUniqueId();
             String name = playerNameMap.get( playerId );
-            StimulusUtil.appendToFile( logFile, "    " + name + " - " + playerId + " - " + rawPaymentFactor );
+            String line = "    " + name + " - " + playerId + " - " + rawPaymentFactor;
+            playerRawPaymentFactorOutput.add(
+                    new SortedLine< Double >( playerWealthMap.get( playerId ), line ));
+        }
+
+        for ( SortedLine< Double > line : playerRawPaymentFactorOutput.descendingSet() )
+        {
+            StimulusUtil.appendToFile( logFile, line.line );
         }
 
         StimulusUtil.appendToFile( logFile, "" );
         StimulusUtil.appendToFile( logFile, "Player Payment Factor Sum: " + paymentFactorSum );
 
+        TreeSet< SortedLine< Double >> playerPaymentFactorOutput = new TreeSet< SortedLine< Double >>();
         for ( UUID playerId : playerPaymentFactorMap.keySet() )
         {
             String name = playerNameMap.get( playerId );
             double paymentFactor = playerPaymentFactorMap.get( playerId );
-            StimulusUtil.appendToFile( logFile, "    " + name + " - " + playerId + " - " + paymentFactor );
+            String line = "    " + name + " - " + playerId + " - " + paymentFactor;
+            playerPaymentFactorOutput.add( new SortedLine< Double >( playerWealthMap.get( playerId ), line ));
+        }
+
+        for ( SortedLine< Double > line : playerPaymentFactorOutput.descendingSet() )
+        {
+            StimulusUtil.appendToFile( logFile, line.line );
         }
 
         // compute the payment for each player
@@ -289,13 +317,19 @@ public class StimulusCommand implements CommandExecutor
         }
 
         int playerPaymentLength = StimulusUtil.getMaxLength( formattedPlayerPaymentMap.values() );
-
+        TreeSet< SortedLine< Double >> playerPaymentOutput = new TreeSet< SortedLine< Double >>();
         for ( UUID playerId : playerPaymentMap.keySet() )
         {
             String name = playerNameMap.get( playerId );
             String rawPayment = formattedPlayerPaymentMap.get( playerId );
             String payment = String.format( "%" + playerPaymentLength + "s", rawPayment );
-            StimulusUtil.appendToFile( logFile, "    " + name + " - " + playerId + " - " + payment );
+            String line = "    " + name + " - " + playerId + " - " + payment;
+            playerPaymentOutput.add( new SortedLine< Double >( playerWealthMap.get( playerId ), line ));
+        }
+
+        for ( SortedLine< Double > line : playerPaymentOutput.descendingSet() )
+        {
+            StimulusUtil.appendToFile( logFile, line.line );
         }
 
         return true;
