@@ -72,7 +72,7 @@ public class StimulusCommand implements CommandExecutor
         StimulusUtil.appendToFile( logFile, "" );
 
         // map of players to their OfflinePlayer instance
-        Map< UUID, OfflinePlayer > playerMap = new HashMap< UUID, OfflinePlayer >();
+        Map< UUID, OfflinePlayer > offlinePlayerMap = new HashMap< UUID, OfflinePlayer >();
 
         // map of players to the number of seconds since they were last on the server
         Map< UUID, Long > playerTimeMap = new HashMap< UUID, Long >();
@@ -81,15 +81,18 @@ public class StimulusCommand implements CommandExecutor
         for ( OfflinePlayer player : offlinePlayers )
         {
             // store OfflinePlayer instance
-            playerMap.put( player.getUniqueId(), player );
+            offlinePlayerMap.put( player.getUniqueId(), player );
 
             // store number of seconds since player was last on
             playerTimeMap.put( player.getUniqueId(), ( now - player.getLastPlayed() ) / 1000 );
         }
 
         Collection< ? extends Player > onlinePlayers = Bukkit.getOnlinePlayers();
+        Map< UUID, Player > onlinePlayerMap = new HashMap< UUID, Player >();
         for ( Player player : onlinePlayers )
         {
+            onlinePlayerMap.put( player.getUniqueId(), player );
+
             // player is on right now, so zero seconds since they were last on the server
             playerTimeMap.put( player.getUniqueId(), 0l );
         }
@@ -107,7 +110,7 @@ public class StimulusCommand implements CommandExecutor
                 ( loginInterval < this.config.getStimulusInterval() ))
             {
                 activePlayers.add( playerId );
-                playerNameMap.put( playerId, playerMap.get( playerId ).getName() );
+                playerNameMap.put( playerId, offlinePlayerMap.get( playerId ).getName() );
                 if ( loginInterval < this.config.getEconomicInterval() ) activeEconomicPlayers++;
                 if ( loginInterval < this.config.getStimulusInterval() ) activeStimulusPlayers++;
             }
@@ -339,7 +342,16 @@ public class StimulusCommand implements CommandExecutor
         {
             double rawPayment = playerPaymentMap.get( playerId );
             double payment = StimulusUtil.round( economy.fractionalDigits(), rawPayment );
-            if ( payment > 0 ) this.economy.depositPlayer( playerMap.get( playerId ), payment );
+            if ( payment > 0 )
+            {
+                this.economy.depositPlayer( offlinePlayerMap.get( playerId ), payment );
+                Player player = onlinePlayerMap.get( playerId );
+                if ( player != null )
+                {
+                    player.sendMessage(
+                            "§3You recieved §d" + this.economy.format( payment ) + "§3 in stimulus!" );
+                }
+            }
         }
 
         return true;
