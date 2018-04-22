@@ -77,9 +77,6 @@ public class StimulusCommand implements CommandExecutor
         // map of players to the number of seconds since they were last on the server
         Map< UUID, Long > playerTimeMap = new HashMap< UUID, Long >();
 
-        // map of players to names
-        Map< UUID, String > playerNameMap = new HashMap< UUID, String >();
-
         OfflinePlayer[] offlinePlayers = Bukkit.getOfflinePlayers();
         for ( OfflinePlayer player : offlinePlayers )
         {
@@ -88,17 +85,6 @@ public class StimulusCommand implements CommandExecutor
 
             // store number of seconds since player was last on
             playerTimeMap.put( player.getUniqueId(), ( now - player.getLastPlayed() ) / 1000 );
-
-            // store player name
-            playerNameMap.put( player.getUniqueId(), player.getName() );
-        }
-
-        // adjust player names to be the same length by adding padding on the right
-        int nameLength = StimulusUtil.getMaxLength( playerNameMap.values() );
-        for ( UUID playerId : playerNameMap.keySet() )
-        {
-            playerNameMap.put(
-                    playerId, String.format( "%-" + nameLength + "s", playerNameMap.get( playerId )));
         }
 
         Collection< ? extends Player > onlinePlayers = Bukkit.getOnlinePlayers();
@@ -112,6 +98,7 @@ public class StimulusCommand implements CommandExecutor
         int activeEconomicPlayers = 0;
         int activeStimulusPlayers = 0;
         Collection< UUID > activePlayers = new LinkedList< UUID >();
+        Map< UUID, String > playerNameMap = new HashMap< UUID, String >();
 
         for ( UUID playerId : playerTimeMap.keySet() )
         {
@@ -120,9 +107,18 @@ public class StimulusCommand implements CommandExecutor
                 ( loginInterval < this.config.getStimulusInterval() ))
             {
                 activePlayers.add( playerId );
+                playerNameMap.put( playerId, playerMap.get( playerId ).getName() );
                 if ( loginInterval < this.config.getEconomicInterval() ) activeEconomicPlayers++;
                 if ( loginInterval < this.config.getStimulusInterval() ) activeStimulusPlayers++;
             }
+        }
+
+        // adjust player names to be the same length by adding padding on the right
+        int nameLength = StimulusUtil.getMaxLength( playerNameMap.values() );
+        for ( UUID playerId : playerNameMap.keySet() )
+        {
+            playerNameMap.put(
+                    playerId, String.format( "%-" + nameLength + "s", playerNameMap.get( playerId )));
         }
 
         // log active players
