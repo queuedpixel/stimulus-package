@@ -26,11 +26,32 @@ SOFTWARE.
 
 package com.queuedpixel.stimuluspackage;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.LinkedList;
 
 public class StimulusUtil
 {
+    public static void appendToFile( Path file, String line )
+    {
+        try
+        {
+            BufferedWriter writer = Files.newBufferedWriter(
+                    file, StandardOpenOption.CREATE, StandardOpenOption.APPEND );
+            writer.write( line );
+            writer.newLine();
+            writer.close();
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
+    }
+
     public static int getMaxLength( String... values )
     {
         Collection< String > list = new LinkedList< String >();

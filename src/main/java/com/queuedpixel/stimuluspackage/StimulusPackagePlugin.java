@@ -27,12 +27,10 @@ SOFTWARE.
 package com.queuedpixel.stimuluspackage;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -117,7 +115,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         double amount = event.getTransaction().getAmount();
         Transaction transaction = new Transaction( timestamp, amount );
         this.addTransaction( transaction );
-        this.appendToFile( this.transactionsFile, transaction.toString() );
+        StimulusUtil.appendToFile( this.transactionsFile, transaction.toString() );
 
         int fractionalDigits = this.economy.fractionalDigits();
         String currencyFormat = ( fractionalDigits > -1 ) ? "%." + fractionalDigits + "f" : "%f";
@@ -126,7 +124,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
                 timestamp, amount, event.getTransaction().getReason(),
                 this.formatEconomable( event.getTransaction().getSender() ),
                 this.formatEconomable( event.getTransaction().getReceiver() ));
-        this.appendToFile( this.getLogFile( "SaneEconomy", timestamp ), logEntry );
+        StimulusUtil.appendToFile( this.getLogFile( "SaneEconomy", timestamp ), logEntry );
         this.getLogger().info( "Economy Transaction: " + logEntry );
     }
 
@@ -170,22 +168,6 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         }
 
         return this.actualVolume;
-    }
-
-    void appendToFile( Path file, String line )
-    {
-        try
-        {
-            BufferedWriter writer = Files.newBufferedWriter(
-                    file, StandardOpenOption.CREATE, StandardOpenOption.APPEND );
-            writer.write( line );
-            writer.newLine();
-            writer.close();
-        }
-        catch ( IOException e )
-        {
-            e.printStackTrace();
-        }
     }
 
     private String formatEconomable( Economable economable )
