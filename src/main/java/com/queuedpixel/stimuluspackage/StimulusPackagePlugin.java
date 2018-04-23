@@ -37,6 +37,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import org.appledash.saneeconomy.economy.economable.Economable;
@@ -111,6 +112,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         this.loadData();
         this.getCommand( "stimulus" ).setExecutor( new StimulusCommand( this ));
         this.getCommand( "wealth" ).setExecutor( new WealthCommand( this ));
+        this.getCommand( "wealthtop" ).setExecutor( new WealthTopCommand( this ));
         this.getServer().getPluginManager().registerEvents( this, this );
     }
 
@@ -218,6 +220,11 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         }
 
         this.data.playerOfflineStimulusMap.put( playerId, newAmount );
+    }
+
+    TreeSet< SortedLine< Double >> getWealthTop()
+    {
+        return this.data.wealthTop;
     }
 
     void saveData()

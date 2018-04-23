@@ -30,3 +30,6 @@ commands:
     wealth:
         description: Test Wealth Command
         usage: /wealth
+    wealthtop:
+        description: Display the wealthiest players on the server.
+        usage: /wealthtop

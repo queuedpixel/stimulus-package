@@ -28,9 +28,11 @@ package com.queuedpixel.stimuluspackage;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeSet;
 import java.util.UUID;
 
 public class StimulusData
 {
     final Map< UUID, Double > playerOfflineStimulusMap = new HashMap< UUID, Double >();
+    final TreeSet< SortedLine< Double >> wealthTop = new TreeSet< SortedLine< Double >>();
 }

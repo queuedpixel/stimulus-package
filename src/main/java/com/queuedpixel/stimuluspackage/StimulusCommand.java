@@ -168,7 +168,12 @@ public class StimulusCommand implements CommandExecutor
         StimulusUtil.appendToFile( logFile,
                 String.format( "Volume Delta   : %" + volumeLength + "s", formattedVolumeDelta ));
 
-        if (( volumeDelta <= 0 ) || ( activeStimulusPlayers == 0 )) return true;
+        this.plugin.getWealthTop().clear();
+        if (( volumeDelta <= 0 ) || ( activeStimulusPlayers == 0 ))
+        {
+            this.plugin.saveData();
+            return true;
+        }
 
         // compute total stimulus
         double stimulusFactor = volumeDelta / totalDesiredVolume;
@@ -195,6 +200,8 @@ public class StimulusCommand implements CommandExecutor
             double bonusClaimBlockValue = playerData.getBonusClaimBlocks() * config.getClaimBlockValue();
             double wealth = balance + accruedClaimBlockValue + bonusClaimBlockValue;
             playerWealthMap.put( player.getUniqueId(), wealth );
+            String wealthLine = "§3" + player.getName() + " §f- §d" + this.economy.format( wealth );
+            this.plugin.getWealthTop().add( new SortedLine< Double >( wealth, wealthLine ));
 
             // adjust highest and lowest wealth
             if ( wealth > highestWealth ) highestWealth = wealth;
