@@ -27,14 +27,17 @@ SOFTWARE.
 package com.queuedpixel.stimuluspackage;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.UUID;
 
 import org.appledash.saneeconomy.economy.economable.Economable;
 import org.appledash.saneeconomy.event.SaneEconomyTransactionEvent;
@@ -42,8 +45,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import de.epiceric.shopchest.event.ShopBuySellEvent;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
@@ -54,8 +61,10 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     private final Path pluginDirectory = Paths.get( "plugins/StimulusPackage" );
     private final Path logDirectory = this.pluginDirectory.resolve( "logs" );
     private final Path transactionsFile = this.pluginDirectory.resolve( "transactions.txt" );
+    private final Path dataFile = this.pluginDirectory.resolve( "stimulus.json" );
     private final StimulusPackageConfiguration config = new StimulusPackageConfiguration();
     private final Collection< Transaction > transactions = new LinkedList< Transaction >();
+    private StimulusData data = new StimulusData();
     private Economy economy;
     private GriefPrevention griefPrevention;
     private double actualVolume = 0;
@@ -99,6 +108,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         this.griefPrevention =
                 (GriefPrevention) Bukkit.getServer().getPluginManager().getPlugin( "GriefPrevention" );
 
+        this.loadData();
         this.getCommand( "stimulus" ).setExecutor( new StimulusCommand( this ));
         this.getCommand( "wealth" ).setExecutor( new WealthCommand( this ));
         this.getServer().getPluginManager().registerEvents( this, this );
@@ -107,6 +117,20 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     public void onDisable()
     {
         this.getLogger().info( "onDisable() is called!" );
+    }
+
+    @EventHandler
+    public void onPlayerJoinEvent( PlayerJoinEvent event )
+    {
+        UUID playerId = event.getPlayer().getUniqueId();
+        if ( this.data.playerOfflineStimulusMap.containsKey( playerId ))
+        {
+            String stimulus = this.economy.format( this.data.playerOfflineStimulusMap.get( playerId ));
+            String message = "§3While offline, you recieved §d" + stimulus + "§3 in stimulus!";
+            event.getPlayer().sendMessage( message );
+            this.data.playerOfflineStimulusMap.remove( playerId );
+            this.saveData();
+        }
     }
 
     @EventHandler
@@ -183,6 +207,58 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         }
 
         return this.actualVolume;
+    }
+
+    void addOfflineStimulus( UUID playerId, double amount )
+    {
+        double newAmount = amount;
+        if ( this.data.playerOfflineStimulusMap.containsKey( playerId ))
+        {
+            newAmount += this.data.playerOfflineStimulusMap.get( playerId );
+        }
+
+        this.data.playerOfflineStimulusMap.put( playerId, newAmount );
+    }
+
+    void saveData()
+    {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        try
+        {
+            BufferedWriter writer = Files.newBufferedWriter(
+                    this.dataFile, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING );
+            writer.write( gson.toJson( this.data ));
+            writer.newLine();
+            writer.close();
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadData()
+    {
+        // create new data file if it doesn't exist
+        if ( !Files.exists( this.dataFile ))
+        {
+            this.data = new StimulusData();
+            return;
+        }
+
+        try
+        {
+            Gson gson = new Gson();
+            BufferedReader reader = Files.newBufferedReader( this.dataFile );
+            this.data = gson.fromJson( reader, StimulusData.class );
+            reader.close();
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+            this.data = new StimulusData();
+        }
     }
 
     private String formatEconomable( Economable economable )

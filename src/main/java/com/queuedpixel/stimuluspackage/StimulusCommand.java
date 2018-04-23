@@ -351,9 +351,14 @@ public class StimulusCommand implements CommandExecutor
                     player.sendMessage(
                             "§3You recieved §d" + this.economy.format( payment ) + "§3 in stimulus!" );
                 }
+                else
+                {
+                    this.plugin.addOfflineStimulus( playerId, payment );
+                }
             }
         }
 
+        this.plugin.saveData();
         return true;
     }
 }
