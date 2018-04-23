@@ -58,21 +58,16 @@ public class WealthCommand implements CommandExecutor
         }
 
         OfflinePlayer player = (OfflinePlayer) sender;
-        sender.sendMessage( "You are a player." );
-
         double balance = this.economy.getBalance( player );
-        sender.sendMessage( "Balance: " + this.economy.format( balance ));
-
         PlayerData playerData = this.griefPrevention.dataStore.getPlayerData( player.getUniqueId() );
-
         double accruedClaimBlockValue = playerData.getAccruedClaimBlocks() * config.getClaimBlockValue();
-        sender.sendMessage( "Accrued Claim Block Value: " + this.economy.format( accruedClaimBlockValue ));
-
         double bonusClaimBlockValue = playerData.getBonusClaimBlocks() * config.getClaimBlockValue();
-        sender.sendMessage( "Bonus Claim Block Value: " + this.economy.format( bonusClaimBlockValue ));
-        
-        double wealth = balance + accruedClaimBlockValue + bonusClaimBlockValue;
-        sender.sendMessage( "Wealth: " + this.economy.format( wealth ));
+        double totalClaimBlockValue = accruedClaimBlockValue + bonusClaimBlockValue;
+        double totalWealth = balance + totalClaimBlockValue;
+
+        sender.sendMessage( "§aEconomy Balance: §c" + this.economy.format( balance ));
+        sender.sendMessage( "§aClaim Block Value: §c" + this.economy.format( totalClaimBlockValue ));
+        sender.sendMessage( "§3Total Wealth: §d" + this.economy.format( totalWealth ));
 
         return true;
     }
