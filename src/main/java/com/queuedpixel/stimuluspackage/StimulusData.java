@@ -34,5 +34,6 @@ import java.util.UUID;
 public class StimulusData
 {
     final Map< UUID, Double > playerOfflineStimulusMap = new HashMap< UUID, Double >();
-    final TreeSet< SortedLine< Double >> wealthTop = new TreeSet< SortedLine< Double >>();
+    final TreeSet< SortedLine< Double >> activeWealthTop = new TreeSet< SortedLine< Double >>();
+    final TreeSet< SortedLine< Double >> allWealthTop = new TreeSet< SortedLine< Double >>();
 }

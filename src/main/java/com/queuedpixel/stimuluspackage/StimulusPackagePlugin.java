@@ -222,9 +222,14 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         this.data.playerOfflineStimulusMap.put( playerId, newAmount );
     }
 
-    TreeSet< SortedLine< Double >> getWealthTop()
+    TreeSet< SortedLine< Double >> getActiveWealthTop()
     {
-        return this.data.wealthTop;
+        return this.data.activeWealthTop;
+    }
+
+    TreeSet< SortedLine< Double >> getAllWealthTop()
+    {
+        return this.data.allWealthTop;
     }
 
     void saveData()

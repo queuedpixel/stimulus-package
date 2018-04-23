@@ -71,12 +71,11 @@ public class StimulusCommand implements CommandExecutor
         StimulusUtil.appendToFile( logFile, String.format( "Time: %tF %<tT.%<tL", now ));
         StimulusUtil.appendToFile( logFile, "" );
 
-        // map of players to their OfflinePlayer instance
+        this.plugin.getActiveWealthTop().clear();
+        this.plugin.getAllWealthTop().clear();
         Map< UUID, OfflinePlayer > offlinePlayerMap = new HashMap< UUID, OfflinePlayer >();
-
-        // map of players to the number of seconds since they were last on the server
         Map< UUID, Long > playerTimeMap = new HashMap< UUID, Long >();
-
+        Map< UUID, Double > playerWealthMap = new HashMap< UUID, Double >();
         OfflinePlayer[] offlinePlayers = Bukkit.getOfflinePlayers();
         for ( OfflinePlayer player : offlinePlayers )
         {
@@ -85,6 +84,17 @@ public class StimulusCommand implements CommandExecutor
 
             // store number of seconds since player was last on
             playerTimeMap.put( player.getUniqueId(), ( now - player.getLastPlayed() ) / 1000 );
+
+            // store the wealth of the player
+            double balance = this.economy.getBalance( player );
+            PlayerData playerData =
+                    this.plugin.getGriefPrevention().dataStore.getPlayerData( player.getUniqueId() );
+            double accruedClaimBlockValue = playerData.getAccruedClaimBlocks() * config.getClaimBlockValue();
+            double bonusClaimBlockValue = playerData.getBonusClaimBlocks() * config.getClaimBlockValue();
+            double wealth = balance + accruedClaimBlockValue + bonusClaimBlockValue;
+            playerWealthMap.put( player.getUniqueId(), wealth );
+            String wealthLine = this.getWealthLine( player.getName(), wealth );
+            this.plugin.getAllWealthTop().add( new SortedLine< Double >( wealth, wealthLine ));
         }
 
         Collection< ? extends Player > onlinePlayers = Bukkit.getOnlinePlayers();
@@ -98,11 +108,11 @@ public class StimulusCommand implements CommandExecutor
         }
 
         // count active players
-        int activeEconomicPlayers = 0;
-        int activeStimulusPlayers = 0;
+        int activeEconomicPlayerCount = 0;
+        int activeStimulusPlayerCount = 0;
         Collection< UUID > activePlayers = new LinkedList< UUID >();
+        Collection< UUID > activeStimulusPlayers = new LinkedList< UUID >();
         Map< UUID, String > playerNameMap = new HashMap< UUID, String >();
-
         for ( UUID playerId : playerTimeMap.keySet() )
         {
             Long loginInterval = playerTimeMap.get( playerId );
@@ -111,8 +121,16 @@ public class StimulusCommand implements CommandExecutor
             {
                 activePlayers.add( playerId );
                 playerNameMap.put( playerId, offlinePlayerMap.get( playerId ).getName() );
-                if ( loginInterval < this.config.getEconomicInterval() ) activeEconomicPlayers++;
-                if ( loginInterval < this.config.getStimulusInterval() ) activeStimulusPlayers++;
+
+                if ( loginInterval < this.config.getEconomicInterval() )
+                {
+                    activeEconomicPlayerCount++;
+                }
+                if ( loginInterval < this.config.getStimulusInterval() )
+                {
+                    activeStimulusPlayers.add( playerId );
+                    activeStimulusPlayerCount++;
+                }
             }
         }
 
@@ -125,8 +143,8 @@ public class StimulusCommand implements CommandExecutor
         }
 
         // log active players
-        StimulusUtil.appendToFile( logFile, "Economic Players: " + activeEconomicPlayers +
-                                   ", Stimulus Players: " + activeStimulusPlayers );
+        StimulusUtil.appendToFile( logFile, "Economic Players: " + activeEconomicPlayerCount +
+                                   ", Stimulus Players: " + activeStimulusPlayerCount );
 
         Map< UUID, String > formattedPlayerTimeMap = new HashMap< UUID, String >();
         for ( UUID playerId : activePlayers )
@@ -152,7 +170,7 @@ public class StimulusCommand implements CommandExecutor
 
         // perform volume calculations
         double actualVolume = this.plugin.getActualVolume( now );
-        double totalDesiredVolume = this.config.getDesiredVolume() * activeEconomicPlayers;
+        double totalDesiredVolume = this.config.getDesiredVolume() * activeEconomicPlayerCount;
         double volumeDelta = totalDesiredVolume - actualVolume;
 
         String formattedTotalDesiredVolume = this.economy.format( totalDesiredVolume );
@@ -168,8 +186,7 @@ public class StimulusCommand implements CommandExecutor
         StimulusUtil.appendToFile( logFile,
                 String.format( "Volume Delta   : %" + volumeLength + "s", formattedVolumeDelta ));
 
-        this.plugin.getWealthTop().clear();
-        if (( volumeDelta <= 0 ) || ( activeStimulusPlayers == 0 ))
+        if (( volumeDelta <= 0 ) || ( activeStimulusPlayerCount == 0 ))
         {
             this.plugin.saveData();
             return true;
@@ -177,31 +194,20 @@ public class StimulusCommand implements CommandExecutor
 
         // compute total stimulus
         double stimulusFactor = volumeDelta / totalDesiredVolume;
-        double totalStimulus = stimulusFactor * this.config.getDesiredStimulus() * activeStimulusPlayers;
+        double totalStimulus = stimulusFactor * this.config.getDesiredStimulus() * activeStimulusPlayerCount;
         StimulusUtil.appendToFile( logFile, "" );
         StimulusUtil.appendToFile( logFile, "Stimulus Factor : " + stimulusFactor );
         StimulusUtil.appendToFile( logFile, "Total Stimulus  : " + totalStimulus  );
 
         // determine the wealth of the wealthiest and poorest players
-        Map< UUID, Double > playerWealthMap = new HashMap< UUID, Double >();
         double highestWealth = Double.NEGATIVE_INFINITY;
         double lowestWealth = Double.POSITIVE_INFINITY;
-        for ( OfflinePlayer player : offlinePlayers )
+        for ( UUID playerId : activeStimulusPlayers )
         {
-            // skip players who are not active stimulus players
-            long loginInterval = playerTimeMap.get( player.getUniqueId() );
-            if ( loginInterval >= this.config.getStimulusInterval() ) continue;
-
-            // determine the wealth of the player
-            double balance = this.economy.getBalance( player );
-            PlayerData playerData =
-                    this.plugin.getGriefPrevention().dataStore.getPlayerData( player.getUniqueId() );
-            double accruedClaimBlockValue = playerData.getAccruedClaimBlocks() * config.getClaimBlockValue();
-            double bonusClaimBlockValue = playerData.getBonusClaimBlocks() * config.getClaimBlockValue();
-            double wealth = balance + accruedClaimBlockValue + bonusClaimBlockValue;
-            playerWealthMap.put( player.getUniqueId(), wealth );
-            String wealthLine = "§3" + player.getName() + " §f- §d" + this.economy.format( wealth );
-            this.plugin.getWealthTop().add( new SortedLine< Double >( wealth, wealthLine ));
+            // add the player to the active wealth top set
+            double wealth = playerWealthMap.get( playerId );
+            String wealthLine = this.getWealthLine( offlinePlayerMap.get( playerId ).getName(), wealth );
+            this.plugin.getActiveWealthTop().add( new SortedLine< Double >( wealth, wealthLine ));
 
             // adjust highest and lowest wealth
             if ( wealth > highestWealth ) highestWealth = wealth;
@@ -224,14 +230,14 @@ public class StimulusCommand implements CommandExecutor
                 logFile, String.format( "Wealth Delta   : %" + wealthLength + "s", formattedWealthDelta ));
 
         Map< UUID, String > formattedPlayerWealthMap = new HashMap< UUID, String >();
-        for ( UUID playerId : playerWealthMap.keySet() )
+        for ( UUID playerId : activeStimulusPlayers )
         {
             formattedPlayerWealthMap.put( playerId, this.economy.format( playerWealthMap.get( playerId )));
         }
 
         int playerWealthLength = StimulusUtil.getMaxLength( formattedPlayerWealthMap.values() );
         TreeSet< SortedLine< Double >> playerWealthOutput = new TreeSet< SortedLine< Double >>();
-        for ( UUID playerId : playerWealthMap.keySet() )
+        for ( UUID playerId : activeStimulusPlayers )
         {
             String name = playerNameMap.get( playerId );
             String rawWealth = formattedPlayerWealthMap.get( playerId );
@@ -252,14 +258,10 @@ public class StimulusCommand implements CommandExecutor
         double paymentFactorSum = 0;
         Map< UUID, Double > playerPaymentFactorMap = new HashMap< UUID, Double >();
         TreeSet< SortedLine< Double >> playerRawPaymentFactorOutput = new TreeSet< SortedLine< Double >>();
-        for ( OfflinePlayer player : offlinePlayers )
+        for ( UUID playerId : activeStimulusPlayers )
         {
             double rawPaymentFactor = 0;
             double paymentFactor = 0;
-
-            // skip players who are not active stimulus players
-            long loginInterval = playerTimeMap.get( player.getUniqueId() );
-            if ( loginInterval >= this.config.getStimulusInterval() ) continue;
 
             if ( highestWealth == lowestWealth )
             {
@@ -268,15 +270,14 @@ public class StimulusCommand implements CommandExecutor
             }
             else
             {
-                double playerOffset = playerWealthMap.get( player.getUniqueId() ) - lowestWealth;
+                double playerOffset = playerWealthMap.get( playerId ) - lowestWealth;
                 rawPaymentFactor = 1 - ( playerOffset / wealthDelta );
                 paymentFactor = (( 1 - config.getMinimumPaymentFactor() ) * rawPaymentFactor ) +
                                 config.getMinimumPaymentFactor();
             }
 
             paymentFactorSum += paymentFactor;
-            playerPaymentFactorMap.put( player.getUniqueId(), paymentFactor );
-            UUID playerId = player.getUniqueId();
+            playerPaymentFactorMap.put( playerId, paymentFactor );
             String name = playerNameMap.get( playerId );
             String line = "    " + name + " - " + playerId + " - " + rawPaymentFactor;
             playerRawPaymentFactorOutput.add(
@@ -292,7 +293,7 @@ public class StimulusCommand implements CommandExecutor
         StimulusUtil.appendToFile( logFile, "Player Payment Factor Sum: " + paymentFactorSum );
 
         TreeSet< SortedLine< Double >> playerPaymentFactorOutput = new TreeSet< SortedLine< Double >>();
-        for ( UUID playerId : playerPaymentFactorMap.keySet() )
+        for ( UUID playerId : activeStimulusPlayers )
         {
             String name = playerNameMap.get( playerId );
             double paymentFactor = playerPaymentFactorMap.get( playerId );
@@ -307,30 +308,25 @@ public class StimulusCommand implements CommandExecutor
 
         // compute the payment for each player
         Map< UUID, Double > playerPaymentMap = new HashMap< UUID, Double >();
-        for ( OfflinePlayer player : offlinePlayers )
+        for ( UUID playerId : activeStimulusPlayers )
         {
-            // skip players who are not active stimulus players
-            long loginInterval = playerTimeMap.get( player.getUniqueId() );
-            if ( loginInterval >= this.config.getStimulusInterval() ) continue;
-
-            double adjustedPaymentFactor =
-                    playerPaymentFactorMap.get( player.getUniqueId() ) / paymentFactorSum;
+            double adjustedPaymentFactor = playerPaymentFactorMap.get( playerId ) / paymentFactorSum;
             double playerPayment = adjustedPaymentFactor * totalStimulus;
-            playerPaymentMap.put( player.getUniqueId(), playerPayment );
+            playerPaymentMap.put( playerId, playerPayment );
         }
 
         StimulusUtil.appendToFile( logFile, "" );
         StimulusUtil.appendToFile( logFile, "Player Payments:" );
         Map< UUID, String > formattedPlayerPaymentMap = new HashMap< UUID, String >();
 
-        for ( UUID playerId : playerPaymentMap.keySet() )
+        for ( UUID playerId : activeStimulusPlayers )
         {
             formattedPlayerPaymentMap.put( playerId, this.economy.format( playerPaymentMap.get( playerId )));
         }
 
         int playerPaymentLength = StimulusUtil.getMaxLength( formattedPlayerPaymentMap.values() );
         TreeSet< SortedLine< Double >> playerPaymentOutput = new TreeSet< SortedLine< Double >>();
-        for ( UUID playerId : playerPaymentMap.keySet() )
+        for ( UUID playerId : activeStimulusPlayers )
         {
             String name = playerNameMap.get( playerId );
             String rawPayment = formattedPlayerPaymentMap.get( playerId );
@@ -345,7 +341,7 @@ public class StimulusCommand implements CommandExecutor
         }
 
         // make stimulus payments
-        for ( UUID playerId : playerPaymentMap.keySet() )
+        for ( UUID playerId : activeStimulusPlayers )
         {
             double rawPayment = playerPaymentMap.get( playerId );
             double payment = StimulusUtil.round( economy.fractionalDigits(), rawPayment );
@@ -367,5 +363,10 @@ public class StimulusCommand implements CommandExecutor
 
         this.plugin.saveData();
         return true;
+    }
+
+    private String getWealthLine( String playerName, double wealth )
+    {
+        return "§3" + playerName + " §f- §d" + this.economy.format( wealth );
     }
 }

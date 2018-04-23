@@ -32,4 +32,4 @@ commands:
         usage: /wealth
     wealthtop:
         description: Display the wealthiest players on the server.
-        usage: /wealthtop
+        usage: /wealthtop [all] [<page num>]
