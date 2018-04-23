@@ -129,14 +129,14 @@ public class StimulusCommand implements CommandExecutor
                                    ", Stimulus Players: " + activeStimulusPlayers );
 
         Map< UUID, String > formattedPlayerTimeMap = new HashMap< UUID, String >();
-        for ( UUID playerId : playerTimeMap.keySet() )
+        for ( UUID playerId : activePlayers )
         {
             formattedPlayerTimeMap.put( playerId, String.format( "%,d", playerTimeMap.get( playerId )));
         }
 
         int playerTimeLength = StimulusUtil.getMaxLength( formattedPlayerTimeMap.values() );
         TreeSet< SortedLine< Long >> playerTimeOutput = new TreeSet< SortedLine< Long >>();
-        for ( UUID playerId : playerTimeMap.keySet() )
+        for ( UUID playerId : activePlayers )
         {
             String name = playerNameMap.get( playerId );
             String rawTime = formattedPlayerTimeMap.get( playerId );
