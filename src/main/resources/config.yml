@@ -32,6 +32,11 @@ economicInterval: 604800
 # Default Value: one week (604,800 seconds)
 stimulusInterval: 604800
 
+# Time interval (in seconds) used to make stimulus payments to players.
+# Data Type: long
+# Default Value: 15 minutes (900 seconds)
+paymentInterval: 900
+
 # Description: Desired economic activity (in terms of in-game currency) per player over the last economic interval.
 # Data Type: double
 # Default Value: 1,000

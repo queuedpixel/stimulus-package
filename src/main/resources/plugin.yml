@@ -24,9 +24,6 @@ name: StiumulusPackage
 version: 1.0.0-SNAPSHOT
 main: com.queuedpixel.stimuluspackage.StimulusPackagePlugin
 commands:
-    stimulus:
-        description: Test Stimulus Command
-        usage: /stimulus
     wealth:
         description: Display your overall wealth.
         usage: /wealth

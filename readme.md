@@ -82,9 +82,9 @@ Copy `target/stimulus-package-1.0.0-SNAPSHOT.jar` into your server `plugins` dir
 
 ## Usage
 
-Use the `/stimulus` command to see debug information related to the plugin.
+Use the `/wealth` command to see your overall wealth.
 
-Use the `/wealth` command to see your total wealth.
+Use the `/wealthtop` command to see the wealthiest players on the server.
 
 ## Contributing
 

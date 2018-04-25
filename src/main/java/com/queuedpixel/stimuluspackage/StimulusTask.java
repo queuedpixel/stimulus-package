@@ -37,15 +37,13 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import me.ryanhamshire.GriefPrevention.PlayerData;
 import net.milkbowl.vault.economy.Economy;
 
-public class StimulusCommand implements CommandExecutor
+public class StimulusTask extends BukkitRunnable
 {
     private final StimulusPackagePlugin plugin;
     private final Economy economy;
@@ -57,7 +55,7 @@ public class StimulusCommand implements CommandExecutor
     private final double minimumPaymentFactor;
     private final double claimBlockValue;
 
-    public StimulusCommand( StimulusPackagePlugin plugin )
+    public StimulusTask( StimulusPackagePlugin plugin )
     {
         this.plugin = plugin;
         this.economy = this.plugin.getEconomy();
@@ -70,9 +68,9 @@ public class StimulusCommand implements CommandExecutor
         this.claimBlockValue      = this.plugin.getConfig().getDouble( "claimBlockValue"      );
     }
 
-    public boolean onCommand( CommandSender sender, Command command, String label, String[] args )
+    public void run()
     {
-        sender.sendMessage( "Making stimulus payments..." );
+        this.plugin.getLogger().info( "Running Stimulus Task" );
 
         // current time
         long now = new Date().getTime();
@@ -390,6 +388,5 @@ public class StimulusCommand implements CommandExecutor
         }
 
         this.plugin.saveData();
-        return true;
     }
 }

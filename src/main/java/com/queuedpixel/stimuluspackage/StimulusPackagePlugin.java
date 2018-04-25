@@ -115,10 +115,14 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
                 (GriefPrevention) Bukkit.getServer().getPluginManager().getPlugin( "GriefPrevention" );
 
         this.loadData();
-        this.getCommand( "stimulus" ).setExecutor( new StimulusCommand( this ));
         this.getCommand( "wealth" ).setExecutor( new WealthCommand( this ));
         this.getCommand( "wealthtop" ).setExecutor( new WealthTopCommand( this ));
         this.getServer().getPluginManager().registerEvents( this, this );
+
+        // schedule the stimulus task
+        StimulusTask stimulusTask = new StimulusTask( this );
+        long paymentInterval = this.getConfig().getLong( "paymentInterval" ) * 20; // 20 ticks per second
+        stimulusTask.runTaskTimer( this, paymentInterval, paymentInterval );
     }
 
     public void onDisable()
