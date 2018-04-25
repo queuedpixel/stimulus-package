@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-name: StiumulusPackage
+name: StimulusPackage
 version: 1.0.1-SNAPSHOT
 main: com.queuedpixel.stimuluspackage.StimulusPackagePlugin
 commands:
