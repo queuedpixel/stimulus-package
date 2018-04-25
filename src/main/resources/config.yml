@@ -1,0 +1,59 @@
+# stimulus-package : Give money to players based on economic activity.
+#
+# Copyright (c) 2018 Queued Pixel <git@queuedpixel.com>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+# Configuration File for StimulusPackage
+
+# Description: Time interval (in seconds) used to measure economic activity.
+# Data Type: long
+# Default Value: one week (604,800 seconds)
+economicInterval: 604800
+
+# Description: Time interval (in seconds) for which players will receive stimulus payments after they last played.
+# Data Type: long
+# Default Value: one week (604,800 seconds)
+stimulusInterval: 604800
+
+# Description: Desired economic activity (in terms of in-game currency) per player over the last economic interval.
+# Data Type: double
+# Default Value: 1,000
+desiredVolume: 1000
+
+# Description: Desired stimulus payment (in terms of in-game currency) per player every payment interval.
+# Data Type: double
+# Default Value: 1
+desiredStimulus: 1
+
+# Description: Determines the stimulus payments made to the wealthiest player.
+# Valid values are between 0 and 1.
+# A value of 0 means that the wealthiest player receives no stimulus.
+# A value of 1 means that all players receive the same stimulus payment regardless of wealth.
+# Data Type: double
+# Default Value: 0
+minimumPaymentFactor: 0
+
+# Description: The value placed on grief prevention claim blocks (in terms of in-game currency).
+# If you don't allow players to buy and sell claims blocks, set this value to 0.
+# Otherwise, set it to the value for which players are able to sell claim blocks.
+# See Economy.ClaimBlocksPurchaseCost and Economy.ClaimBlocksSellValue in GriefPrevention plugin configuration.
+# Data Type: double
+# Default Value: 1
+claimBlockValue: 1

@@ -38,15 +38,15 @@ import net.milkbowl.vault.economy.Economy;
 
 public class WealthCommand implements CommandExecutor
 {
-    private final StimulusPackageConfiguration config;
     private final Economy economy;
     private final GriefPrevention griefPrevention;
+    private final double claimBlockValue;
 
     public WealthCommand( StimulusPackagePlugin plugin )
     {
-        this.config = plugin.getConfiguration();
         this.economy = plugin.getEconomy();
         this.griefPrevention = plugin.getGriefPrevention();
+        this.claimBlockValue = plugin.getConfig().getDouble( "claimBlockValue" );
     }
 
     public boolean onCommand( CommandSender sender, Command command, String label, String[] args )
@@ -60,8 +60,8 @@ public class WealthCommand implements CommandExecutor
         OfflinePlayer player = (OfflinePlayer) sender;
         double balance = this.economy.getBalance( player );
         PlayerData playerData = this.griefPrevention.dataStore.getPlayerData( player.getUniqueId() );
-        double accruedClaimBlockValue = playerData.getAccruedClaimBlocks() * config.getClaimBlockValue();
-        double bonusClaimBlockValue = playerData.getBonusClaimBlocks() * config.getClaimBlockValue();
+        double accruedClaimBlockValue = playerData.getAccruedClaimBlocks() * this.claimBlockValue;
+        double bonusClaimBlockValue = playerData.getBonusClaimBlocks() * this.claimBlockValue;
         double totalClaimBlockValue = accruedClaimBlockValue + bonusClaimBlockValue;
         double totalWealth = balance + totalClaimBlockValue;
 

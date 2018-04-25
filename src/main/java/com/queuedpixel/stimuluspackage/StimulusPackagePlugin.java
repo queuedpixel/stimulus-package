@@ -28,7 +28,6 @@ package com.queuedpixel.stimuluspackage;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -59,10 +58,10 @@ import net.milkbowl.vault.economy.Economy;
 
 public class StimulusPackagePlugin extends JavaPlugin implements Listener
 {
+    private Path pluginDirectory;
     private Path logDirectory;
     private Path transactionsFile;
     private Path dataFile;
-    private final StimulusPackageConfiguration config = new StimulusPackageConfiguration();
     private final Collection< Transaction > transactions = new LinkedList< Transaction >();
     private StimulusData data = new StimulusData();
     private Economy economy;
@@ -73,7 +72,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     {
         this.getLogger().info( "onEnable() is called!" );
 
-        Path pluginDirectory  = this.getDataFolder().toPath();
+        this.pluginDirectory  = this.getDataFolder().toPath();
         this.logDirectory     = pluginDirectory.resolve( "logs"             );
         this.transactionsFile = pluginDirectory.resolve( "transactions.txt" );
         this.dataFile         = pluginDirectory.resolve( "stimulus.json"    );
@@ -87,6 +86,8 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         {
             e.printStackTrace();
         }
+
+        this.checkConfig();
 
         if ( Files.exists( this.transactionsFile ))
         {
@@ -173,11 +174,6 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         StimulusUtil.appendToFile( this.getLogFile( "SaneEconomy", timestamp ), logEntry );
     }
 
-    StimulusPackageConfiguration getConfiguration()
-    {
-        return this.config;
-    }
-
     Economy getEconomy()
     {
         return this.economy;
@@ -199,7 +195,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         {
             Transaction transaction = iterator.next();
             long transactionAge = ( now - transaction.getTimestamp() ) / 1000;
-            if ( transactionAge > this.config.getEconomicInterval() )
+            if ( transactionAge > this.getConfig().getLong( "economicInterval" ))
             {
                 // remove transaction that is outside the economic time interval
                 this.actualVolume -= transaction.getAmount();
@@ -274,6 +270,30 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         {
             e.printStackTrace();
             this.data = new StimulusData();
+        }
+    }
+
+    private void checkConfig()
+    {
+        Path configFile = this.pluginDirectory.resolve( "congif.yml" );
+        if ( !Files.exists( configFile )) this.saveDefaultConfig();
+
+        if ( this.getConfig().getDouble( "desiredStimulus" ) < 0 )
+        {
+            this.getLogger().info( "desiredStimulus is less than 0! Defaulting to 0." );
+            this.getConfig().set( "desiredStimulus", 0 );
+        }
+
+        if ( this.getConfig().getDouble( "minimumPaymentFactor" ) > 1 )
+        {
+            this.getLogger().info( "minimumPaymentFactor is greater than 1! Defaulting to 1." );
+            this.getConfig().set( "minimumPaymentFactor", 1 );
+        }
+
+        if ( this.getConfig().getDouble( "minimumPaymentFactor" ) < 0 )
+        {
+            this.getLogger().info( "minimumPaymentFactor is less than 0! Defaulting to 0." );
+            this.getConfig().set( "minimumPaymentFactor", 0 );
         }
     }
 

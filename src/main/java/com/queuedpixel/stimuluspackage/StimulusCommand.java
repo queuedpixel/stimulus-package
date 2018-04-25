@@ -49,13 +49,25 @@ public class StimulusCommand implements CommandExecutor
 {
     private final StimulusPackagePlugin plugin;
     private final Economy economy;
-    private final StimulusPackageConfiguration config;
+
+    private final long   economicInterval;
+    private final long   stimulusInterval;
+    private final double desiredVolume;
+    private final double desiredStimulus;
+    private final double minimumPaymentFactor;
+    private final double claimBlockValue;
 
     public StimulusCommand( StimulusPackagePlugin plugin )
     {
         this.plugin = plugin;
         this.economy = this.plugin.getEconomy();
-        this.config = this.plugin.getConfiguration();
+
+        this.economicInterval     = this.plugin.getConfig().getLong(   "economicInterval"     );
+        this.stimulusInterval     = this.plugin.getConfig().getLong(   "stimulusInterval"     );
+        this.desiredVolume        = this.plugin.getConfig().getDouble( "desiredVolume"        );
+        this.desiredStimulus      = this.plugin.getConfig().getDouble( "desiredStimulus"      );
+        this.minimumPaymentFactor = this.plugin.getConfig().getDouble( "minimumPaymentFactor" );
+        this.claimBlockValue      = this.plugin.getConfig().getDouble( "claimBlockValue"      );
     }
 
     public boolean onCommand( CommandSender sender, Command command, String label, String[] args )
@@ -88,8 +100,8 @@ public class StimulusCommand implements CommandExecutor
             double balance = this.economy.getBalance( player );
             PlayerData playerData =
                     this.plugin.getGriefPrevention().dataStore.getPlayerData( player.getUniqueId() );
-            double accruedClaimBlockValue = playerData.getAccruedClaimBlocks() * config.getClaimBlockValue();
-            double bonusClaimBlockValue = playerData.getBonusClaimBlocks() * config.getClaimBlockValue();
+            double accruedClaimBlockValue = playerData.getAccruedClaimBlocks() * this.claimBlockValue;
+            double bonusClaimBlockValue = playerData.getBonusClaimBlocks() * this.claimBlockValue;
             double wealth = balance + accruedClaimBlockValue + bonusClaimBlockValue;
             playerWealthMap.put( player.getUniqueId(), wealth );
         }
@@ -115,17 +127,17 @@ public class StimulusCommand implements CommandExecutor
         for ( UUID playerId : playerTimeMap.keySet() )
         {
             Long loginInterval = playerTimeMap.get( playerId );
-            if (( loginInterval < this.config.getEconomicInterval() ) ||
-                ( loginInterval < this.config.getStimulusInterval() ))
+            if (( loginInterval < this.economicInterval ) ||
+                ( loginInterval < this.stimulusInterval ))
             {
                 activePlayers.add( playerId );
                 playerNameMap.put( playerId, offlinePlayerMap.get( playerId ).getName() );
 
-                if ( loginInterval < this.config.getEconomicInterval() )
+                if ( loginInterval < this.economicInterval )
                 {
                     activeEconomicPlayerCount++;
                 }
-                if ( loginInterval < this.config.getStimulusInterval() )
+                if ( loginInterval < this.stimulusInterval )
                 {
                     activeStimulusPlayers.add( playerId );
                     activeStimulusPlayerCount++;
@@ -169,7 +181,7 @@ public class StimulusCommand implements CommandExecutor
 
         // perform volume calculations
         double actualVolume = this.plugin.getActualVolume( now );
-        double totalDesiredVolume = this.config.getDesiredVolume() * activeEconomicPlayerCount;
+        double totalDesiredVolume = this.desiredVolume * activeEconomicPlayerCount;
         double volumeDelta = totalDesiredVolume - actualVolume;
 
         String formattedTotalDesiredVolume = this.economy.format( totalDesiredVolume );
@@ -191,7 +203,7 @@ public class StimulusCommand implements CommandExecutor
             // compute total stimulus
             double stimulusFactor = volumeDelta / totalDesiredVolume;
             double totalStimulus =
-                    stimulusFactor * this.config.getDesiredStimulus() * activeStimulusPlayerCount;
+                    stimulusFactor * this.desiredStimulus * activeStimulusPlayerCount;
             StimulusUtil.appendToFile( logFile, "" );
             StimulusUtil.appendToFile( logFile, "Stimulus Factor : " + stimulusFactor );
             StimulusUtil.appendToFile( logFile, "Total Stimulus  : " + totalStimulus  );
@@ -266,8 +278,8 @@ public class StimulusCommand implements CommandExecutor
                 {
                     double playerOffset = playerWealthMap.get( playerId ) - lowestWealth;
                     rawPaymentFactor = 1 - ( playerOffset / wealthDelta );
-                    paymentFactor = (( 1 - config.getMinimumPaymentFactor() ) * rawPaymentFactor ) +
-                                    config.getMinimumPaymentFactor();
+                    paymentFactor = (( 1 - this.minimumPaymentFactor ) * rawPaymentFactor ) +
+                                    this.minimumPaymentFactor;
                 }
 
                 paymentFactorSum += paymentFactor;
