@@ -365,24 +365,19 @@ public class StimulusCommand implements CommandExecutor
         for ( OfflinePlayer player : offlinePlayerMap.values() )
         {
             double wealth = playerWealthMap.get( player.getUniqueId() );
-            String wealthLine = this.getWealthLine( player.getName(), wealth );
-            this.plugin.getAllWealthTop().add( new SortedLine< Double >( wealth, wealthLine ));
+            String playerName = player.getName();
+            this.plugin.getAllWealthTop().add( new SortedLine< Double >( wealth, playerName ));
         }
 
         // populate wealth top data structure for active players
         for ( UUID playerId : activeStimulusPlayers )
         {
             double wealth = playerWealthMap.get( playerId );
-            String wealthLine = this.getWealthLine( offlinePlayerMap.get( playerId ).getName(), wealth );
-            this.plugin.getActiveWealthTop().add( new SortedLine< Double >( wealth, wealthLine ));
+            String playerName = offlinePlayerMap.get( playerId ).getName();
+            this.plugin.getActiveWealthTop().add( new SortedLine< Double >( wealth, playerName ));
         }
 
         this.plugin.saveData();
         return true;
-    }
-
-    private String getWealthLine( String playerName, double wealth )
-    {
-        return "§3" + playerName + " §f- §d" + this.economy.format( wealth );
     }
 }

@@ -17,6 +17,7 @@ public class WealthTopCommand implements CommandExecutor
 
     public boolean onCommand( CommandSender sender, Command command, String label, String[] args )
     {
+        String prefix = "§a[§2Wealth§a] ";
         boolean allPlayers = false;
         int pageNum = 1;
         for ( String arg : args )
@@ -33,7 +34,7 @@ public class WealthTopCommand implements CommandExecutor
                 }
                 catch ( NumberFormatException e )
                 {
-                    sender.sendMessage( "§a[§2Wealth§a] §3Invalid page number." );
+                    sender.sendMessage( prefix + "§3Invalid page number." );
                     return false;
                 }
             }
@@ -41,12 +42,12 @@ public class WealthTopCommand implements CommandExecutor
 
         if ( pageNum < 1 )
         {
-            sender.sendMessage( "§a[§2Wealth§a] §3Page number must be greater than zero." );
+            sender.sendMessage( prefix + "§3Page number must be greater than zero." );
             return false;
         }
 
         String playerType = allPlayers ? "All" : "Active";
-        sender.sendMessage( "§a[§2Wealth§a] §fDisplaying " + playerType + " Players - Page " + pageNum + ":" );
+        sender.sendMessage( prefix + "§fDisplaying " + playerType + " Players - Page " + pageNum + ":" );
 
         TreeSet< SortedLine< Double >> wealthSet =
                 allPlayers ? this.plugin.getAllWealthTop() : this.plugin.getActiveWealthTop();
@@ -55,7 +56,7 @@ public class WealthTopCommand implements CommandExecutor
 
         if ( size - (( pageNum - 1 ) * 10 ) <= 0 )
         {
-            sender.sendMessage( "§a[§2Wealth§a] §3No players to display." );
+            sender.sendMessage( prefix + "§3No players to display." );
             return true;
         }
 
@@ -70,8 +71,10 @@ public class WealthTopCommand implements CommandExecutor
             // stop output after we display 10 players
             if ( index > pageNum * 10 ) break;
 
-            sender.sendMessage(
-                    String.format( "§a[§2Wealth§a] §e[§6%0" + length + "d§e] %s", index, line.line ));
+            String indexString = String.format( "%0" + length + "d", index );
+            String playerName = line.line;
+            String wealth = this.plugin.getEconomy().format( line.sortValue );
+            sender.sendMessage( prefix + "§e[§6" + indexString + "§e] §3" + playerName + " §f- §d" + wealth );
         }
 
         return true;
