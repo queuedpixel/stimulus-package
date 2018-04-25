@@ -3,11 +3,7 @@
 Stimulus Package is a Spigot plugin that gives money to players based on the number of active players and volume of
 economic transactions.
 
-## Under Development
-
-This plugin does not currently match our proposed implementation.
-
-## Proposed Implementation
+## Implementation Details
 
 - Configured variables:
     - `[economic interval]`: Time interval used to measure economic activity.
@@ -46,7 +42,7 @@ This plugin does not currently match our proposed implementation.
     - Compute a `[payment amount]` for each active stimulus player: `[adjusted payment factor]` * `[total stimulus]`
     - Pay each active stimulus player their `[payment amount]`.
 
-## Proposed Default Configuration
+## Default Configuration
 
 - `[economic interval]`: 1 Week - 604,800 Seconds
 - `[stimulus interval]`: 1 Week - 604,800 Seconds
@@ -69,8 +65,8 @@ This plugin depends on the following plugins:
 
 ## Installation
 
-This plugin is currently under development and a binary release is not available. To use this plugin you must compile it
-yourself. We use [Apache Maven](https://maven.apache.org/) to build this plugin.
+A binary release of this plugin is not available. To use this plugin you must compile it yourself.
+We use [Apache Maven](https://maven.apache.org/) to build this plugin.
 
 ### Compile Plugin
 
@@ -78,7 +74,7 @@ Run `mvn package` to create a Jar for this plugin.
 
 ### Install Plugin
 
-Copy `target/stimulus-package-1.0.0-SNAPSHOT.jar` into your server `plugins` directory.
+Copy `target/stimulus-package-1.0.0.jar` into your server `plugins` directory.
 
 ## Usage
 
