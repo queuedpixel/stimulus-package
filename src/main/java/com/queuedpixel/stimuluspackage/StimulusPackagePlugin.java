@@ -123,6 +123,11 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         StimulusTask stimulusTask = new StimulusTask( this );
         long paymentInterval = this.getConfig().getLong( "paymentInterval" ) * 20; // 20 ticks per second
         stimulusTask.runTaskTimer( this, paymentInterval, paymentInterval );
+
+        // schedule the prune transactions task
+        PruneTransactionsTask pruneTransactionsTask = new PruneTransactionsTask( this );
+        long pruneInterval = this.getConfig().getLong( "pruneInterval" ) * 20; // 20 ticks per second
+        pruneTransactionsTask.runTaskTimer( this, pruneInterval, pruneInterval );
     }
 
     public void onDisable()
@@ -234,6 +239,29 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     TreeSet< SortedLine< Double >> getAllWealthTop()
     {
         return this.data.allWealthTop;
+    }
+
+    void pruneTransactions()
+    {
+        this.getLogger().info( "Pruning Transactions" );
+
+        try
+        {
+            BufferedWriter writer = Files.newBufferedWriter(
+                    this.transactionsFile, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING );
+
+            for ( Transaction transaction : this.transactions )
+            {
+                writer.write( transaction.toString() );
+                writer.newLine();
+            }
+
+            writer.close();
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
     }
 
     void saveData()

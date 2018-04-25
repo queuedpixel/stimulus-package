@@ -37,6 +37,11 @@ stimulusInterval: 604800
 # Default Value: 15 minutes (900 seconds)
 paymentInterval: 900
 
+# Time interval (in seconds) used to prune old transactions.
+# Data Type: long
+# Default Value: 1 hour (3600 seconds)
+pruneInterval: 3600
+
 # Description: Desired economic activity (in terms of in-game currency) per player over the last economic interval.
 # Data Type: double
 # Default Value: 1,000
