@@ -70,8 +70,6 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
 
     public void onEnable()
     {
-        this.getLogger().info( "onEnable() is called!" );
-
         this.pluginDirectory  = this.getDataFolder().toPath();
         this.logDirectory     = pluginDirectory.resolve( "logs"             );
         this.transactionsFile = pluginDirectory.resolve( "transactions.txt" );
@@ -132,7 +130,6 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
 
     public void onDisable()
     {
-        this.getLogger().info( "onDisable() is called!" );
     }
 
     @EventHandler
@@ -243,8 +240,6 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
 
     void pruneTransactions()
     {
-        this.getLogger().info( "Pruning Transactions" );
-
         try
         {
             BufferedWriter writer = Files.newBufferedWriter(

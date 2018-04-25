@@ -70,8 +70,6 @@ public class StimulusTask extends BukkitRunnable
 
     public void run()
     {
-        this.plugin.getLogger().info( "Running Stimulus Task" );
-
         // current time
         long now = new Date().getTime();
 
