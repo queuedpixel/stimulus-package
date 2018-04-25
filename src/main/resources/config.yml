@@ -67,3 +67,11 @@ minimumPaymentFactor: 0
 # Data Type: double
 # Default Value: 1
 claimBlockValue: 1
+
+# Description: UUIDs of players that will be ignored by this plugin.
+# Could be used to exlclude admin players who should not receive stimulus or for players who are abusing the economy.
+# Example:
+# excludedPlayers:
+# - 00000000-1111-2222-3333-444444444444
+# - aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
+excludedPlayers:

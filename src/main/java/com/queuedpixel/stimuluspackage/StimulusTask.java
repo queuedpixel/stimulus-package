@@ -123,8 +123,9 @@ public class StimulusTask extends BukkitRunnable
         for ( UUID playerId : playerTimeMap.keySet() )
         {
             Long loginInterval = playerTimeMap.get( playerId );
-            if (( loginInterval < this.economicInterval ) ||
-                ( loginInterval < this.stimulusInterval ))
+            if ((( loginInterval < this.economicInterval ) ||
+                 ( loginInterval < this.stimulusInterval )) &&
+                ( !this.plugin.getExcludedPlayers().contains( playerId )))
             {
                 activePlayers.add( playerId );
                 playerNameMap.put( playerId, offlinePlayerMap.get( playerId ).getName() );

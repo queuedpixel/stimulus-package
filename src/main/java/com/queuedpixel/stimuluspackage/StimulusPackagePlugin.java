@@ -34,6 +34,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TreeSet;
@@ -62,6 +63,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     private Path logDirectory;
     private Path transactionsFile;
     private Path dataFile;
+    private final Collection< UUID > excludedPlayers = new HashSet< UUID >();
     private final Collection< Transaction > transactions = new LinkedList< Transaction >();
     private StimulusData data = new StimulusData();
     private Economy economy;
@@ -150,20 +152,25 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     public void onShopBuySellEvent( ShopBuySellEvent event )
     {
         long timestamp = new Date().getTime();
-        Transaction transaction = new Transaction( timestamp, event.getNewPrice() );
-        this.addTransaction( transaction );
-        StimulusUtil.appendToFile( this.transactionsFile, transaction.toString() );
-
         int fractionalDigits = this.economy.fractionalDigits();
+        UUID playerId = event.getPlayer().getUniqueId();
+        UUID vendorId = event.getShop().getVendor().getUniqueId();
         String currencyFormat = ( fractionalDigits > -1 ) ? "%." + fractionalDigits + "f" : "%f";
         String logEntry = String.format(
                 "%tF %<tT.%<tL, %s, %s, %d, " + currencyFormat + ", %s [%s], %s [%s]",
                 timestamp, event.getType().toString(),
                 event.getShop().getProduct().getType().toString(),
                 event.getNewAmount(), event.getNewPrice(),
-                event.getPlayer().getUniqueId(), event.getPlayer().getName(),
-                event.getShop().getVendor().getUniqueId(), event.getShop().getVendor().getName() );
+                playerId, event.getPlayer().getName(),
+                vendorId, event.getShop().getVendor().getName() );
         StimulusUtil.appendToFile( this.getLogFile( "ShopChest", timestamp ), logEntry );
+
+        if (( !this.excludedPlayers.contains( playerId )) && ( !this.excludedPlayers.contains( vendorId )))
+        {
+            Transaction transaction = new Transaction( timestamp, event.getNewPrice() );
+            this.addTransaction( transaction );
+            StimulusUtil.appendToFile( this.transactionsFile, transaction.toString() );
+        }
     }
 
     @EventHandler
@@ -193,6 +200,11 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     Path getLogFile( String prefix, long timestamp )
     {
         return this.logDirectory.resolve( String.format( "%s-%tF.log", prefix, timestamp ));
+    }
+
+    Collection< UUID > getExcludedPlayers()
+    {
+        return this.excludedPlayers;
     }
 
     double getActualVolume( long now )
@@ -321,6 +333,12 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         {
             this.getLogger().info( "minimumPaymentFactor is less than 0! Defaulting to 0." );
             this.getConfig().set( "minimumPaymentFactor", 0 );
+        }
+
+        this.excludedPlayers.clear();
+        for ( String playerId : this.getConfig().getStringList( "excludedPlayers" ))
+        {
+            this.excludedPlayers.add( UUID.fromString( playerId ));
         }
     }
 
