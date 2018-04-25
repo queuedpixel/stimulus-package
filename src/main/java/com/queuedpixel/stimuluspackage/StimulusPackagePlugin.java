@@ -61,6 +61,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
 {
     private Path pluginDirectory;
     private Path logDirectory;
+    private Path versionFile;
     private Path transactionsFile;
     private Path dataFile;
     private final Collection< UUID > excludedPlayers = new HashSet< UUID >();
@@ -74,6 +75,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     {
         this.pluginDirectory  = this.getDataFolder().toPath();
         this.logDirectory     = pluginDirectory.resolve( "logs"             );
+        this.versionFile      = pluginDirectory.resolve( "data_version.txt" );
         this.transactionsFile = pluginDirectory.resolve( "transactions.txt" );
         this.dataFile         = pluginDirectory.resolve( "stimulus.json"    );
 
@@ -87,6 +89,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
             e.printStackTrace();
         }
 
+        this.checkVersion();
         this.checkConfig();
 
         if ( Files.exists( this.transactionsFile ))
@@ -309,6 +312,49 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         {
             e.printStackTrace();
             this.data = new StimulusData();
+        }
+    }
+
+    private void checkVersion()
+    {
+        long desiredVersion = 1;
+        Gson gson = new Gson();
+
+        // if version file exists, verify the version
+        if ( Files.exists( this.versionFile ))
+        {
+            long version = -1;
+            try
+            {
+                BufferedReader reader = Files.newBufferedReader( this.versionFile );
+                version = gson.fromJson( reader, Long.class );
+                reader.close();
+            }
+            catch ( IOException e )
+            {
+                e.printStackTrace();
+            }
+
+            if ( version != desiredVersion )
+            {
+                throw new IllegalStateException( "Unknown version of StimulusPackage data files!" );
+            }
+        }
+        // otherwise, create version file
+        else
+        {
+            try
+            {
+                BufferedWriter writer = Files.newBufferedWriter(
+                        this.versionFile, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING );
+                writer.write( gson.toJson( desiredVersion ));
+                writer.newLine();
+                writer.close();
+            }
+            catch ( IOException e )
+            {
+                e.printStackTrace();
+            }
         }
     }
 
