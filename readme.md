@@ -74,7 +74,7 @@ Run `mvn package` to create a Jar for this plugin.
 
 ### Install Plugin
 
-Copy `target/stimulus-package-1.0.0.jar` into your server `plugins` directory.
+Copy `target/stimulus-package-1.0.1-SNAPSHOT.jar` into your server `plugins` directory.
 
 ## Usage
 
