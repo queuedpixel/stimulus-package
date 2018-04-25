@@ -28,10 +28,10 @@ package com.queuedpixel.stimuluspackage;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.Date;
@@ -59,10 +59,9 @@ import net.milkbowl.vault.economy.Economy;
 
 public class StimulusPackagePlugin extends JavaPlugin implements Listener
 {
-    private final Path pluginDirectory = Paths.get( "plugins/StimulusPackage" );
-    private final Path logDirectory = this.pluginDirectory.resolve( "logs" );
-    private final Path transactionsFile = this.pluginDirectory.resolve( "transactions.txt" );
-    private final Path dataFile = this.pluginDirectory.resolve( "stimulus.json" );
+    private Path logDirectory;
+    private Path transactionsFile;
+    private Path dataFile;
     private final StimulusPackageConfiguration config = new StimulusPackageConfiguration();
     private final Collection< Transaction > transactions = new LinkedList< Transaction >();
     private StimulusData data = new StimulusData();
@@ -74,10 +73,15 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     {
         this.getLogger().info( "onEnable() is called!" );
 
+        Path pluginDirectory  = this.getDataFolder().toPath();
+        this.logDirectory     = pluginDirectory.resolve( "logs"             );
+        this.transactionsFile = pluginDirectory.resolve( "transactions.txt" );
+        this.dataFile         = pluginDirectory.resolve( "stimulus.json"    );
+
         try
         {
-            if ( !Files.exists( this.pluginDirectory )) Files.createDirectory( this.pluginDirectory );
-            if ( !Files.exists( this.logDirectory    )) Files.createDirectory( this.logDirectory    );
+            if ( !Files.exists( pluginDirectory   )) Files.createDirectory( pluginDirectory   );
+            if ( !Files.exists( this.logDirectory )) Files.createDirectory( this.logDirectory );
         }
         catch ( IOException e )
         {
