@@ -66,6 +66,18 @@ public class StimulusUtil
         return result;
     }
 
+    public static String getRepeatedString( String string, int count )
+    {
+        StringBuilder builder = new StringBuilder();
+
+        for ( int i = 0; i < count; i++ )
+        {
+            builder.append( string );
+        }
+
+        return builder.toString();
+    }
+
     public static double round( int precision, double value )
     {
         if ( precision < 0 ) return value;
