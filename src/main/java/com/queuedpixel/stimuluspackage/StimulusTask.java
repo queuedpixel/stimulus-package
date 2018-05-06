@@ -202,8 +202,8 @@ public class StimulusTask extends BukkitRunnable
             double totalStimulus =
                     stimulusFactor * this.desiredStimulus * activeStimulusPlayerCount;
             StimulusUtil.appendToFile( logFile, "" );
-            StimulusUtil.appendToFile( logFile, "Stimulus Factor : " + stimulusFactor );
-            StimulusUtil.appendToFile( logFile, "Total Stimulus  : " + totalStimulus  );
+            StimulusUtil.appendToFile( logFile, "Stimulus Factor : " + stimulusFactor                      );
+            StimulusUtil.appendToFile( logFile, "Total Stimulus  : " + this.economy.format( totalStimulus ));
 
             // determine the wealth of the wealthiest and poorest players
             double highestWealth = Double.NEGATIVE_INFINITY;
