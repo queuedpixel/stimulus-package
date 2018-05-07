@@ -71,6 +71,8 @@ public class StimulusTask extends BukkitRunnable
 
     public void run()
     {
+        String prefix = "§a[§2Stimulus§a] ";
+
         // current time
         long now = new Date().getTime();
 
@@ -287,11 +289,19 @@ public class StimulusTask extends BukkitRunnable
                     if ( player != null )
                     {
                         player.sendMessage(
-                                "§3You received §d" + this.economy.format( payment ) + "§3 in stimulus!" );
+                                prefix + "§3You received §d" + this.economy.format( payment ) + "§3 in stimulus!" );
                     }
                     else
                     {
                         this.plugin.addOfflineStimulus( playerId, payment );
+                    }
+                }
+                else
+                {
+                    Player player = onlinePlayerMap.get( playerId );
+                    if ( player != null )
+                    {
+                        player.sendMessage( prefix + "§3You received no stimulus." );
                     }
                 }
             }
@@ -395,6 +405,18 @@ public class StimulusTask extends BukkitRunnable
             }
 
             StimulusUtil.appendToFile( logFile, divider );
+        }
+        else
+        {
+            // send a message to all players about the lack of stimulus
+            for ( UUID playerId : activeStimulusPlayers )
+            {
+                Player player = onlinePlayerMap.get( playerId );
+                if ( player != null )
+                {
+                    player.sendMessage( prefix + "§3You received no stimulus due to strong economy." );
+                }
+            }
         }
 
         // clear wealth top data structures
