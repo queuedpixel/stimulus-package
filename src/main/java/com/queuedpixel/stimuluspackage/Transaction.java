@@ -34,25 +34,25 @@ public class Transaction
     // amount of the transaction
     private final double amount;
 
-    public Transaction( String transactionString )
+    Transaction( String transactionString )
     {
         String[] transactionElements = transactionString.split( " " );
         this.timestamp = Long.parseLong( transactionElements[ 0 ] );
         this.amount = Double.parseDouble( transactionElements[ 1 ] );
     }
 
-    public Transaction( long timestamp, double amount )
+    Transaction( long timestamp, double amount )
     {
         this.timestamp = timestamp;
         this.amount = amount;
     }
 
-    public long getTimestamp()
+    long getTimestamp()
     {
         return this.timestamp;
     }
 
-    public double getAmount()
+    double getAmount()
     {
         return this.amount;
     }

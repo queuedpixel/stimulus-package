@@ -32,7 +32,7 @@ public class PruneTransactionsTask extends BukkitRunnable
 {
     private final StimulusPackagePlugin plugin;
 
-    public PruneTransactionsTask( StimulusPackagePlugin plugin )
+    PruneTransactionsTask( StimulusPackagePlugin plugin )
     {
         this.plugin = plugin;
     }

@@ -59,13 +59,12 @@ import net.milkbowl.vault.economy.Economy;
 
 public class StimulusPackagePlugin extends JavaPlugin implements Listener
 {
-    private Path pluginDirectory;
     private Path logDirectory;
     private Path versionFile;
     private Path transactionsFile;
     private Path dataFile;
-    private final Collection< UUID > excludedPlayers = new HashSet< UUID >();
-    private final Collection< Transaction > transactions = new LinkedList< Transaction >();
+    private final Collection< UUID > excludedPlayers = new HashSet<>();
+    private final Collection< Transaction > transactions = new LinkedList<>();
     private StimulusData data = new StimulusData();
     private Economy economy;
     private GriefPrevention griefPrevention;
@@ -73,7 +72,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
 
     public void onEnable()
     {
-        this.pluginDirectory  = this.getDataFolder().toPath();
+        Path pluginDirectory  = this.getDataFolder().toPath();
         this.logDirectory     = pluginDirectory.resolve( "logs"             );
         this.versionFile      = pluginDirectory.resolve( "data_version.txt" );
         this.transactionsFile = pluginDirectory.resolve( "transactions.txt" );
@@ -144,7 +143,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         if ( this.data.playerOfflineStimulusMap.containsKey( playerId ))
         {
             String stimulus = this.economy.format( this.data.playerOfflineStimulusMap.get( playerId ));
-            String message = "§3While offline, you recieved §d" + stimulus + "§3 in stimulus!";
+            String message = "§3While offline, you received §d" + stimulus + "§3 in stimulus!";
             event.getPlayer().sendMessage( message );
             this.data.playerOfflineStimulusMap.remove( playerId );
             this.saveData();
@@ -360,8 +359,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
 
     private void checkConfig()
     {
-        Path configFile = this.pluginDirectory.resolve( "congif.yml" );
-        if ( !Files.exists( configFile )) this.saveDefaultConfig();
+        this.saveDefaultConfig();
 
         if ( this.getConfig().getDouble( "desiredStimulus" ) < 0 )
         {

@@ -31,21 +31,21 @@ import org.junit.jupiter.api.Test;
 
 import com.queuedpixel.stimuluspackage.SortedLine;
 
-public class SortedLineTest
+class SortedLineTest
 {
     @Test
     void testNull()
     {
-        SortedLine< Integer > line = new SortedLine< Integer >( 5, "foo" );
-        Assertions.assertThrows( NullPointerException.class, ()-> { line.compareTo( null ); } );
+        SortedLine< Integer > line = new SortedLine<>( 5, "foo" );
+        Assertions.assertThrows( NullPointerException.class, () -> line.compareTo( null ));
         Assertions.assertNotEquals( line, null, "Line equal to null." );
     }
 
     @Test
     void testDifferentSortValue()
     {
-        SortedLine< Integer > lineOne = new SortedLine< Integer >( 5, "foo" );
-        SortedLine< Integer > lineTwo = new SortedLine< Integer >( 12, "bar" );
+        SortedLine< Integer > lineOne = new SortedLine<>( 5, "foo" );
+        SortedLine< Integer > lineTwo = new SortedLine<>( 12, "bar" );
         Assertions.assertTrue( lineOne.compareTo( lineTwo ) < 0, "Line one not less than line two." );
         Assertions.assertTrue( lineTwo.compareTo( lineOne ) > 0, "Line two not greater than line one." );
         Assertions.assertNotEquals( lineOne, lineTwo, "Two lines equal." );
@@ -54,8 +54,8 @@ public class SortedLineTest
     @Test
     void testDifferentLine()
     {
-        SortedLine< Integer > lineOne = new SortedLine< Integer >( 5, "foo" );
-        SortedLine< Integer > lineTwo = new SortedLine< Integer >( 5, "bar" );
+        SortedLine< Integer > lineOne = new SortedLine<>( 5, "foo" );
+        SortedLine< Integer > lineTwo = new SortedLine<>( 5, "bar" );
         Assertions.assertTrue( lineOne.compareTo( lineTwo ) > 0, "Line one not greater than line two." );
         Assertions.assertTrue( lineTwo.compareTo( lineOne ) < 0, "Line two not less than line one." );
         Assertions.assertNotEquals( lineOne, lineTwo, "Two lines equal." );
@@ -64,8 +64,8 @@ public class SortedLineTest
     @Test
     void testEqual()
     {
-        SortedLine< Integer > lineOne = new SortedLine< Integer >( 5, "foo" );
-        SortedLine< Integer > lineTwo = new SortedLine< Integer >( 5, "foo" );
+        SortedLine< Integer > lineOne = new SortedLine<>( 5, "foo" );
+        SortedLine< Integer > lineTwo = new SortedLine<>( 5, "foo" );
         Assertions.assertEquals( 0, lineOne.compareTo( lineTwo ));
         Assertions.assertEquals( 0, lineTwo.compareTo( lineOne ));
         Assertions.assertEquals( lineOne, lineTwo, "Two lines not equal." );
@@ -74,7 +74,7 @@ public class SortedLineTest
     @Test
     void testWrongType()
     {
-        SortedLine< Integer > lineOne = new SortedLine< Integer >( 5, "foo" );
+        SortedLine< Integer > lineOne = new SortedLine<>( 5, "foo" );
         String lineTwo = "bar";
         Assertions.assertNotEquals( lineOne, lineTwo, "Two lines equal." );
     }

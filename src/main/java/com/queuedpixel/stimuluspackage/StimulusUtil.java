@@ -31,12 +31,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 
 public class StimulusUtil
 {
-    public static void appendToFile( Path file, String line )
+    static void appendToFile( Path file, String line )
     {
         try
         {
@@ -54,25 +55,23 @@ public class StimulusUtil
 
     public static int getMaxLength( String... values )
     {
-        Collection< String > list = new LinkedList< String >();
-        for ( String value : values ) list.add( value );
-        return StimulusUtil.getMaxLength( list );
+        return StimulusUtil.getMaxLength( Arrays.asList( values ));
     }
 
-    public static int getMaxLength( Collection< String > values )
+    static int getMaxLength( Collection< String > values )
     {
         int result = 0;
         for ( String value : values ) if ( value.length() > result ) result = value.length();
         return result;
     }
 
-    public static String getRepeatedString( String string, int count )
+    static String getRepeatedDash( int count )
     {
         StringBuilder builder = new StringBuilder();
 
         for ( int i = 0; i < count; i++ )
         {
-            builder.append( string );
+            builder.append( "-" );
         }
 
         return builder.toString();

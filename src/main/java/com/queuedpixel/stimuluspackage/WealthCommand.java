@@ -42,7 +42,7 @@ public class WealthCommand implements CommandExecutor
     private final GriefPrevention griefPrevention;
     private final double claimBlockValue;
 
-    public WealthCommand( StimulusPackagePlugin plugin )
+    WealthCommand( StimulusPackagePlugin plugin )
     {
         this.economy = plugin.getEconomy();
         this.griefPrevention = plugin.getGriefPrevention();

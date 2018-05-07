@@ -56,7 +56,7 @@ public class StimulusTask extends BukkitRunnable
     private final double minimumPaymentFactor;
     private final double claimBlockValue;
 
-    public StimulusTask( StimulusPackagePlugin plugin )
+    StimulusTask( StimulusPackagePlugin plugin )
     {
         this.plugin = plugin;
         this.economy = this.plugin.getEconomy();
@@ -81,9 +81,9 @@ public class StimulusTask extends BukkitRunnable
         StimulusUtil.appendToFile( logFile, "" );
 
         // get information on all players
-        Map< UUID, OfflinePlayer > offlinePlayerMap = new HashMap< UUID, OfflinePlayer >();
-        Map< UUID, Long > playerTimeMap = new HashMap< UUID, Long >();
-        Map< UUID, Double > playerWealthMap = new HashMap< UUID, Double >();
+        Map< UUID, OfflinePlayer > offlinePlayerMap = new HashMap<>();
+        Map< UUID, Long > playerTimeMap = new HashMap<>();
+        Map< UUID, Double > playerWealthMap = new HashMap<>();
         OfflinePlayer[] offlinePlayers = Bukkit.getOfflinePlayers();
         for ( OfflinePlayer player : offlinePlayers )
         {
@@ -105,22 +105,22 @@ public class StimulusTask extends BukkitRunnable
 
         // get information on players that are online right now
         Collection< ? extends Player > onlinePlayers = Bukkit.getOnlinePlayers();
-        Map< UUID, Player > onlinePlayerMap = new HashMap< UUID, Player >();
+        Map< UUID, Player > onlinePlayerMap = new HashMap<>();
         for ( Player player : onlinePlayers )
         {
             // store player instance
             onlinePlayerMap.put( player.getUniqueId(), player );
 
             // player is on right now, so zero seconds since they were last on the server
-            playerTimeMap.put( player.getUniqueId(), 0l );
+            playerTimeMap.put( player.getUniqueId(), 0L );
         }
 
         // count active players
         int activeEconomicPlayerCount = 0;
         int activeStimulusPlayerCount = 0;
-        Collection< UUID > activePlayers = new LinkedList< UUID >();
-        Collection< UUID > activeStimulusPlayers = new LinkedList< UUID >();
-        Map< UUID, String > playerNameMap = new HashMap< UUID, String >();
+        Collection< UUID > activePlayers = new LinkedList<>();
+        Collection< UUID > activeStimulusPlayers = new LinkedList<>();
+        Map< UUID, String > playerNameMap = new HashMap<>();
         for ( UUID playerId : playerTimeMap.keySet() )
         {
             Long loginInterval = playerTimeMap.get( playerId );
@@ -156,21 +156,21 @@ public class StimulusTask extends BukkitRunnable
                                    ", Stimulus Players: " + activeStimulusPlayerCount );
         StimulusUtil.appendToFile( logFile, "" );
 
-        Map< UUID, String > formattedPlayerTimeMap = new HashMap< UUID, String >();
+        Map< UUID, String > formattedPlayerTimeMap = new HashMap<>();
         for ( UUID playerId : activePlayers )
         {
             formattedPlayerTimeMap.put( playerId, String.format( "%,d", playerTimeMap.get( playerId )));
         }
 
         int playerTimeLength = StimulusUtil.getMaxLength( formattedPlayerTimeMap.values() );
-        TreeSet< SortedLine< Long >> playerTimeOutput = new TreeSet< SortedLine< Long >>();
+        TreeSet< SortedLine< Long >> playerTimeOutput = new TreeSet<>();
         for ( UUID playerId : activePlayers )
         {
             String name = playerNameMap.get( playerId );
             String rawTime = formattedPlayerTimeMap.get( playerId );
             String time = String.format( "%" + playerTimeLength + "s", rawTime );
             String line = name + " - " + playerId + " - " + time;
-            playerTimeOutput.add( new SortedLine< Long >( playerTimeMap.get( playerId ), line ));
+            playerTimeOutput.add( new SortedLine<>( playerTimeMap.get( playerId ), line ));
         }
 
         for ( SortedLine< Long > line : playerTimeOutput )
@@ -237,12 +237,12 @@ public class StimulusTask extends BukkitRunnable
 
             // map players to payment factors
             double paymentFactorSum = 0;
-            Map< UUID, Double > playerRawPaymentFactorMap = new HashMap< UUID, Double >();
-            Map< UUID, Double > playerPaymentFactorMap = new HashMap< UUID, Double >();
+            Map< UUID, Double > playerRawPaymentFactorMap = new HashMap<>();
+            Map< UUID, Double > playerPaymentFactorMap = new HashMap<>();
             for ( UUID playerId : activeStimulusPlayers )
             {
-                double rawPaymentFactor = 0;
-                double paymentFactor = 0;
+                double rawPaymentFactor;
+                double paymentFactor;
 
                 if ( highestWealth == lowestWealth )
                 {
@@ -266,7 +266,7 @@ public class StimulusTask extends BukkitRunnable
             StimulusUtil.appendToFile( logFile, "Player Payment Factor Sum: " + paymentFactorSum );
 
             // compute the payment for each player
-            Map< UUID, Double > playerPaymentMap = new HashMap< UUID, Double >();
+            Map< UUID, Double > playerPaymentMap = new HashMap<>();
             for ( UUID playerId : activeStimulusPlayers )
             {
                 double adjustedPaymentFactor = playerPaymentFactorMap.get( playerId ) / paymentFactorSum;
@@ -287,7 +287,7 @@ public class StimulusTask extends BukkitRunnable
                     if ( player != null )
                     {
                         player.sendMessage(
-                                "§3You recieved §d" + this.economy.format( payment ) + "§3 in stimulus!" );
+                                "§3You received §d" + this.economy.format( payment ) + "§3 in stimulus!" );
                     }
                     else
                     {
@@ -303,11 +303,11 @@ public class StimulusTask extends BukkitRunnable
             String playerPaymentFactorHeader    = "Payment Factor";
             String playerPaymentHeader          = "Payment";
 
-            Map< UUID, String > formattedPlayerNameMap             = new HashMap< UUID, String >();
-            Map< UUID, String > formattedPlayerWealthMap           = new HashMap< UUID, String >();
-            Map< UUID, String > formattedPlayerRawPaymentFactorMap = new HashMap< UUID, String >();
-            Map< UUID, String > formattedPlayerPaymentFactorMap    = new HashMap< UUID, String >();
-            Map< UUID, String > formattedPlayerPaymentMap          = new HashMap< UUID, String >();
+            Map< UUID, String > formattedPlayerNameMap             = new HashMap<>();
+            Map< UUID, String > formattedPlayerWealthMap           = new HashMap<>();
+            Map< UUID, String > formattedPlayerRawPaymentFactorMap = new HashMap<>();
+            Map< UUID, String > formattedPlayerPaymentFactorMap    = new HashMap<>();
+            Map< UUID, String > formattedPlayerPaymentMap          = new HashMap<>();
 
             for ( UUID playerId : activeStimulusPlayers )
             {
@@ -351,7 +351,7 @@ public class StimulusTask extends BukkitRunnable
                 playerPaymentLength = playerPaymentHeader.length();
             }
 
-            TreeSet< SortedLine< Double >> playerOutput = new TreeSet< SortedLine< Double >>();
+            TreeSet< SortedLine< Double >> playerOutput = new TreeSet<>();
             for ( UUID playerId : activeStimulusPlayers )
             {
                 String name = String.format(
@@ -366,7 +366,7 @@ public class StimulusTask extends BukkitRunnable
                         "%" + playerPaymentLength + "s", formattedPlayerPaymentMap.get( playerId ));
                 String line =
                         name + "  " + wealth + "  " + rawPaymentFactor + "  " + paymentFactor + "  " + payment;
-                playerOutput.add( new SortedLine< Double >( playerWealthMap.get( playerId ), line ));
+                playerOutput.add( new SortedLine<>( playerWealthMap.get( playerId ), line ));
             }
 
             String header = String.format(
@@ -379,11 +379,11 @@ public class StimulusTask extends BukkitRunnable
                     playerPaymentFactorHeader, playerPaymentHeader );
 
             String divider =
-                    StimulusUtil.getRepeatedString( "-", playerNameLength             ) + "  " +
-                    StimulusUtil.getRepeatedString( "-", playerWealthLength           ) + "  " +
-                    StimulusUtil.getRepeatedString( "-", playerRawPaymentFactorLength ) + "  " +
-                    StimulusUtil.getRepeatedString( "-", playerPaymentFactorLength    ) + "  " +
-                    StimulusUtil.getRepeatedString( "-", playerPaymentLength          );
+                    StimulusUtil.getRepeatedDash( playerNameLength             ) + "  " +
+                    StimulusUtil.getRepeatedDash( playerWealthLength           ) + "  " +
+                    StimulusUtil.getRepeatedDash( playerRawPaymentFactorLength ) + "  " +
+                    StimulusUtil.getRepeatedDash( playerPaymentFactorLength    ) + "  " +
+                    StimulusUtil.getRepeatedDash( playerPaymentLength          );
 
             StimulusUtil.appendToFile( logFile, "" );
             StimulusUtil.appendToFile( logFile, header );
@@ -406,7 +406,7 @@ public class StimulusTask extends BukkitRunnable
         {
             double wealth = playerWealthMap.get( player.getUniqueId() );
             String playerName = player.getName();
-            this.plugin.getAllWealthTop().add( new SortedLine< Double >( wealth, playerName ));
+            this.plugin.getAllWealthTop().add( new SortedLine<>( wealth, playerName ));
         }
 
         // populate wealth top data structure for active players
@@ -414,7 +414,7 @@ public class StimulusTask extends BukkitRunnable
         {
             double wealth = playerWealthMap.get( playerId );
             String playerName = offlinePlayerMap.get( playerId ).getName();
-            this.plugin.getActiveWealthTop().add( new SortedLine< Double >( wealth, playerName ));
+            this.plugin.getActiveWealthTop().add( new SortedLine<>( wealth, playerName ));
         }
 
         this.plugin.saveData();

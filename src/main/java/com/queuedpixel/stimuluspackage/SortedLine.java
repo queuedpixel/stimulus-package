@@ -28,8 +28,8 @@ package com.queuedpixel.stimuluspackage;
 
 public class SortedLine< T extends Comparable< T >> implements Comparable< SortedLine< T >>
 {
-    public final T sortValue;
-    public final String line;
+    final T sortValue;
+    final String line;
 
     public SortedLine( T sortValue, String line )
     {
@@ -50,7 +50,6 @@ public class SortedLine< T extends Comparable< T >> implements Comparable< Sorte
         if ( !( other instanceof SortedLine )) return false;
         SortedLine< ? > otherLine = (SortedLine< ? >) other;
         if ( !( this.sortValue.equals( otherLine.sortValue ))) return false;
-        if ( !( this.line.equals( otherLine.line ))) return false;
-        return true;
+        return this.line.equals( otherLine.line );
     }
 }

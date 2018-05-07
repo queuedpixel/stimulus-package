@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 
 import com.queuedpixel.stimuluspackage.StimulusUtil;
 
-public class StimulusUtilTest
+class StimulusUtilTest
 {
     @Test
     void getMaxLength_testNoValues()

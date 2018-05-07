@@ -9,8 +9,8 @@ import org.bukkit.command.CommandSender;
 public class WealthTopCommand implements CommandExecutor
 {
     private final StimulusPackagePlugin plugin;
-    
-    public WealthTopCommand( StimulusPackagePlugin plugin )
+
+    WealthTopCommand( StimulusPackagePlugin plugin )
     {
         this.plugin = plugin;
     }
