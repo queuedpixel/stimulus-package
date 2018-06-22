@@ -8,4 +8,5 @@ Download the CLA for this project: <http://files.queuedpixel.com/stimulus-packag
 
 Send a scanned copy of the signed CLA via email to: <cla@queuedpixel.com>
 
-Once submitted, you will receive a confirmation email and be added to the [project contributors](contributors.md).
+Once submitted, you will receive a confirmation email and be added to the
+[project contributors](contributors.md).
