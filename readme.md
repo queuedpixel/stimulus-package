@@ -3,6 +3,10 @@
 Stimulus Package is a Spigot plugin that gives money to players based on the number of active players and volume of
 economic transactions.
 
+## Under Development
+
+This is a development snapshot version of this project that may not be stable or function at all.
+
 ## Implementation Details
 
 - Configured variables:
