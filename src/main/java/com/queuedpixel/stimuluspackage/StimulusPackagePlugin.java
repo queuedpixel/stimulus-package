@@ -40,10 +40,7 @@ import java.util.LinkedList;
 import java.util.TreeSet;
 import java.util.UUID;
 
-import org.appledash.saneeconomy.economy.economable.Economable;
-import org.appledash.saneeconomy.event.SaneEconomyTransactionEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -173,20 +170,6 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
             this.addTransaction( transaction );
             StimulusUtil.appendToFile( this.transactionsFile, transaction.toString() );
         }
-    }
-
-    @EventHandler
-    public void onSaneEconomyTransactionEvent( SaneEconomyTransactionEvent event )
-    {
-        long timestamp = new Date().getTime();
-        int fractionalDigits = this.economy.fractionalDigits();
-        String currencyFormat = ( fractionalDigits > -1 ) ? "%." + fractionalDigits + "f" : "%f";
-        String logEntry = String.format(
-                "%tF %<tT.%<tL, " + currencyFormat + ", %s, %s, %s",
-                timestamp, event.getTransaction().getAmount(), event.getTransaction().getReason(),
-                this.formatEconomable( event.getTransaction().getSender() ),
-                this.formatEconomable( event.getTransaction().getReceiver() ));
-        StimulusUtil.appendToFile( this.getLogFile( "SaneEconomy", timestamp ), logEntry );
     }
 
     Economy getEconomy()
@@ -384,14 +367,6 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         {
             this.excludedPlayers.add( UUID.fromString( playerId ));
         }
-    }
-
-    private String formatEconomable( Economable economable )
-    {
-        String result = economable.getUniqueIdentifier();
-        OfflinePlayer player = economable.tryCastToPlayer();
-        if ( player != null ) result += " [" + player.getName() + "]";
-        return result;
     }
 
     private void addTransaction( Transaction transaction )
