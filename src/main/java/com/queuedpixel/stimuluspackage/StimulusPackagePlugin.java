@@ -50,9 +50,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import de.epiceric.shopchest.event.ShopBuySellEvent;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import net.milkbowl.vault.economy.Economy;
+import org.maxgamer.quickshop.event.ShopSuccessPurchaseEvent;
 
 public class StimulusPackagePlugin extends JavaPlugin implements Listener
 {
@@ -148,25 +148,24 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     }
 
     @EventHandler
-    public void onShopBuySellEvent( ShopBuySellEvent event )
+    public void onShopSuccessPurchaseEvent( ShopSuccessPurchaseEvent event )
     {
         long timestamp = new Date().getTime();
         int fractionalDigits = this.economy.fractionalDigits();
         UUID playerId = event.getPlayer().getUniqueId();
-        UUID vendorId = event.getShop().getVendor().getUniqueId();
+        UUID vendorId = event.getShop().getOwner();
         String currencyFormat = ( fractionalDigits > -1 ) ? "%." + fractionalDigits + "f" : "%f";
         String logEntry = String.format(
-                "%tF %<tT.%<tL, %s, %s, %d, " + currencyFormat + ", %s [%s], %s [%s]",
-                timestamp, event.getType().toString(),
-                event.getShop().getProduct().getType().toString(),
-                event.getNewAmount(), event.getNewPrice(),
+                "%tF %<tT.%<tL, %s, %d, " + currencyFormat + ", %s [%s], %s [%s]",
+                timestamp, event.getShop().getItem().getType().toString(),
+                event.getAmount(), event.getBalance(),
                 playerId, event.getPlayer().getName(),
-                vendorId, event.getShop().getVendor().getName() );
-        StimulusUtil.appendToFile( this.getLogFile( "ShopChest", timestamp ), logEntry );
+                vendorId, event.getShop().ownerName() );
+        StimulusUtil.appendToFile( this.getLogFile( "QuickShop", timestamp ), logEntry );
 
         if (( !this.excludedPlayers.contains( playerId )) && ( !this.excludedPlayers.contains( vendorId )))
         {
-            Transaction transaction = new Transaction( timestamp, event.getNewPrice() );
+            Transaction transaction = new Transaction( timestamp, event.getBalance() );
             this.addTransaction( transaction );
             StimulusUtil.appendToFile( this.transactionsFile, transaction.toString() );
         }

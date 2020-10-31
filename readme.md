@@ -63,7 +63,7 @@ total payment of 672 currency over one week.
 This plugin depends on the following plugins:
 
 * [GriefPrevention](https://www.spigotmc.org/resources/griefprevention.1884/)
-* [ShopChest](https://www.spigotmc.org/resources/shopchest.11431/)
+* [QuickShop-Reremake](https://www.spigotmc.org/resources/quickshop-reremake-1-16-ready-say-hello-with-rgb.62575/)
 * [Vault](https://www.spigotmc.org/resources/vault.34315/)
 
 ## Installation

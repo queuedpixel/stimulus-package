@@ -25,7 +25,7 @@ version: 1.2.0-SNAPSHOT
 main: com.queuedpixel.stimuluspackage.StimulusPackagePlugin
 depend:
     - GriefPrevention
-    - ShopChest
+    - QuickShop
     - Vault
 commands:
     wealth:

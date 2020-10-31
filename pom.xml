@@ -55,9 +55,8 @@ SOFTWARE.
         </dependency>
         <dependency>
             <groupId>com.github.queuedpixel</groupId>
-            <artifactId>ShopChest</artifactId>
-            <version>queuedpixel-build-SNAPSHOT</version>
-            <scope>provided</scope>
+            <artifactId>QuickShop-Reremake</artifactId>
+            <version>v4.0.4.14-qp1</version>
         </dependency>
         <dependency>
             <groupId>com.github.TechFortress</groupId>
