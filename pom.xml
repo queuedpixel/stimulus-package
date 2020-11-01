@@ -54,14 +54,14 @@ SOFTWARE.
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.queuedpixel</groupId>
-            <artifactId>QuickShop-Reremake</artifactId>
-            <version>v4.0.4.14-qp1</version>
-        </dependency>
-        <dependency>
             <groupId>com.github.TechFortress</groupId>
             <artifactId>GriefPrevention</artifactId>
             <version>16.8</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.queuedpixel</groupId>
+            <artifactId>QuickShop-Reremake</artifactId>
+            <version>v4.0.4.14-qp1</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
