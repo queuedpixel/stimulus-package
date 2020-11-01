@@ -66,6 +66,15 @@ This plugin depends on the following plugins:
 * [QuickShop-Reremake](https://www.spigotmc.org/resources/quickshop-reremake-1-16-ready-say-hello-with-rgb.62575/)
 * [Vault](https://www.spigotmc.org/resources/vault.34315/)
 
+## Compatibility
+
+This plugin has been tested against the following versions of its dependencies:
+
+* Spigot - Version 1.16.3
+* GriefPrevention - Version 16.16.0
+* QuickShop-Reremake - Version 4.0.4.14
+* Vault - Version 1.7.3
+
 ## Installation
 
 A binary release of this plugin is not available. To use this plugin you must compile it yourself.
