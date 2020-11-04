@@ -32,12 +32,12 @@ economicInterval: 604800
 # Default Value: one week (604,800 seconds)
 stimulusInterval: 604800
 
-# Time interval (in seconds) used to make stimulus payments to players.
+# Description: Time interval (in seconds) used to make stimulus payments to players.
 # Data Type: long
 # Default Value: 15 minutes (900 seconds)
 paymentInterval: 900
 
-# Time interval (in seconds) used to prune old transactions.
+# Description: Time interval (in seconds) used to prune old transactions.
 # Data Type: long
 # Default Value: 1 hour (3600 seconds)
 pruneInterval: 3600
