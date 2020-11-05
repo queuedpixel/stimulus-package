@@ -26,6 +26,7 @@ SOFTWARE.
 
 package com.queuedpixel.stimuluspackage;
 
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -65,9 +66,12 @@ public class WealthCommand implements CommandExecutor
         double totalClaimBlockValue = accruedClaimBlockValue + bonusClaimBlockValue;
         double totalWealth = balance + totalClaimBlockValue;
 
-        sender.sendMessage( "§aEconomy Balance: §c" + this.economy.format( balance ));
-        sender.sendMessage( "§aClaim Block Value: §c" + this.economy.format( totalClaimBlockValue ));
-        sender.sendMessage( "§3Total Wealth: §d" + this.economy.format( totalWealth ));
+        sender.sendMessage( ChatColor.GREEN + "Economy Balance: " +
+                            ChatColor.RED + this.economy.format( balance ));
+        sender.sendMessage( ChatColor.GREEN + "Claim Block Value: " +
+                            ChatColor.RED + this.economy.format( totalClaimBlockValue ));
+        sender.sendMessage( ChatColor.DARK_AQUA + "Total Wealth: " +
+                            ChatColor.LIGHT_PURPLE + this.economy.format( totalWealth ));
 
         return true;
     }

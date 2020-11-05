@@ -37,6 +37,7 @@ import java.util.TreeSet;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -71,7 +72,7 @@ public class StimulusTask extends BukkitRunnable
 
     public void run()
     {
-        String prefix = "§a[§2Stimulus§a] ";
+        String prefix = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Stimulus" + ChatColor.GREEN + "] ";
 
         // current time
         long now = new Date().getTime();
@@ -288,8 +289,9 @@ public class StimulusTask extends BukkitRunnable
                     Player player = onlinePlayerMap.get( playerId );
                     if ( player != null )
                     {
-                        player.sendMessage(
-                                prefix + "§3You received §d" + this.economy.format( payment ) + "§3 in stimulus!" );
+                        player.sendMessage( prefix + ChatColor.DARK_AQUA + "You received " +
+                                            ChatColor.LIGHT_PURPLE + this.economy.format( payment ) +
+                                            ChatColor.DARK_AQUA + " in stimulus!" );
                     }
                     else
                     {
@@ -301,7 +303,7 @@ public class StimulusTask extends BukkitRunnable
                     Player player = onlinePlayerMap.get( playerId );
                     if ( player != null )
                     {
-                        player.sendMessage( prefix + "§3You received no stimulus." );
+                        player.sendMessage( prefix + ChatColor.DARK_AQUA + "You received no stimulus." );
                     }
                 }
             }
@@ -414,7 +416,8 @@ public class StimulusTask extends BukkitRunnable
                 Player player = onlinePlayerMap.get( playerId );
                 if ( player != null )
                 {
-                    player.sendMessage( prefix + "§3You received no stimulus due to strong economy." );
+                    player.sendMessage(
+                            prefix + ChatColor.DARK_AQUA + "You received no stimulus due to strong economy." );
                 }
             }
         }

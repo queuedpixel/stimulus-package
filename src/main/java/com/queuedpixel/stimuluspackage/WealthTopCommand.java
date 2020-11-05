@@ -28,6 +28,7 @@ package com.queuedpixel.stimuluspackage;
 
 import java.util.TreeSet;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -43,7 +44,7 @@ public class WealthTopCommand implements CommandExecutor
 
     public boolean onCommand( CommandSender sender, Command command, String label, String[] args )
     {
-        String prefix = "§a[§2Wealth§a] ";
+        String prefix = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Wealth" + ChatColor.GREEN +"] ";
         boolean allPlayers = false;
         int pageNum = 1;
         for ( String arg : args )
@@ -60,7 +61,7 @@ public class WealthTopCommand implements CommandExecutor
                 }
                 catch ( NumberFormatException e )
                 {
-                    sender.sendMessage( prefix + "§3Invalid page number." );
+                    sender.sendMessage( prefix + ChatColor.DARK_AQUA + "Invalid page number." );
                     return false;
                 }
             }
@@ -68,12 +69,13 @@ public class WealthTopCommand implements CommandExecutor
 
         if ( pageNum < 1 )
         {
-            sender.sendMessage( prefix + "§3Page number must be greater than zero." );
+            sender.sendMessage( prefix + ChatColor.DARK_AQUA + "Page number must be greater than zero." );
             return false;
         }
 
         String playerType = allPlayers ? "All" : "Active";
-        sender.sendMessage( prefix + "§fDisplaying " + playerType + " Players - Page " + pageNum + ":" );
+        sender.sendMessage( prefix + ChatColor.WHITE +
+                            "Displaying " + playerType + " Players - Page " + pageNum + ":" );
 
         TreeSet< SortedLine< Double >> wealthSet =
                 allPlayers ? this.plugin.getAllWealthTop() : this.plugin.getActiveWealthTop();
@@ -82,7 +84,7 @@ public class WealthTopCommand implements CommandExecutor
 
         if ( size - (( pageNum - 1 ) * 10 ) <= 0 )
         {
-            sender.sendMessage( prefix + "§3No players to display." );
+            sender.sendMessage( prefix + ChatColor.DARK_AQUA + "No players to display." );
             return true;
         }
 
@@ -97,10 +99,13 @@ public class WealthTopCommand implements CommandExecutor
             // stop output after we display 10 players
             if ( index > pageNum * 10 ) break;
 
-            String indexString = String.format( "%0" + length + "d", index );
-            String playerName = line.line;
-            String wealth = this.plugin.getEconomy().format( line.sortValue );
-            sender.sendMessage( prefix + "§e[§6" + indexString + "§e] §3" + playerName + " §f- §d" + wealth );
+            String indexString = ChatColor.YELLOW + "[" + ChatColor.GOLD +
+                                 String.format( "%0" + length + "d", index ) +
+                                 ChatColor.YELLOW + "]";
+            String playerName = ChatColor.DARK_AQUA + line.line;
+            String wealth = ChatColor.WHITE + "- " + ChatColor.LIGHT_PURPLE +
+                            this.plugin.getEconomy().format( line.sortValue );
+            sender.sendMessage( prefix + " " + indexString + " " + playerName + " " + wealth );
         }
 
         return true;

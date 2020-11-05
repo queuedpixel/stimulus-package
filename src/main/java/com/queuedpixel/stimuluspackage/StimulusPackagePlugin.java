@@ -41,6 +41,7 @@ import java.util.TreeSet;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -145,7 +146,8 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         if ( this.data.playerOfflineStimulusMap.containsKey( playerId ))
         {
             String stimulus = this.economy.format( this.data.playerOfflineStimulusMap.get( playerId ));
-            String message = "§3While offline, you received §d" + stimulus + "§3 in stimulus!";
+            String message = ChatColor.DARK_AQUA + "While offline, you received " +
+                             ChatColor.LIGHT_PURPLE + stimulus + ChatColor.DARK_AQUA + " in stimulus!";
             event.getPlayer().sendMessage( message );
             this.data.playerOfflineStimulusMap.remove( playerId );
             this.saveData();
