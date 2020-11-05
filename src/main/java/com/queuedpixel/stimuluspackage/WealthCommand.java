@@ -58,6 +58,7 @@ public class WealthCommand implements CommandExecutor
             return true;
         }
 
+        String prefix = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Wealth" + ChatColor.GREEN +"] ";
         OfflinePlayer player = (OfflinePlayer) sender;
         double balance = this.economy.getBalance( player );
         PlayerData playerData = this.griefPrevention.dataStore.getPlayerData( player.getUniqueId() );
@@ -66,11 +67,11 @@ public class WealthCommand implements CommandExecutor
         double totalClaimBlockValue = accruedClaimBlockValue + bonusClaimBlockValue;
         double totalWealth = balance + totalClaimBlockValue;
 
-        sender.sendMessage( ChatColor.GREEN + "Economy Balance: " +
+        sender.sendMessage( prefix + ChatColor.GREEN + "Economy Balance: " +
                             ChatColor.RED + this.economy.format( balance ));
-        sender.sendMessage( ChatColor.GREEN + "Claim Block Value: " +
+        sender.sendMessage( prefix + ChatColor.GREEN + "Claim Block Value: " +
                             ChatColor.RED + this.economy.format( totalClaimBlockValue ));
-        sender.sendMessage( ChatColor.DARK_AQUA + "Total Wealth: " +
+        sender.sendMessage( prefix + ChatColor.DARK_AQUA + "Total Wealth: " +
                             ChatColor.LIGHT_PURPLE + this.economy.format( totalWealth ));
 
         return true;
