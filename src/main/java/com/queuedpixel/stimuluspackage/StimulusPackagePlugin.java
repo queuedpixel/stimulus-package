@@ -127,6 +127,11 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         PruneTransactionsTask pruneTransactionsTask = new PruneTransactionsTask( this );
         long pruneInterval = this.getConfig().getLong( "pruneInterval" ) * 20; // 20 ticks per second
         pruneTransactionsTask.runTaskTimer( this, pruneInterval, pruneInterval );
+
+        // schedule the log balances task
+        LogBalancesTask logBalancesTask = new LogBalancesTask( this );
+        long logBalancesInterval = this.getConfig().getLong( "logBalancesInterval" ) * 20; // 20 ticks per second
+        logBalancesTask.runTaskTimer( this, 0, logBalancesInterval );
     }
 
     public void onDisable()

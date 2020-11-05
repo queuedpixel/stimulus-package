@@ -75,3 +75,8 @@ claimBlockValue: 1
 # - 00000000-1111-2222-3333-444444444444
 # - aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
 excludedPlayers:
+
+# Description: Time interval (in seconds) used to log changes to player economy balances.
+# Data Type: long
+# Default Value: 5 minutes (300 seconds)
+logBalancesInterval: 300
