@@ -72,8 +72,6 @@ public class StimulusTask extends BukkitRunnable
 
     public void run()
     {
-        String prefix = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Stimulus" + ChatColor.GREEN + "] ";
-
         // current time
         long now = new Date().getTime();
 
@@ -289,7 +287,7 @@ public class StimulusTask extends BukkitRunnable
                     Player player = onlinePlayerMap.get( playerId );
                     if ( player != null )
                     {
-                        player.sendMessage( prefix + ChatColor.DARK_AQUA + "You received " +
+                        player.sendMessage( this.plugin.messagePrefix + ChatColor.DARK_AQUA + "You received " +
                                             ChatColor.LIGHT_PURPLE + this.economy.format( payment ) +
                                             ChatColor.DARK_AQUA + " in stimulus!" );
                     }
@@ -303,7 +301,8 @@ public class StimulusTask extends BukkitRunnable
                     Player player = onlinePlayerMap.get( playerId );
                     if ( player != null )
                     {
-                        player.sendMessage( prefix + ChatColor.DARK_AQUA + "You received no stimulus." );
+                        player.sendMessage(
+                                this.plugin.messagePrefix + ChatColor.DARK_AQUA + "You received no stimulus." );
                     }
                 }
             }
@@ -416,8 +415,8 @@ public class StimulusTask extends BukkitRunnable
                 Player player = onlinePlayerMap.get( playerId );
                 if ( player != null )
                 {
-                    player.sendMessage(
-                            prefix + ChatColor.DARK_AQUA + "You received no stimulus due to strong economy." );
+                    player.sendMessage( this.plugin.messagePrefix + ChatColor.DARK_AQUA +
+                                        "You received no stimulus due to strong economy." );
                 }
             }
         }

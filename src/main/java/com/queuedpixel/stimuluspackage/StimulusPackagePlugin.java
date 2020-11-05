@@ -57,6 +57,8 @@ import org.maxgamer.quickshop.event.ShopSuccessPurchaseEvent;
 
 public class StimulusPackagePlugin extends JavaPlugin implements Listener
 {
+    final String messagePrefix = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Stimulus" + ChatColor.GREEN + "] ";
+
     private Path logDirectory;
     private Path versionFile;
     private Path transactionsFile;
@@ -146,7 +148,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         if ( this.data.playerOfflineStimulusMap.containsKey( playerId ))
         {
             String stimulus = this.economy.format( this.data.playerOfflineStimulusMap.get( playerId ));
-            String message = ChatColor.DARK_AQUA + "While offline, you received " +
+            String message = this.messagePrefix + ChatColor.DARK_AQUA + "While offline, you received " +
                              ChatColor.LIGHT_PURPLE + stimulus + ChatColor.DARK_AQUA + " in stimulus!";
             event.getPlayer().sendMessage( message );
             this.data.playerOfflineStimulusMap.remove( playerId );
