@@ -62,15 +62,15 @@ public class WealthCommand implements CommandExecutor
         OfflinePlayer player = (OfflinePlayer) sender;
         double balance = this.economy.getBalance( player );
         PlayerData playerData = this.griefPrevention.dataStore.getPlayerData( player.getUniqueId() );
-        double accruedClaimBlockValue = playerData.getAccruedClaimBlocks() * this.claimBlockValue;
-        double bonusClaimBlockValue = playerData.getBonusClaimBlocks() * this.claimBlockValue;
-        double totalClaimBlockValue = accruedClaimBlockValue + bonusClaimBlockValue;
+        int totalClaimBlocks = playerData.getAccruedClaimBlocks() + playerData.getBonusClaimBlocks();
+        double totalClaimBlockValue = totalClaimBlocks * this.claimBlockValue;
         double totalWealth = balance + totalClaimBlockValue;
 
         sender.sendMessage( prefix + ChatColor.DARK_AQUA + "Economy Balance: " +
                             ChatColor.AQUA + this.economy.format( balance ));
         sender.sendMessage( prefix + ChatColor.DARK_AQUA + "Claim Block Value: " +
-                            ChatColor.AQUA + this.economy.format( totalClaimBlockValue ));
+                            ChatColor.AQUA + this.economy.format( totalClaimBlockValue ) +
+                            ChatColor.LIGHT_PURPLE + " (" + String.format( "%,d", totalClaimBlocks ) + " blocks)" );
         sender.sendMessage( prefix + ChatColor.GOLD + "Total Wealth: " +
                             ChatColor.YELLOW + this.economy.format( totalWealth ));
 
