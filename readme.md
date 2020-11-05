@@ -7,6 +7,25 @@ economic transactions.
 
 This is a development snapshot version of this project that may not be stable or function at all.
 
+## Usage
+
+Use the `/wealth` command to see your overall wealth.
+
+Use the `/wealthtop` command to see the wealthiest players on the server.
+
+## Installation
+
+A binary release of this plugin is not available. To use this plugin you must compile it yourself.
+We use [Apache Maven](https://maven.apache.org/) to build this plugin.
+
+### Compile Plugin
+
+Run `mvn package` to create a Jar for this plugin.
+
+### Install Plugin
+
+Copy `target/stimulus-package-1.3.0-SNAPSHOT` into your server `plugins` directory.
+
 ## Implementation Details
 
 - Configured variables:
@@ -74,25 +93,6 @@ This plugin has been tested against the following versions of its dependencies:
 * GriefPrevention - Version 16.16.0
 * QuickShop-Reremake - Version 4.0.4.14
 * Vault - Version 1.7.3
-
-## Installation
-
-A binary release of this plugin is not available. To use this plugin you must compile it yourself.
-We use [Apache Maven](https://maven.apache.org/) to build this plugin.
-
-### Compile Plugin
-
-Run `mvn package` to create a Jar for this plugin.
-
-### Install Plugin
-
-Copy `target/stimulus-package-1.3.0-SNAPSHOT` into your server `plugins` directory.
-
-## Usage
-
-Use the `/wealth` command to see your overall wealth.
-
-Use the `/wealthtop` command to see the wealthiest players on the server.
 
 ## Contributing
 
