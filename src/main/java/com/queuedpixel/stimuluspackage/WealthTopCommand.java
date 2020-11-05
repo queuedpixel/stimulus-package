@@ -44,7 +44,7 @@ public class WealthTopCommand implements CommandExecutor
 
     public boolean onCommand( CommandSender sender, Command command, String label, String[] args )
     {
-        String prefix = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "Wealth" + ChatColor.GREEN +"] ";
+        String prefix = ChatColor.GREEN + "[" + ChatColor.DARK_GREEN + "WealthTop" + ChatColor.GREEN +"] ";
         boolean allPlayers = false;
         int pageNum = 1;
         for ( String arg : args )
