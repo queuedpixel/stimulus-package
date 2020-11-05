@@ -48,6 +48,7 @@ Copy `stimulus-package-1.3.0-SNAPSHOT.jar` into your server `plugins` directory.
 ### Configure
 
 The first time you run your server with this plugin installed it will create its default configuration in:
+
 `<server root>/plugins/StimulusPackage/config.yml`
 
 After you edit your configuration this plugin will use your new configuration the next time you start your server.
