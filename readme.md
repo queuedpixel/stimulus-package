@@ -31,16 +31,26 @@ Example:
 
 ## Installation
 
-A binary release of this plugin is not available. To use this plugin you must compile it yourself.
-We use [Apache Maven](https://maven.apache.org/) to build this plugin.
+### Download
 
-### Compile Plugin
+A pre-compiled Jar file is available for recent releases of this plugin:
+[Stimulus Package Releases](https://github.com/queuedpixel/stimulus-package/releases)
 
-Run `mvn package` to create a Jar for this plugin.
+### Compile
 
-### Install Plugin
+You may compile this plugin yourself.
+We use [Apache Maven](https://maven.apache.org/) to compile this plugin.
 
-Copy `target/stimulus-package-1.3.0-SNAPSHOT` into your server `plugins` directory.
+### Install
+
+Copy `stimulus-package-1.3.0-SNAPSHOT.jar` into your server `plugins` directory.
+
+### Configure
+
+The first time you run your server with this plugin installed it will create its default configuration in:
+`<server root>/plugins/StimulusPackage/config.yml`
+
+After you edit your configuration this plugin will use your new configuration the next time you start your server.
 
 ## Implementation Details
 
