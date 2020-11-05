@@ -7,11 +7,27 @@ economic transactions.
 
 This is a development snapshot version of this project that may not be stable or function at all.
 
-## Usage
+## Commands
 
-Use the `/wealth` command to see your overall wealth.
+### `/wealth`
 
-Use the `/wealthtop` command to see the wealthiest players on the server.
+View your combined wealth and the individual components of your wealth:
+your economy balance and the value of your GriefPrevention claim blocks.
+
+### `/wealthtop`
+
+View the wealthiest players on the server.
+
+By default, this command only displays active players:
+players who have logged in recently enough they are still eligible to receive stimulus payments.
+Use `/wealthtop all` to display all players instead.
+
+This command only displays 10 players.
+Specify a page number to view additional players.
+Example:
+
+* `/wealthtop 2`
+* `/wealthtop all 5`
 
 ## Installation
 
