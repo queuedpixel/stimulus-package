@@ -67,12 +67,12 @@ public class WealthCommand implements CommandExecutor
         double totalClaimBlockValue = accruedClaimBlockValue + bonusClaimBlockValue;
         double totalWealth = balance + totalClaimBlockValue;
 
-        sender.sendMessage( prefix + ChatColor.GREEN + "Economy Balance: " +
-                            ChatColor.RED + this.economy.format( balance ));
-        sender.sendMessage( prefix + ChatColor.GREEN + "Claim Block Value: " +
-                            ChatColor.RED + this.economy.format( totalClaimBlockValue ));
-        sender.sendMessage( prefix + ChatColor.DARK_AQUA + "Total Wealth: " +
-                            ChatColor.LIGHT_PURPLE + this.economy.format( totalWealth ));
+        sender.sendMessage( prefix + ChatColor.DARK_AQUA + "Economy Balance: " +
+                            ChatColor.AQUA + this.economy.format( balance ));
+        sender.sendMessage( prefix + ChatColor.DARK_AQUA + "Claim Block Value: " +
+                            ChatColor.AQUA + this.economy.format( totalClaimBlockValue ));
+        sender.sendMessage( prefix + ChatColor.GOLD + "Total Wealth: " +
+                            ChatColor.YELLOW + this.economy.format( totalWealth ));
 
         return true;
     }
