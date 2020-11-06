@@ -385,7 +385,7 @@ public class StimulusTask extends BukkitRunnable
                     "%-" + playerWealthLength           + "s  " +
                     "%-" + playerRawPaymentFactorLength + "s  " +
                     "%-" + playerPaymentFactorLength    + "s  " +
-                    "%-" + playerPaymentLength          + "s",
+                    "%s",
                     playerNameHeader, playerWealthHeader, playerRawPaymentFactorHeader,
                     playerPaymentFactorHeader, playerPaymentHeader );
 
