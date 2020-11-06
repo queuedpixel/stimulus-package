@@ -30,7 +30,7 @@ depend:
 commands:
     wealth:
         description: Display your overall wealth.
-        usage: /wealth
+        usage: /wealth [<player name>]
     wealthtop:
         description: Display the wealthiest players on the server.
         usage: /wealthtop [all] [<page num>]

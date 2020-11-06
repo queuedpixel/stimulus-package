@@ -34,14 +34,17 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.TreeSet;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -69,6 +72,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     private Economy economy;
     private GriefPrevention griefPrevention;
     private double actualVolume = 0;
+    private final Map< String, UUID > playerNameMap = new HashMap();
 
     public void onEnable()
     {
@@ -116,6 +120,13 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         this.griefPrevention =
                 (GriefPrevention) Bukkit.getServer().getPluginManager().getPlugin( "GriefPrevention" );
 
+        // build our map of player names to player IDs
+        this.playerNameMap.clear();
+        for ( OfflinePlayer player : Bukkit.getOfflinePlayers() )
+        {
+            this.playerNameMap.put( player.getName().toLowerCase(), player.getUniqueId() );
+        }
+
         this.loadData();
         this.getCommand( "wealth" ).setExecutor( new WealthCommand( this ));
         this.getCommand( "wealthtop" ).setExecutor( new WealthTopCommand( this ));
@@ -144,7 +155,10 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     @EventHandler
     public void onPlayerJoinEvent( PlayerJoinEvent event )
     {
+        String playerName = event.getPlayer().getName().toLowerCase();
         UUID playerId = event.getPlayer().getUniqueId();
+        this.playerNameMap.put( playerName, playerId );
+
         if ( this.data.playerOfflineStimulusMap.containsKey( playerId ))
         {
             String stimulus = this.economy.format( this.data.playerOfflineStimulusMap.get( playerId ));
@@ -178,6 +192,11 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
             this.addTransaction( transaction );
             StimulusUtil.appendToFile( this.transactionsFile, transaction.toString() );
         }
+    }
+
+    UUID getPlayerId( String playerName )
+    {
+        return this.playerNameMap.get( playerName.toLowerCase() );
     }
 
     Economy getEconomy()
