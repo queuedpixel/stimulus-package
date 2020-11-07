@@ -32,7 +32,7 @@ commands:
         description: View detailed information on the most recent stimulus payment for the specified player.
         usage: /stimulus [<player name>]
     wealth:
-        description: Display your overall wealth.
+        description: Display the wealth for the specified player.
         usage: /wealth [<player name>]
     wealthtop:
         description: Display the wealthiest players on the server.
