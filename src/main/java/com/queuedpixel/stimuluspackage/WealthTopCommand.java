@@ -61,7 +61,7 @@ public class WealthTopCommand implements CommandExecutor
                 }
                 catch ( NumberFormatException e )
                 {
-                    sender.sendMessage( prefix + ChatColor.DARK_AQUA + "Invalid page number." );
+                    sender.sendMessage( prefix + ChatColor.RED + "Invalid page number." );
                     return false;
                 }
             }
@@ -69,7 +69,7 @@ public class WealthTopCommand implements CommandExecutor
 
         if ( pageNum < 1 )
         {
-            sender.sendMessage( prefix + ChatColor.DARK_AQUA + "Page number must be greater than zero." );
+            sender.sendMessage( prefix + ChatColor.RED + "Page number must be greater than zero." );
             return false;
         }
 
