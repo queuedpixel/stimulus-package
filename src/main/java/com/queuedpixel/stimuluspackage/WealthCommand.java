@@ -75,7 +75,7 @@ public class WealthCommand implements CommandExecutor
 
             if ( playerId == null )
             {
-                sender.sendMessage( prefix + ChatColor.RED + "Player Not Found" );
+                sender.sendMessage( prefix + ChatColor.RED + "Player not found." );
                 return false;
             }
 
