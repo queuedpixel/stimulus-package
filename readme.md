@@ -30,8 +30,8 @@ This command only displays 10 players.
 Specify a page number to view additional players.
 Example:
 
-* `/wealthtop 2`
-* `/wealthtop all 5`
+- `/wealthtop 2`
+- `/wealthtop all 5`
 
 ## Installation
 
@@ -112,18 +112,18 @@ total payment of 672 currency over one week.
 
 This plugin depends on the following plugins:
 
-* [GriefPrevention](https://www.spigotmc.org/resources/griefprevention.1884/)
-* [QuickShop-Reremake](https://www.spigotmc.org/resources/quickshop-reremake-1-16-ready-say-hello-with-rgb.62575/)
-* [Vault](https://www.spigotmc.org/resources/vault.34315/)
+- [GriefPrevention](https://www.spigotmc.org/resources/griefprevention.1884/)
+- [QuickShop-Reremake](https://www.spigotmc.org/resources/quickshop-reremake-1-16-ready-say-hello-with-rgb.62575/)
+- [Vault](https://www.spigotmc.org/resources/vault.34315/)
 
 ## Compatibility
 
 This plugin has been tested against the following versions of its dependencies:
 
-* Spigot - Version 1.16.4
-* GriefPrevention - Version 16.16.0
-* QuickShop-Reremake - Version 4.0.4.14
-* Vault - Version 1.7.3
+- Spigot - Version 1.16.4
+- GriefPrevention - Version 16.16.0
+- QuickShop-Reremake - Version 4.0.4.14
+- Vault - Version 1.7.3
 
 ## Contributing
 
