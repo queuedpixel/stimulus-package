@@ -5,6 +5,14 @@ economic transactions.
 
 ## Commands
 
+### `/stimulus`
+
+View the stimulus payment information for a specified player.
+
+Specify the player name as the first argument of the command: `/stimulus [player name]`
+
+The command will display your stimulus information if you don't specify a player name.
+
 ### `/wealth`
 
 View the wealth for a specified player.
