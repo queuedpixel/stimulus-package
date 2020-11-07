@@ -120,7 +120,7 @@ This plugin depends on the following plugins:
 
 This plugin has been tested against the following versions of its dependencies:
 
-* Spigot - Version 1.16.3
+* Spigot - Version 1.16.4
 * GriefPrevention - Version 16.16.0
 * QuickShop-Reremake - Version 4.0.4.14
 * Vault - Version 1.7.3
