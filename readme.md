@@ -11,8 +11,12 @@ This is a development snapshot version of this project that may not be stable or
 
 ### `/wealth`
 
-View your combined wealth and the individual components of your wealth:
-your economy balance and the value of your GriefPrevention claim blocks.
+View the wealth for a specified player.
+A player's wealth is the sum of their economy balance and the value of their GriefPrevention claim blocks.
+
+Specify the player name as the first argument of the command: `/wealth [player name]`
+
+The command will display your wealth if you don't specify a player name.
 
 ### `/wealthtop`
 
