@@ -238,7 +238,6 @@ public class StimulusTask extends BukkitRunnable
             StimulusUtil.appendToFile(
                     logFile, String.format( "Wealth Delta    : %" + wealthLength + "s", formattedWealthDelta ));
 
-
             // map players to payment factors
             double paymentFactorSum = 0;
             Map< UUID, Double > playerRawPaymentFactorMap = new HashMap<>();
