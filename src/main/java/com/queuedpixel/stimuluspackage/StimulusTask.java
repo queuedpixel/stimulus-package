@@ -197,17 +197,20 @@ public class StimulusTask extends BukkitRunnable
         StimulusUtil.appendToFile( logFile,
                 String.format( "Volume Delta    : %" + volumeLength + "s", formattedVolumeDelta ));
 
-        // make payments if economic volume is below our desired volume and there are active stimulus players
-        if (( volumeDelta > 0 ) && ( activeStimulusPlayerCount > 0 ))
-        {
-            // compute total stimulus
-            double stimulusFactor = volumeDelta / totalDesiredVolume;
-            double totalStimulus =
-                    stimulusFactor * this.desiredStimulus * activeStimulusPlayerCount;
-            StimulusUtil.appendToFile( logFile, "" );
-            StimulusUtil.appendToFile( logFile, "Stimulus Factor : " + stimulusFactor                      );
-            StimulusUtil.appendToFile( logFile, "Total Stimulus  : " + this.economy.format( totalStimulus ));
+        // compute available stimulus
+        double maximumStimulus = this.desiredStimulus * activeStimulusPlayerCount;
+        double stimulusFactor = ( volumeDelta < 0 ) ? 0 : volumeDelta / totalDesiredVolume;
+        double availableStimulus = stimulusFactor * maximumStimulus;
+        StimulusUtil.appendToFile( logFile, "" );
+        StimulusUtil.appendToFile( logFile, "Maximum Stimulus   : " + this.economy.format( maximumStimulus   ));
+        StimulusUtil.appendToFile( logFile, "Stimulus Factor    : " + stimulusFactor                          );
+        StimulusUtil.appendToFile( logFile, "Available Stimulus : " + this.economy.format( availableStimulus ));
 
+        Map< UUID, StimulusPlayerInformation > stimulusPlayerInformationMap = new HashMap<>();
+
+        // make payments if economic volume is below our desired volume and there are active stimulus players
+        if (( stimulusFactor > 0 ) && ( activeStimulusPlayerCount > 0 ))
+        {
             // determine the wealth of the wealthiest and poorest players
             double highestWealth = Double.NEGATIVE_INFINITY;
             double lowestWealth = Double.POSITIVE_INFINITY;
@@ -271,8 +274,10 @@ public class StimulusTask extends BukkitRunnable
             for ( UUID playerId : activeStimulusPlayers )
             {
                 double adjustedPaymentFactor = playerPaymentFactorMap.get( playerId ) / paymentFactorSum;
-                double playerPayment = adjustedPaymentFactor * totalStimulus;
+                double playerPayment = adjustedPaymentFactor * availableStimulus;
                 playerPaymentMap.put( playerId, playerPayment );
+                stimulusPlayerInformationMap.put(
+                        playerId, new StimulusPlayerInformation( adjustedPaymentFactor, playerPayment ));
             }
 
             // make stimulus payments
@@ -440,6 +445,12 @@ public class StimulusTask extends BukkitRunnable
             String playerName = offlinePlayerMap.get( playerId ).getName();
             this.plugin.getActiveWealthTop().add( new SortedLine<>( wealth, playerName ));
         }
+
+        // populate stimulus information data structure
+        this.plugin.setStimulusInformation( new StimulusInformation(
+                activeEconomicPlayerCount, activeStimulusPlayerCount,
+                totalDesiredVolume, actualVolume, volumeDelta, stimulusFactor,
+                maximumStimulus, availableStimulus, stimulusPlayerInformationMap ));
 
         this.plugin.saveData();
     }

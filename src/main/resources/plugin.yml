@@ -28,6 +28,9 @@ depend:
     - QuickShop
     - Vault
 commands:
+    stimulus:
+        description: View detailed information on the most recent stimulus payment for the specified player.
+        usage: /stimulus [<player name>]
     wealth:
         description: Display your overall wealth.
         usage: /wealth [<player name>]

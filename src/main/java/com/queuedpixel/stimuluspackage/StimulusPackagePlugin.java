@@ -73,6 +73,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     private GriefPrevention griefPrevention;
     private double actualVolume = 0;
     private final Map< String, UUID > playerNameMap = new HashMap();
+    private StimulusInformation stimulusInformation = null;
 
     public void onEnable()
     {
@@ -128,6 +129,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         }
 
         this.loadData();
+        this.getCommand( "stimulus" ).setExecutor( new StimulusCommand( this ));
         this.getCommand( "wealth" ).setExecutor( new WealthCommand( this ));
         this.getCommand( "wealthtop" ).setExecutor( new WealthTopCommand( this ));
         this.getServer().getPluginManager().registerEvents( this, this );
@@ -281,6 +283,16 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         {
             e.printStackTrace();
         }
+    }
+
+    void setStimulusInformation( StimulusInformation stimulusInformation )
+    {
+        this.stimulusInformation = stimulusInformation;
+    }
+
+    StimulusInformation getStimulusInformation()
+    {
+        return this.stimulusInformation;
     }
 
     void saveData()
