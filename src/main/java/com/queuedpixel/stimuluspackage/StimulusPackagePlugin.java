@@ -175,6 +175,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     @EventHandler
     public void onShopSuccessPurchaseEvent( ShopSuccessPurchaseEvent event )
     {
+        // log the transaction
         long timestamp = new Date().getTime();
         int fractionalDigits = this.economy.fractionalDigits();
         UUID playerId = event.getPlayer().getUniqueId();
@@ -188,12 +189,16 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
                 vendorId, event.getShop().ownerName() );
         StimulusUtil.appendToFile( this.getLogFile( "QuickShop", timestamp ), logEntry );
 
-        if (( !this.excludedPlayers.contains( playerId )) && ( !this.excludedPlayers.contains( vendorId )))
-        {
-            Transaction transaction = new Transaction( timestamp, event.getBalance() );
-            this.addTransaction( transaction );
-            StimulusUtil.appendToFile( this.transactionsFile, transaction.toString() );
-        }
+        // ignore transactions from excluded players
+        if (( this.excludedPlayers.contains( playerId )) || ( this.excludedPlayers.contains( vendorId ))) return;
+
+        // ignore transactions from players interacting with their own shops
+        if ( playerId.equals( vendorId )) return;
+
+        // store the transaction
+        Transaction transaction = new Transaction( timestamp, event.getBalance() );
+        this.addTransaction( transaction );
+        StimulusUtil.appendToFile( this.transactionsFile, transaction.toString() );
     }
 
     UUID getPlayerId( String playerName )
