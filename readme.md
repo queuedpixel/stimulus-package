@@ -130,7 +130,7 @@ This plugin has been tested against the following versions of its dependencies:
 
 - Spigot - Version 1.16.5
 - GriefPrevention - Version 16.17.1
-- QuickShop-Reremake - Version 4.0.4.14
+- QuickShop-Reremake - Version 4.0.7.5
 - Vault - Version 1.7.3
 
 ## Contributing

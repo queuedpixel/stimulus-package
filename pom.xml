@@ -44,6 +44,10 @@ SOFTWARE.
             <id>jitpack.io</id>
             <url>https://jitpack.io/</url>
         </repository>
+        <repository>
+            <id>quickshop-repo</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -60,9 +64,9 @@ SOFTWARE.
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.queuedpixel</groupId>
-            <artifactId>QuickShop-Reremake</artifactId>
-            <version>v4.0.4.14-qp1</version>
+            <groupId>org.maxgamer</groupId>
+            <artifactId>QuickShop</artifactId>
+            <version>4.0.7.5</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
