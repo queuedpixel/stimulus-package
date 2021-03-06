@@ -24,24 +24,20 @@ SOFTWARE.
 
 */
 
-package com.queuedpixel.stimuluspackage;
+package com.queuedpixel.stimuluspackage.test;
 
-import java.util.UUID;
+import com.queuedpixel.stimuluspackage.PaymentQueue;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class PaymentQueue
+public class PaymentQueueTest
 {
-    public static void addPayment( UUID playerId, double payment )
+    @Test
+    void addPayment_nullPlayerId()
     {
-        throw new IllegalArgumentException( "Parameter 'playerId' cannot be null." );
-    }
-
-    public static void makePayment()
-    {
-        throw new UnsupportedOperationException( "Not implemented yet." );
-    }
-
-    public static void makeAllPayments()
-    {
-        throw new UnsupportedOperationException( "Not implemented yet." );
+        Exception exception =
+                Assertions.assertThrows( IllegalArgumentException.class, () -> PaymentQueue.addPayment( null, 5 ));
+        Assertions.assertEquals(
+                "Parameter 'playerId' cannot be null.", exception.getMessage(), "Unexpected exception message." );
     }
 }
