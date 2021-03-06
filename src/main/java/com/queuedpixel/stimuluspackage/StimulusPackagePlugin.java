@@ -72,7 +72,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     private Economy economy;
     private GriefPrevention griefPrevention;
     private double actualVolume = 0;
-    private final Map< String, UUID > playerNameMap = new HashMap();
+    private final Map< String, UUID > playerNameMap = new HashMap<>();
     private StimulusInformation stimulusInformation = null;
 
     public void onEnable()
