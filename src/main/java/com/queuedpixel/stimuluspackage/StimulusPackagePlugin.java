@@ -178,14 +178,14 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         // log the transaction
         long timestamp = new Date().getTime();
         int fractionalDigits = this.economy.fractionalDigits();
-        UUID playerId = event.getPlayer().getUniqueId();
+        UUID playerId = event.getPurchaser();
         UUID vendorId = event.getShop().getOwner();
         String currencyFormat = ( fractionalDigits > -1 ) ? "%." + fractionalDigits + "f" : "%f";
         String logEntry = String.format(
                 "%tF %<tT.%<tL, %s, %d, " + currencyFormat + ", %s [%s], %s [%s]",
                 timestamp, event.getShop().getItem().getType().toString(),
                 event.getAmount(), event.getBalance(),
-                playerId, event.getPlayer().getName(),
+                playerId, Bukkit.getPlayer( playerId ).getName(),
                 vendorId, event.getShop().ownerName() );
         StimulusUtil.appendToFile( this.getLogFile( "QuickShop", timestamp ), logEntry );
 
