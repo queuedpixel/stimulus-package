@@ -3,6 +3,10 @@
 Stimulus Package is a Spigot plugin that gives money to players based on the number of active players and volume of
 economic transactions.
 
+## Under Development
+
+This is a development snapshot version of this project that may not be stable or function at all.
+
 ## Commands
 
 ### `/stimulus`
@@ -51,7 +55,7 @@ We use [Apache Maven](https://maven.apache.org/) to compile this plugin.
 
 ### Install
 
-Copy `stimulus-package-1.3.1.jar` into your server `plugins` directory.
+Copy `stimulus-package-1.3.2-SNAPSHOT.jar` into your server `plugins` directory.
 
 ### Configure
 
