@@ -96,6 +96,20 @@ public class PaymentQueueTest
         this.verifyPaymentData( playerId1, 11, paymentHandler.payments.get( 1 ), "Payment 1" );
     }
 
+    @Test
+    void makePayment_doublePayment()
+    {
+        TestPaymentHandler paymentHandler = new TestPaymentHandler();
+        PaymentQueue paymentQueue = new PaymentQueue( paymentHandler );
+        UUID playerId = UUID.fromString( "0b7cb3d3-fa85-47f6-9073-b758d31cd24f" );
+        paymentQueue.addPayment( playerId, 3 );
+        paymentQueue.addPayment( playerId, 5 );
+        paymentQueue.makePayment();
+        paymentQueue.makePayment();
+        Assertions.assertEquals( 1, paymentHandler.payments.size(), "Unexpected number of payments." );
+        this.verifyPaymentData( playerId, 8, paymentHandler.payments.get( 0 ), "Payment 0" );
+    }
+
     private void verifyPaymentData( UUID playerId, double payment, TestPaymentData paymentData, String messagePrefix )
     {
         Assertions.assertEquals( playerId, paymentData.playerId, messagePrefix + ": Unexpected player ID." );

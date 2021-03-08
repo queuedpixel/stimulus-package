@@ -47,8 +47,12 @@ public class PaymentQueue
     {
         if ( playerId == null ) throw new IllegalArgumentException( "Parameter 'playerId' cannot be null." );
         if ( payment <= 0 ) throw new IllegalArgumentException( "Parameter 'payment' must be greater than 0." );
-        this.playerList.add( playerId );
-        this.paymentMap.put( playerId, payment );
+
+        double totalPayment = payment;
+        if ( paymentMap.containsKey( playerId )) totalPayment += this.paymentMap.get( playerId );
+        else this.playerList.add( playerId );
+
+        this.paymentMap.put( playerId, totalPayment );
     }
 
     public void makePayment()
