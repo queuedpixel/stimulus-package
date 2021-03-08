@@ -32,7 +32,8 @@ public class PaymentQueue
 {
     public static void addPayment( UUID playerId, double payment )
     {
-        throw new IllegalArgumentException( "Parameter 'playerId' cannot be null." );
+        if ( playerId == null ) throw new IllegalArgumentException( "Parameter 'playerId' cannot be null." );
+        throw new IllegalArgumentException( "Parameter 'payment' must be greater than 0." );
     }
 
     public static void makePayment()

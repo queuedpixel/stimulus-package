@@ -30,14 +30,26 @@ import com.queuedpixel.stimuluspackage.PaymentQueue;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
 public class PaymentQueueTest
 {
     @Test
     void addPayment_nullPlayerId()
     {
-        Exception exception =
-                Assertions.assertThrows( IllegalArgumentException.class, () -> PaymentQueue.addPayment( null, 5 ));
-        Assertions.assertEquals(
-                "Parameter 'playerId' cannot be null.", exception.getMessage(), "Unexpected exception message." );
+        Exception exception = Assertions.assertThrows(
+                IllegalArgumentException.class, () -> PaymentQueue.addPayment( null, 5 ));
+        Assertions.assertEquals( "Parameter 'playerId' cannot be null.", exception.getMessage(),
+                                 "Unexpected exception message." );
+    }
+
+    @Test
+    void addPayment_negativePayment()
+    {
+        UUID playerId = UUID.fromString( "4440445f-f669-45a6-8865-46ca78e820a9" );
+        Exception exception = Assertions.assertThrows(
+                IllegalArgumentException.class, () -> PaymentQueue.addPayment( playerId, -5 ));
+        Assertions.assertEquals( "Parameter 'payment' must be greater than 0.", exception.getMessage(),
+                                 "Unexpected exception message." );
     }
 }
