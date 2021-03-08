@@ -26,11 +26,17 @@ SOFTWARE.
 
 package com.queuedpixel.stimuluspackage;
 
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 import java.util.UUID;
 
 public class PaymentQueue
 {
     private final PaymentHandler paymentHandler;
+    private final Deque< UUID > playerList = new LinkedList<>();
+    private final Map< UUID, Double > paymentMap = new HashMap<>();
 
     public PaymentQueue( PaymentHandler paymentHandler )
     {
@@ -40,11 +46,16 @@ public class PaymentQueue
     public void addPayment( UUID playerId, double payment )
     {
         if ( playerId == null ) throw new IllegalArgumentException( "Parameter 'playerId' cannot be null." );
-        throw new IllegalArgumentException( "Parameter 'payment' must be greater than 0." );
+        if ( payment <= 0 ) throw new IllegalArgumentException( "Parameter 'payment' must be greater than 0." );
+        this.playerList.add( playerId );
+        this.paymentMap.put( playerId, payment );
     }
 
     public void makePayment()
     {
+        if ( playerList.isEmpty() ) return;
+        UUID playerId = this.playerList.removeFirst();
+        this.paymentHandler.handlePayment( playerId, this.paymentMap.remove( playerId ));
     }
 
     public void makeAllPayments()
