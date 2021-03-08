@@ -49,6 +49,7 @@ public class StimulusTask extends BukkitRunnable
 {
     private final StimulusPackagePlugin plugin;
     private final Economy economy;
+    private final PaymentQueue paymentQueue;
 
     private final long   economicInterval;
     private final long   stimulusInterval;
@@ -61,6 +62,7 @@ public class StimulusTask extends BukkitRunnable
     {
         this.plugin = plugin;
         this.economy = this.plugin.getEconomy();
+        this.paymentQueue = this.plugin.getPaymentQueue();
 
         this.economicInterval     = this.plugin.getConfig().getLong(   "economicInterval"     );
         this.stimulusInterval     = this.plugin.getConfig().getLong(   "stimulusInterval"     );
@@ -72,8 +74,22 @@ public class StimulusTask extends BukkitRunnable
 
     public void run()
     {
+        this.processStimulus();
+        this.paymentQueue.makePayment();
+    }
+
+    private void processStimulus()
+    {
         // current time
         long now = new Date().getTime();
+
+        // determine time of next stimulus payment
+        long paymentInterval = this.plugin.getConfig().getLong( "paymentInterval" ) * 1000;
+        long lastStimulus = this.plugin.getLastStimulusTime();
+        long nextStimulus = lastStimulus == 0 ? now : lastStimulus + paymentInterval;
+
+        // skip if it isn't time for the next stimulus payment
+        if ( now < nextStimulus ) return;
 
         // stimulus log file
         Path logFile = plugin.getLogFile( "Stimulus", now );
@@ -287,19 +303,9 @@ public class StimulusTask extends BukkitRunnable
                 double payment = StimulusUtil.round( economy.fractionalDigits(), rawPayment );
                 if ( payment > 0 )
                 {
-                    this.economy.depositPlayer( offlinePlayerMap.get( playerId ), payment );
+                    this.paymentQueue.addPayment( playerId, payment );
                     playerWealthMap.put( playerId, playerWealthMap.get( playerId ) + payment );
-                    Player player = onlinePlayerMap.get( playerId );
-                    if ( player != null )
-                    {
-                        player.sendMessage( this.plugin.messagePrefix + ChatColor.DARK_AQUA + "You received " +
-                                            ChatColor.LIGHT_PURPLE + this.economy.format( payment ) +
-                                            ChatColor.DARK_AQUA + " in stimulus!" );
-                    }
-                    else
-                    {
-                        this.plugin.addOfflineStimulus( playerId, payment );
-                    }
+                    if ( !onlinePlayerMap.containsKey( playerId )) this.plugin.addOfflineStimulus( playerId, payment );
                 }
                 else
                 {
@@ -452,6 +458,7 @@ public class StimulusTask extends BukkitRunnable
                 totalDesiredVolume, actualVolume, volumeDelta, stimulusFactor,
                 maximumStimulus, availableStimulus, stimulusPlayerInformationMap ));
 
+        this.plugin.setLastStimulusTime( nextStimulus );
         this.plugin.saveData();
     }
 }

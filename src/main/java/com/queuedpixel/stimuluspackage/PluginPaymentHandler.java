@@ -26,15 +26,33 @@ SOFTWARE.
 
 package com.queuedpixel.stimuluspackage;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeSet;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+
 import java.util.UUID;
 
-class StimulusData
+public class PluginPaymentHandler implements PaymentHandler
 {
-    final Map< UUID, Double > playerOfflineStimulusMap = new HashMap<>();
-    final TreeSet< SortedLine< Double >> activeWealthTop = new TreeSet<>();
-    final TreeSet< SortedLine< Double >> allWealthTop = new TreeSet<>();
-    long lastStimulusTime = 0;
+    private final StimulusPackagePlugin plugin;
+
+    public PluginPaymentHandler( StimulusPackagePlugin plugin )
+    {
+        this.plugin = plugin;
+    }
+
+    public void handlePayment( UUID playerId, double payment )
+    {
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer( playerId );
+        this.plugin.getEconomy().depositPlayer( offlinePlayer, payment );
+
+        Player player = offlinePlayer.getPlayer();
+        if ( player != null )
+        {
+            player.sendMessage( this.plugin.messagePrefix + ChatColor.DARK_AQUA + "You received " +
+                                ChatColor.LIGHT_PURPLE + this.plugin.getEconomy().format( payment ) +
+                                ChatColor.DARK_AQUA + " in stimulus!" );
+        }
+    }
 }

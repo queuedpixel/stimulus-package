@@ -71,6 +71,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     private StimulusData data = new StimulusData();
     private Economy economy;
     private GriefPrevention griefPrevention;
+    private PaymentQueue paymentQueue;
     private double actualVolume = 0;
     private final Map< String, UUID > playerNameMap = new HashMap<>();
     private StimulusInformation stimulusInformation = null;
@@ -120,6 +121,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         this.economy = rsp.getProvider();
         this.griefPrevention =
                 (GriefPrevention) Bukkit.getServer().getPluginManager().getPlugin( "GriefPrevention" );
+        this.paymentQueue = new PaymentQueue( new PluginPaymentHandler( this ));
 
         // build our map of player names to player IDs
         this.playerNameMap.clear();
@@ -136,8 +138,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
 
         // schedule the stimulus task
         StimulusTask stimulusTask = new StimulusTask( this );
-        long paymentInterval = this.getConfig().getLong( "paymentInterval" ) * 20; // 20 ticks per second
-        stimulusTask.runTaskTimer( this, paymentInterval, paymentInterval );
+        stimulusTask.runTaskTimer( this, 0, 20 ); // once a second
 
         // schedule the prune transactions task
         PruneTransactionsTask pruneTransactionsTask = new PruneTransactionsTask( this );
@@ -152,6 +153,7 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
 
     public void onDisable()
     {
+        this.paymentQueue.makeAllPayments();
     }
 
     @EventHandler
@@ -216,6 +218,11 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
         return this.griefPrevention;
     }
 
+    PaymentQueue getPaymentQueue()
+    {
+        return this.paymentQueue;
+    }
+
     Path getLogFile( String prefix, long timestamp )
     {
         return this.logDirectory.resolve( String.format( "%s-%tF.log", prefix, timestamp ));
@@ -267,6 +274,16 @@ public class StimulusPackagePlugin extends JavaPlugin implements Listener
     TreeSet< SortedLine< Double >> getAllWealthTop()
     {
         return this.data.allWealthTop;
+    }
+
+    void setLastStimulusTime( long lastStimulusTime )
+    {
+        this.data.lastStimulusTime = lastStimulusTime;
+    }
+
+    long getLastStimulusTime()
+    {
+        return this.data.lastStimulusTime;
     }
 
     void pruneTransactions()
