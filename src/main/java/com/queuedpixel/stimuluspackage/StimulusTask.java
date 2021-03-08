@@ -199,7 +199,8 @@ public class StimulusTask extends BukkitRunnable
 
         // compute available stimulus
         double maximumStimulus = this.desiredStimulus * activeStimulusPlayerCount;
-        double stimulusFactor = ( volumeDelta < 0 ) ? 0 : volumeDelta / totalDesiredVolume;
+        double stimulusFactor = 1;
+        if ( totalDesiredVolume > 0 ) stimulusFactor = ( volumeDelta < 0 ) ? 0 : volumeDelta / totalDesiredVolume;
         double availableStimulus = stimulusFactor * maximumStimulus;
         StimulusUtil.appendToFile( logFile, "" );
         StimulusUtil.appendToFile( logFile, "Maximum Stimulus   : " + this.economy.format( maximumStimulus   ));
