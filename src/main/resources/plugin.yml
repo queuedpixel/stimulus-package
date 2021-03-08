@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 name: StimulusPackage
-version: 1.3.2-SNAPSHOT
+version: 1.3.2
 main: com.queuedpixel.stimuluspackage.StimulusPackagePlugin
 depend:
     - GriefPrevention
