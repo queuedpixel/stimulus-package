@@ -37,8 +37,10 @@ public class PaymentQueueTest
     @Test
     void addPayment_nullPlayerId()
     {
+        TestPaymentHandler paymentHandler = new TestPaymentHandler();
+        PaymentQueue paymentQueue = new PaymentQueue( paymentHandler );
         Exception exception = Assertions.assertThrows(
-                IllegalArgumentException.class, () -> PaymentQueue.addPayment( null, 5 ));
+                IllegalArgumentException.class, () -> paymentQueue.addPayment( null, 5 ));
         Assertions.assertEquals( "Parameter 'playerId' cannot be null.", exception.getMessage(),
                                  "Unexpected exception message." );
     }
@@ -46,10 +48,21 @@ public class PaymentQueueTest
     @Test
     void addPayment_negativePayment()
     {
+        TestPaymentHandler paymentHandler = new TestPaymentHandler();
+        PaymentQueue paymentQueue = new PaymentQueue( paymentHandler );
         UUID playerId = UUID.fromString( "4440445f-f669-45a6-8865-46ca78e820a9" );
         Exception exception = Assertions.assertThrows(
-                IllegalArgumentException.class, () -> PaymentQueue.addPayment( playerId, -5 ));
+                IllegalArgumentException.class, () -> paymentQueue.addPayment( playerId, -5 ));
         Assertions.assertEquals( "Parameter 'payment' must be greater than 0.", exception.getMessage(),
                                  "Unexpected exception message." );
+    }
+
+    @Test
+    void makePayment_noPayments()
+    {
+        TestPaymentHandler paymentHandler = new TestPaymentHandler();
+        PaymentQueue paymentQueue = new PaymentQueue( paymentHandler );
+        paymentQueue.makePayment();
+        Assertions.assertEquals( 0, paymentHandler.payments.size(), "Unexpected number of payments." );
     }
 }

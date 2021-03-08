@@ -24,31 +24,18 @@ SOFTWARE.
 
 */
 
-package com.queuedpixel.stimuluspackage;
+package com.queuedpixel.stimuluspackage.test;
 
 import java.util.UUID;
 
-public class PaymentQueue
+public class TestPaymentData
 {
-    private final PaymentHandler paymentHandler;
+    public final UUID playerId;
+    public final double payment;
 
-    public PaymentQueue( PaymentHandler paymentHandler )
+    public TestPaymentData( UUID playerId, double payment )
     {
-        this.paymentHandler = paymentHandler;
-    }
-
-    public void addPayment( UUID playerId, double payment )
-    {
-        if ( playerId == null ) throw new IllegalArgumentException( "Parameter 'playerId' cannot be null." );
-        throw new IllegalArgumentException( "Parameter 'payment' must be greater than 0." );
-    }
-
-    public void makePayment()
-    {
-    }
-
-    public void makeAllPayments()
-    {
-        throw new UnsupportedOperationException( "Not implemented yet." );
+        this.playerId = playerId;
+        this.payment  = payment;
     }
 }

@@ -24,31 +24,20 @@ SOFTWARE.
 
 */
 
-package com.queuedpixel.stimuluspackage;
+package com.queuedpixel.stimuluspackage.test;
 
+import com.queuedpixel.stimuluspackage.PaymentHandler;
+
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
-public class PaymentQueue
+class TestPaymentHandler implements PaymentHandler
 {
-    private final PaymentHandler paymentHandler;
+    final List< TestPaymentData > payments = new LinkedList<>();
 
-    public PaymentQueue( PaymentHandler paymentHandler )
+    public void handlePayment( UUID playerId, double payment )
     {
-        this.paymentHandler = paymentHandler;
-    }
-
-    public void addPayment( UUID playerId, double payment )
-    {
-        if ( playerId == null ) throw new IllegalArgumentException( "Parameter 'playerId' cannot be null." );
-        throw new IllegalArgumentException( "Parameter 'payment' must be greater than 0." );
-    }
-
-    public void makePayment()
-    {
-    }
-
-    public void makeAllPayments()
-    {
-        throw new UnsupportedOperationException( "Not implemented yet." );
+        payments.add( new TestPaymentData( playerId, payment ));
     }
 }

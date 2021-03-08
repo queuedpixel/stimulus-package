@@ -28,27 +28,7 @@ package com.queuedpixel.stimuluspackage;
 
 import java.util.UUID;
 
-public class PaymentQueue
+public interface PaymentHandler
 {
-    private final PaymentHandler paymentHandler;
-
-    public PaymentQueue( PaymentHandler paymentHandler )
-    {
-        this.paymentHandler = paymentHandler;
-    }
-
-    public void addPayment( UUID playerId, double payment )
-    {
-        if ( playerId == null ) throw new IllegalArgumentException( "Parameter 'playerId' cannot be null." );
-        throw new IllegalArgumentException( "Parameter 'payment' must be greater than 0." );
-    }
-
-    public void makePayment()
-    {
-    }
-
-    public void makeAllPayments()
-    {
-        throw new UnsupportedOperationException( "Not implemented yet." );
-    }
+    void handlePayment( UUID playerId, double payment );
 }
