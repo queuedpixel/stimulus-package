@@ -64,6 +64,6 @@ public class PaymentQueue
 
     public void makeAllPayments()
     {
-        throw new UnsupportedOperationException( "Not implemented yet." );
+        while ( !this.playerList.isEmpty() ) this.makePayment();
     }
 }
