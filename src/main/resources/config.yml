@@ -80,3 +80,8 @@ excludedPlayers:
 # Data Type: long
 # Default Value: 5 minutes (300 seconds)
 logBalancesInterval: 300
+
+# Description: Determine whether to show the message that user receives no stimulus or not
+# Data Type: boolean
+# Default value: true
+showNoStimulusMsg: true

@@ -418,7 +418,7 @@ public class StimulusTask extends BukkitRunnable
 
             StimulusUtil.appendToFile( logFile, divider );
         }
-        else
+        else if (plugin.getConfig().getBoolean("showNoStimulusMsg"))
         {
             // send a message to all players about the lack of stimulus
             for ( UUID playerId : activeStimulusPlayers )
