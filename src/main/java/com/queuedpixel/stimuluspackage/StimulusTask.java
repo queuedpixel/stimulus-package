@@ -307,7 +307,7 @@ public class StimulusTask extends BukkitRunnable
                     playerWealthMap.put( playerId, playerWealthMap.get( playerId ) + payment );
                     if ( !onlinePlayerMap.containsKey( playerId )) this.plugin.addOfflineStimulus( playerId, payment );
                 }
-                else
+                else if (plugin.getConfig().getBoolean("showNormalNoStimulusMsg"))
                 {
                     Player player = onlinePlayerMap.get( playerId );
                     if ( player != null )
@@ -418,7 +418,7 @@ public class StimulusTask extends BukkitRunnable
 
             StimulusUtil.appendToFile( logFile, divider );
         }
-        else
+        else if (plugin.getConfig().getBoolean("showStrongEcoNoStimulusMsg"))
         {
             // send a message to all players about the lack of stimulus
             for ( UUID playerId : activeStimulusPlayers )
