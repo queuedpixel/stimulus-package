@@ -80,3 +80,13 @@ excludedPlayers:
 # Data Type: long
 # Default Value: 5 minutes (300 seconds)
 logBalancesInterval: 300
+
+# Description: Determine whether to show message when player receive no stimulus or not.
+# Data Type: boolean
+# Default Value: true
+showNormalNoStimulusMsg: true
+
+# Description: Determine whether to show message when player receive no stimulus or not due to strong economy.
+# Data Type: boolean
+# Default Value: true
+showStrongEcoNoStimulusMsg: true
